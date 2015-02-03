@@ -115,48 +115,50 @@ int hu_abs(int number)
 
 
 	void changePage(){
-		printf("page_node_num=%d\r\n", page_node_num);
-		printf("page=%d\r\n", page);
+		//printf("page_node_num=%d\r\n", page_node_num);
+		//printf("page=%d\r\n", page);
 		if (select_id>=page_node_num*(page+1))//右移，页面+1
 		{
-			isFlip=true;
-						if (page  < const_page)
+			int cnt =select_id/(page_node_num*(page+1));
+						if (page +cnt <= const_page)
 						{
-							page++;
+							isFlip=true;
+							page+=cnt;
 									dx=page_w*page;
 
 									for (int i = 0; i < node_num; i++)
 									{
-											 nodemp[i]->cx-=page_w;
+											 nodemp[i]->cx-=page_w*cnt;
 								//nodemp[i]->touch_init_area(nodemp[i]->x,nodemp[i]->y, nodemp[i]->width, nodemp[i]->height);
 									 }
-
+								printf("++OK\r\n", page);
+								TimerSet(0);
+								xml_mgr->PostCS(hustr("page%d", page + 1));
+						}else{
+							isFlip=false;
 						}
-						printf("++OK\r\n", page);
-						TimerSet(0);
-						xml_mgr->PostCS(hustr("page%d", page + 1));
-					//	Flush();
+
 					}
 
-		else if(page>0){
-		 if(select_id<page_node_num*(page))//左移，页面-1
+		else if(select_id<page_node_num*(page))//左移，页面-1
 			{
-			 isFlip=true;
+			// int cnt =(page_node_num*page)/(select_id+6);
+			// int cnt =(page_node_num*page)/(select_id+6);
+			 int cnt = (page_node_num*(page+1)-(select_id+1))/page_node_num;
+			if(page-cnt>=0){
+			    isFlip=true;
 				printf("--\r\n");
 
-				page--;
+				page-=cnt;
 				dx=page_w*page;
 
 						 for (int i = 0; i < node_num; i++)
 						 {
-								 nodemp[i]->cx+=page_w;
-					//nodemp[i]->touch_init_area(nodemp[i]->x,nodemp[i]->y, nodemp[i]->width, nodemp[i]->height);
+								 nodemp[i]->cx+=page_w*cnt;
 						 }
 
 					 TimerSet(0);
 					xml_mgr->PostCS(hustr("page%d", page + 1));
-					//Flush();
-
 			}
 		 else{
 			 isFlip=false;
