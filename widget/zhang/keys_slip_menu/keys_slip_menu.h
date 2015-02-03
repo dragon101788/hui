@@ -201,10 +201,14 @@ int hu_abs(int number)
 
 		select_id=m_mp["select"]->getvalue_int();
 
+
+		page_w=width;
+		sum_w=width*(const_page+1);
+		/*
 		sum_w=width;
 		width/=const_page+1;//触摸及可视宽度等于图片宽度除以页数
 		page_w=width;
-
+*/
 		//node_name="pic_node";
 		name = m_mp["name"]->getvalue();
 		if (m_mp.exist("small_pic"))
