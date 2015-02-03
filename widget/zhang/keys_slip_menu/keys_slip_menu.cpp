@@ -7,5 +7,5 @@ hucall int init(HUMap & mp,void * data)
 }
 
 //	XMLinstan["Radio_buttons"] = Install_Element<Radio_buttons>;
-static InstallXMLinstan install("slip_menu",Install_Element<slip_menu>);
+static InstallXMLinstan install("keys_slip_menu",Install_Element<keys_slip_menu>);
 
