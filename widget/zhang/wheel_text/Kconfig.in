@@ -1,0 +1,5 @@
+config  CONTROL_WHEEL_TEXT 
+        depends on USING_FONT 
+        bool "wheel_text Control" 
+        help 
+			path=$AUTOPATH
