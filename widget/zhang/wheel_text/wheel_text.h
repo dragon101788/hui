@@ -81,12 +81,13 @@ public:
 			ttf.style = style;
 			//printf("width=%d, height= %d\r\n", width,height);
 			ttf.SetBuffer(width, height);
+			x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
 			Flush();
 		}
 		void doRender()
 		{
-			printf("in mode doRender()!!!!!\n");
+			//printf("in mode doRender()!!!!!\n");
 			image::Render(&ttf, 0, 0);
 			//	image::Render(&img, 0, 0, width, height, 0, 0);
 		}
