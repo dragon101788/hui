@@ -19,6 +19,7 @@ public:
 		size = 16;
 		hide = 0;
 		lenth = 0;
+		align_center=0;
 	}
 	~static_text()
 	{
@@ -45,6 +46,8 @@ public:
 		int red = m_mp["red"]->getvalue_int();
 		int green = m_mp["green"]->getvalue_int();
 		int blue = m_mp["blue"]->getvalue_int();
+		if (m_mp.exist("align_center"))
+		align_center=m_mp["align_center"]->getvalue_int();
 		color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
 		//bkcolor = m_mp["bkcolor"]->getvalue_int();
 		font = m_mp["font"]->getvalue();
@@ -59,6 +62,8 @@ public:
 		ttf.color = color;
 		ttf.style = style;
 		ttf.SetBuffer(width, height);
+		if(align_center)
+		x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
 
 		Flush();
@@ -82,6 +87,7 @@ public:
 	//int id;
 	int lenth;
 	int buf_len;
+	int align_center;
 };
 
 #endif //__STATIC_IMAGE_H__
