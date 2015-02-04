@@ -21,7 +21,7 @@ int hu_abs(int number)
                         dx = 0;
                         dy = 0;
                 }
-                HuExec  exec;
+               // HuExec  exec;
                 int dx;
                 int dy;
         };
@@ -29,10 +29,11 @@ int hu_abs(int number)
 	class node: public element
 	{
 	public:
-        int cx;
+        int cx,cy;
 		node()
 		{ 
 			cx=0;
+			cy=0;
 		}
 		void doFlushConfig()
 		{
@@ -60,12 +61,13 @@ int hu_abs(int number)
                         SetBuffer(width, height);
                         path.format("ele-%s %dx%d", name.c_str(), width, height);
                 }
-		int temp_x=x;
-		x=x%this->parent->page_w; //取第一页位置
-                initstack();
-		x=temp_x;//还原x
-			//exec.parse(m_mp);
-			//exec.name = parent->name;
+				int temp_x=x;
+				int temp_y=y;
+				x=x%this->parent->page_w; //取第一页位置
+				y=y%this->parent->page_h; //取第一页位置
+				initstack();
+				x=temp_x;//还原x
+				y=temp_y;//还原y
 
 			Flush();
 		}
@@ -74,10 +76,9 @@ int hu_abs(int number)
 		{
               //  printf("this->x=%d,this->cx=%d\n",x,cx);
                //
-		      image::Render(&this->parent->img[1], x+this->parent->cx-
-
-
-		    		  this->parent->x, y-this->parent->y,width,height,0,0);
+			 if(x<this->parent->width&&y<this->parent->height&&x>=0&&y>=0)
+		      image::Render(&this->parent->img[1], x+this->parent->cx-this->parent->x,
+		    		  	  	  	  	  	  	  	   y+this->parent->cy-this->parent->y,width,height,0,0);
 
 		      //  image::Render(&img[0],               cx ,                                0,    (int)page_w, (int)height, 0,0);
 		}
@@ -88,29 +89,50 @@ int hu_abs(int number)
 	int doTimer(int tm)
 	{
 	//	printf("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
-		for (int i = 0; i < rcn && cx > dx; i++)
-			if (cx > dx){ //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)page-
-
-				// nodemp[select_id]->cx++;
-				cx--;
+		if(vertical_mode){
+			for (int i = 0; i < rcn && cy > dy; i++)
+				if (cy > dy){ //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)page-
+					cy--;
+				}
+			for (int i = 0; i < rcn && cy < dy; i++)//(自动向右运动) page+
+				if (cy < dy){
+					cy++;
+				}
+			Flush();
+			if (dy == cy)
+			{
+				TimerStop();
+				if(isFlip)
+				nodemp[select_id]->Flush();
 			}
-		for (int i = 0; i < rcn && cx < dx; i++)//(自动向右运动) page+
-			if (cx < dx){
-
-				cx++;
+			else
+			{
+				TimerSet(tm + rsp);
 			}
-		Flush();
-		if (dx == cx)
-		{
-			TimerStop();
-			if(isFlip)
-			nodemp[select_id]->Flush();
-		}
-		else
-		{
-			TimerSet(tm + rsp);
-		}
+		}else{
+			for (int i = 0; i < rcn && cx > dx; i++)
+				if (cx > dx){ //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)page-
 
+					// nodemp[select_id]->cx++;
+					cx--;
+				}
+			for (int i = 0; i < rcn && cx < dx; i++)//(自动向右运动) page+
+				if (cx < dx){
+
+					cx++;
+				}
+			Flush();
+			if (dx == cx)
+			{
+				TimerStop();
+				if(isFlip)
+				nodemp[select_id]->Flush();
+			}
+			else
+			{
+				TimerSet(tm + rsp);
+			}
+		}
 	}
 
 
@@ -124,13 +146,20 @@ int hu_abs(int number)
 						{
 							isFlip=true;
 							page+=cnt;
-									dx=page_w*page;
+									if(vertical_mode){
+										dy=page_h*page;
+										for (int i = 0; i < node_num; i++)
+										 {
+										  nodemp[i]->cy-=page_h*cnt;
+										 }
+									}else{
+										dx=page_w*page;
 
-									for (int i = 0; i < node_num; i++)
-									{
-											 nodemp[i]->cx-=page_w*cnt;
-								//nodemp[i]->touch_init_area(nodemp[i]->x,nodemp[i]->y, nodemp[i]->width, nodemp[i]->height);
-									 }
+										for (int i = 0; i < node_num; i++)
+										 {
+										  nodemp[i]->cx-=page_w*cnt;
+										 }
+									}
 								printf("++OK\r\n", page);
 								TimerSet(0);
 								xml_mgr->PostCS(hustr("page%d", page + 1));
@@ -150,13 +179,19 @@ int hu_abs(int number)
 				printf("--\r\n");
 
 				page-=cnt;
-				dx=page_w*page;
-
-						 for (int i = 0; i < node_num; i++)
-						 {
-								 nodemp[i]->cx+=page_w*cnt;
-						 }
-
+				if(vertical_mode){
+					dy=page_h*page;
+					 for (int i = 0; i < node_num; i++)
+					 	 {
+							 nodemp[i]->cy+=page_h*cnt;
+					 	 }
+				}else{
+					dx=page_w*page;
+					 for (int i = 0; i < node_num; i++)
+					 	 {
+							 nodemp[i]->cx+=page_w*cnt;
+					 	 }
+				}
 					 TimerSet(0);
 					xml_mgr->PostCS(hustr("page%d", page + 1));
 			}
@@ -185,7 +220,7 @@ int hu_abs(int number)
 
 	void doRender()
 	{
-		image::Render(&img[0], cx , 0, (int)page_w, (int)height, 0, 0);
+		image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
 		if(!isFlip)
 		nodemp[select_id]->Flush();//都使用第一页的节点显示
 	}
@@ -198,14 +233,22 @@ int hu_abs(int number)
 		const_page = m_mp["page"]->getvalue_int()-1;//0代表1页，2代表3页,在xml中1代表1页
                 rsp = m_mp["rsp"]->getvalue_int();
                 rcn = m_mp["rcn"]->getvalue_int();
-		remax = m_mp["remax"]->getvalue_int();
-		remin = m_mp["remin"]->getvalue_int();
+
 
 		select_id=m_mp["select"]->getvalue_int();
-
+		if (m_mp.exist("vertical_mode")){
+			vertical_mode=m_mp["vertical_mode"]->getvalue_int();
+		}
 
 		page_w=width;
-		sum_w=width*(const_page+1);
+		page_h=height;
+		if(vertical_mode){
+			sum_h=height*(const_page+1);
+			sum_w=width;
+		}else{
+			sum_w=width*(const_page+1);
+			sum_h=height;
+		}
 		/*
 		sum_w=width;
 		width/=const_page+1;//触摸及可视宽度等于图片宽度除以页数
@@ -232,7 +275,7 @@ int hu_abs(int number)
 
 		   if(use_small==0)//使用大图
 		   {
-			img[j].SetBuffer(sum_w, height);
+			img[j].SetBuffer(sum_w, sum_h);
                             
 			img[j].SetResource(m_mp[pic_sc.c_str()]->getvalue());//设置全局图片
 			img[j].LoadResource();//加载按下前的图片，此图片可以替代背景图片
@@ -259,7 +302,7 @@ int hu_abs(int number)
 					tmp[i].LoadResource();
 				}
 				img[j].path.format("slip_menu-%s output", name.c_str());
-				img[j].SetBuffer(sum_w, height);
+				img[j].SetBuffer(sum_w, sum_h);
 
 				for (int i = 0; i < tmp.size(); i++)
 				{
@@ -270,7 +313,7 @@ int hu_abs(int number)
 		   }
 		  }
 	       	 }
-		int touch_lock = m_mp["lock"]->getvalue_int();
+
                 node_num=m_mp.count("node");
 		for (int i = 0; i < node_num; i++)
 		{
@@ -298,6 +341,9 @@ int hu_abs(int number)
 
 		xml_mgr->AddTimerElement( this);
 		changePage();
+		if(vertical_mode)
+			nodemp[select_id]->y+=nodemp[select_id]->cy;
+		else
 		nodemp[select_id]->x+=nodemp[select_id]->cx;
 		Flush();
 
@@ -310,18 +356,20 @@ int hu_abs(int number)
 		sum_w = 0;
 		sum_h = 0;
 		page_w = 0;
-		index = 0;
+		page_h = 0;
+
+		vertical_mode=0; //默认是水平翻页
 		cx = 0; //当前x
+		cy = 0; //当前y
 		//mx = 0; //拖动轴mx
 		dx = 0; //时间轴x
+		dy = 0; //时间轴x
 		page = 0;
 		 rsp=0;//返回定时器频率
 		rcn=0;///返回速度
         const_page=0;
 		page_max = 0;
-		remax = 0;
 		node_num=0;
-		remin = 0;
 		use_small=0;
 	    select_id=0;
 	    page_node_num=0;
@@ -337,7 +385,8 @@ int hu_abs(int number)
 	int sum_w;//menu的宽度
 	int sum_h; 
 	int page_w;//一页的宽度
-	int index;
+	int page_h;//一页的高度
+
 	//int op;
 	int select_id;  //哪张图片选中
 	bool isFlip;
@@ -345,13 +394,14 @@ int hu_abs(int number)
 	hustr node_name;
 	hustr pic_sc;
 	int cx; //图像当前x，绝对值
+	int cy; //图像当前y，绝对值
 	//int mx; //拖动轴mx
 	int dx; //时间轴x,目标x，跟page宽度对齐
+	int dy; //时间轴x,目标x，跟page宽度对齐
 	int page;
 	int const_page;
 	int page_max;
-	int remax;
-	int remin;
+	int vertical_mode;//翻页模式，0-水平，1竖直
 	int rsp;//返回定时器频率
 	int rcn;///返回速度
 	int page_node_num;
