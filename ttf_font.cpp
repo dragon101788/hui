@@ -306,9 +306,9 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		final_num++;//显示文字数加一
 		ptext->ft_draw_bitmap(&slot->bitmap, x + slot->bitmap_left, y + Font_H - slot->bitmap_top, color);
 		x += slot->advance.x >> 6; //可以从此处下手添加自动换行功能
-		if ((x + Font_H * 2 ) > buff_width)
+		if ((x + Font_H ) > buff_width)
 		{
-			if ((y + Font_H * 2 + 4) < buff_height)
+			if ((y + Font_H * 2 + 4) < buff_height)//换行
 			{
 				x = 0;
 				y +=Font_H*1.2;
