@@ -4,11 +4,12 @@
 #include "XMLInstal.h"
 #include "layer.h"
 #include "ttf_font.h"
+#include "alpha.h"
 
 class static_text: public element
 {
 public:
-	text ttf;
+
 
 	static_text()
 	{
@@ -46,6 +47,8 @@ public:
 		int red = m_mp["red"]->getvalue_int();
 		int green = m_mp["green"]->getvalue_int();
 		int blue = m_mp["blue"]->getvalue_int();
+		int padding_left=m_mp["padding_left"]->getvalue_int();
+		int padding_top=m_mp["padding_top"]->getvalue_int();
 		if (m_mp.exist("align_center"))
 		align_center=m_mp["align_center"]->getvalue_int();
 		color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
@@ -62,9 +65,17 @@ public:
 		ttf.color = color;
 		ttf.style = style;
 		ttf.SetBuffer(width, height);
+		/*
 		if(align_center)
 		x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
+		*/
+		if(align_center){
+			padding_left+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			padding_top+=(height-size)/2;
+			}
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+
 
 		Flush();
 	}
@@ -73,18 +84,14 @@ public:
 		image::Render(&ttf, 0, 0);
 		//	image::Render(&img, 0, 0, width, height, 0, 0);
 	}
-//	int xpos;
-//	int ypos;
-	//text * pfont;
+
+	text ttf;
 	map<hustr, text>::iterator font_it;
 	unsigned int color;
-	//unsigned int bkcolor;
 	hustr font;	//保存路径
 	hustr txt;	//i
-	//wchar_t *mytxt;
 	unsigned char style;
 	int size;
-	//int id;
 	int lenth;
 	int buf_len;
 	int align_center;
