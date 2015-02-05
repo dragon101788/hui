@@ -1,0 +1,4 @@
+config  CONTROL_TEXT_BUTTON 
+        bool "text_button Control" 
+        help 
+			path=$AUTOPATH
