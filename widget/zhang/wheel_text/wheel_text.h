@@ -81,8 +81,15 @@ public:
 			ttf.style = style;
 			//printf("width=%d, height= %d\r\n", width,height);
 			ttf.SetBuffer(width, height);
-			x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
-			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
+
+			//x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			//ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
+
+			int padding_left=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			int padding_top=(height-size)/2;
+
+			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+
 			Flush();
 		}
 		void doRender()
