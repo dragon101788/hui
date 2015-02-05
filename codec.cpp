@@ -16,11 +16,25 @@
 
 #include "codec.h"
 #include "hulib.h"
-
+#include <assert.h>
 int
 image_write_to_snap(image * img, const char * path);
 int
 image_read_from_snap(image * img, const char * path);
+
+void MyMemMove(void *dst,const void *src,size_t count)
+{
+    assert(dst!=NULL && src!=NULL);
+
+    int num = count/4-1;
+    uint32_t* tmp =(uint32_t* ) dst;
+     uint32_t* s = (uint32_t* )src+num;
+
+    for(size_t i=0;i<num;i++){
+    	*(tmp++)=*(s--);
+    }
+
+}
 
 int access_Image(const char * filename)
 {

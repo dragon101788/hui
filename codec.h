@@ -18,11 +18,13 @@ using namespace std;
 
 extern int snapcache;
 
+void MyMemMove(void *dst,const void *src,size_t count);
 int bmpCodec_to_image(image * sobj, const char *filename);
 int jpegCodec_to_image(image * sobj, const char *filename);
 int pngCodec_to_image(image * sobj, const char *filepath);
 int pngEndec_to_image(const char *file_name, image * graph);
 int codec_to_Image(image * enode, const char * filename);
+
 
 void Render_img_to_buf(void * buf, image * img, int width, int height);
 void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y);
@@ -81,10 +83,16 @@ public:
 		memcpy(pSrcBuffer, buf, SrcSize);
 		unlock();
 	}
+#include "include/autoconf.h"
 	void dump_to_buf(void * buf)
 	{
 		lock();
+		//memcpy(buf, pSrcBuffer, SrcSize);
+#ifdef CONFIG_REVERSE_SCREEN
+		MyMemMove(buf, pSrcBuffer, SrcSize);
+#else
 		memcpy(buf, pSrcBuffer, SrcSize);
+#endif
 		unlock();
 	}
 	int isNULL()
