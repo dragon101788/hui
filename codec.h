@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include "include/autoconf.h"
 using namespace std;
 
 #include "hui.h"
@@ -83,7 +84,7 @@ public:
 		memcpy(pSrcBuffer, buf, SrcSize);
 		unlock();
 	}
-#include "include/autoconf.h"
+
 	void dump_to_buf(void * buf)
 	{
 		lock();

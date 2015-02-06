@@ -25,11 +25,13 @@ public:
 
 		while (go)
 		{
+
 			hu_msgbuf qbuf;
-			msg.read_message(100, &qbuf);
+			msg.read_message(100, &qbuf);//在这里阻塞
 			TiXmlDocument xml;
 			xml.Parse(qbuf.mtext);
 			ParaseUpdateXml3(&xml, g_cur_xml);
+
 		}
 		printf("msg thread exit\r\n");
 	}

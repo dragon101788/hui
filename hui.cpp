@@ -538,7 +538,7 @@ int main(int argc, char *argv[])
 	g_th_touch.init();
 	g_th_msg.create();
 	g_th_timer.create();
-
+	fb.create();
 //	g_cur_xml = new xmlproc(xmlfile);
 //	//g_xml_proc[xmlfile] = g_cur_xml;
 //	g_cur_xml->ParseXMLFile();
@@ -551,6 +551,7 @@ int main(int argc, char *argv[])
 	g_th_touch.wait();
 	printf("wait g_th_touch OK\r\n");
 	g_th_msg.cancel();
+	fb.wait();
 	printf("wait g_th_msg OK\r\n");
 
 	printf("demo exit %d\r\n", go);

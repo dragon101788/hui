@@ -20,10 +20,20 @@ using namespace std;
 #define IOCTL_LCD_DISABLE_INT	_IO('v', 29)
 
 //fbflush fbf;
+extern int go;
+
+//static pthread_mutex_t mutex;
+
+
+
+
+
+
 
 #define RGB565(r,g,b)  ( ((r>>3)&(1<<5)-1)<<11 | ((g>>2)&(1<<6)-1)<<5 | ((b>>3)&(1<<5)-1)<<0 )
 class framebuffer: public Mutex, public thread
 {
+
 public:
 	int lcm_fd;
 	void * pSrcBuffer;
@@ -31,12 +41,62 @@ public:
 	unsigned int u32Width;	// crop width
 	unsigned int u32Height;	// crop height
 	int lcm_dpp;
-	image put;
-	image in_img;
-	image out_img;
+//	image put;
+//	image in_img;
+//	image out_img;
 	hustr snap;
+
+	image *from_img;
+
+    pthread_cond_t cond;
+	int flag;
+
+	void pthread_init()
+	{
+	    pthread_cond_init(&cond,NULL);
+	}
+
+	void pthread_suspend()
+	{
+	    lock();
+	    flag--;
+	    unlock();
+	}
+
+
+	void pthread_resume()
+	{
+		lock();
+	    flag++;
+	    pthread_cond_signal(&cond);
+	    unlock();
+	}
+
+
+
+
 	int run()
 	{
+
+		while(go){
+			lock();
+			while(flag<=0)
+				{
+					pthread_cond_wait(&cond,&mutex);
+				}
+			if(from_img!=NULL){
+				from_img->lock();
+			RenderImageToFrameBuffer_self(from_img);
+				from_img->unlock();
+			}
+
+
+			unlock();
+			pthread_suspend();
+
+
+		}
+		/*
 		//return 0;
 		put.dump_from_buf(pSrcBuffer,u32Width,u32Height);
 		//memcpy(put.pSrcBuffer, pSrcBuffer, SrcSize);
@@ -56,16 +116,17 @@ public:
 			put.Render(&out_img, 0, 0);
 			RenderImageToFrameBuffer(&put);
 			usleep(1000*30);
-		}
+
+			}*/
 	}
 
-	void DumpToXml(image & out)
-	{
-		//cancel();
-		wait();
-		out_img = out;
-		create();
-	}
+//	void DumpToXml(image & out)
+//	{
+//		//cancel();
+//		wait();
+//		out_img = out;
+//		create();
+//	}
 	void DumpToSnap(const char * path)
 	{
 		//cancel();
@@ -77,7 +138,7 @@ public:
 	framebuffer()
 	{
 		Accept();
-
+		/*
 		put.path = "framebuffer change put buf";
 		in_img.path = "framebuffer change in buf";
 		out_img.path = "framebuffer change out buf";
@@ -85,6 +146,10 @@ public:
 		put.SetBuffer(u32Width, u32Height);
 		in_img.SetBuffer(u32Width, u32Height);
 		out_img.SetBuffer(u32Width, u32Height);
+		*/
+		flag=0;
+		pthread_init();
+
 	}
 	~framebuffer()
 	{
@@ -134,7 +199,46 @@ public:
 		lcm_fd = -1;
 	}
 
-	void RenderImageToFrameBuffer(image * img)
+	void RenderImageToFrameBuffer(image * img){
+    	lock();
+		//printf("RenderImageToFrameBuffer!!!\n");
+    	from_img=img;
+    	pthread_resume();
+    	unlock();
+    }
+	void RenderImageToFrameBuffer_self(image * img)
+	{
+		if (img == NULL ||img->isNULL())
+		{
+			huErrExit("RenderFromBuffer Image invalid\r\n");
+		}
+
+		ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
+
+
+		if (lcm_dpp == 16)
+		{
+			//printf("$$$luo$$$ bpp=16\r\n");
+			for(int y=0;y<u32Height;y++)
+			{
+				for(int x=0;x<u32Width;x++)
+				{
+					IMG_PIX * pix = img->GetPix(x,y);
+					*(((unsigned short*)pSrcBuffer)+(y*u32Width+x)) = RGB565(pix->u8Red,pix->u8Green,pix->u8Blue);
+				}
+			}
+		}
+		else if (lcm_dpp == 32)
+		{
+			//printf("$$$luo$$$ bpp=32\r\n");
+			img->dump_to_buf(pSrcBuffer);
+		}
+		//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);
+
+		ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
+
+	}
+	void RenderImageToFrameBuffer_old(image * img)
 	{
 		wait();
 		if (img == NULL ||img->isNULL())

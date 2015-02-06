@@ -291,6 +291,7 @@ private:
 class Mutex
 {
 public:
+	pthread_mutex_t mutex;
 	void lock()
 	{
 		pthread_mutex_lock(&mutex);
@@ -331,7 +332,7 @@ public:
 		pthread_mutexattr_destroy(&mattr);
 	}
 private:
-	pthread_mutex_t mutex;
+
 	pthread_mutexattr_t mattr;
 };
 
@@ -415,6 +416,8 @@ public:
 		}
 
 	}
+
+
 	void wait()
 	{
 		if (tid != -1)

@@ -176,7 +176,7 @@ public:
 		{
 			int ret = ScheduleProc();
 			ProcDraw();
-			FPSWaitFPS(25);
+			FPSWaitFPS(30);
 		}
 	}
 	void ProcDraw()
