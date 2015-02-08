@@ -90,11 +90,11 @@ void element::initstack()
 
 			if (ele->lay < lay && lay != 0)
 			{
-				addeb(ele);
-				ele->addet(this);
+				addeb(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
+				ele->addet(this); //将自己加入顶队列
 
 			}
-			else if (ele->lay > lay)
+			else if (ele->lay > lay) //否则相反
 			{
 				addet(ele);
 				ele->addeb(this);

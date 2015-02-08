@@ -358,9 +358,10 @@ public:
 		if (!eb.empty())
 		{
 			list<element *>::iterator it;
+			element * ele ;
 			for (it = eb.begin(); it != eb.end(); ++it)
 			{
-				element * ele = *it;
+				ele = *it;
 				ele->et.remove(this);
 			}
 		}
@@ -370,15 +371,20 @@ public:
 		if (!eb.empty())
 		{
 			list<element *>::iterator it;
+			element * ele;
+			int s_ofx ; //源x
+			int d_ofx ; //目标x
+			int s_ofy ; //源x
+			int d_ofy ; //目标x
 			for (it = eb.begin(); it != eb.end(); ++it)
 			{
-				element * ele = *it;
+				ele = *it;
 				if (ele->hide == 0)
 				{
 					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
 
-					int s_ofx = 0; //源x
-					int d_ofx = 0; //目标x
+					 s_ofx = 0; //源x
+					 d_ofx = 0; //目标x
 					if (ele->x < x)
 					{
 						s_ofx = x - ele->x;
@@ -391,8 +397,8 @@ public:
 						d_ofx = ele->x - x;
 					}
 
-					int s_ofy = 0; //源x
-					int d_ofy = 0; //目标x
+					 s_ofy = 0; //源x
+					 d_ofy = 0; //目标x
 					if (ele->y < y)
 					{
 						s_ofy = y - ele->y;
@@ -417,9 +423,10 @@ public:
 		if (!et.empty())
 		{
 			list<element *>::iterator it;
+			element * ele;
 			for (it = et.begin(); it != et.end(); ++it)
 			{
-				element * ele = *it;
+				 ele = *it;
 				if (ele->hide == 0)
 				{
 					//printf("$$$HU$$$ RenderET %s <-- %s\r\n", name.c_str(), ele->name.c_str());

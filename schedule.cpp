@@ -21,9 +21,10 @@ int schedule_draw::ScheduleProc()
 		return 0;
 
 	int ret = 0;
+	schedule_ele * ele;
 	while (1)
 	{
-		schedule_ele * ele = que.getele();
+		 ele = que.getele();
 		if (ele == NULL)
 		{
 			break;
