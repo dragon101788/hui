@@ -9,6 +9,8 @@
 #include "hulib.h"
 #include "codec.h"
 #include "autoconf.h"
+#include <semaphore.h>
+
 using namespace std;
 
 #define DEVMEM_GET_STATUS	_IOR('m', 4, unsigned int)
@@ -23,12 +25,6 @@ using namespace std;
 extern int go;
 
 //static pthread_mutex_t mutex;
-
-
-
-
-
-
 
 #define RGB565(r,g,b)  ( ((r>>3)&(1<<5)-1)<<11 | ((g>>2)&(1<<6)-1)<<5 | ((b>>3)&(1<<5)-1)<<0 )
 class framebuffer: public Mutex, public thread
@@ -47,7 +43,7 @@ public:
 	hustr snap;
 
 	image *from_img;
-
+	sem_t sem;//信号量
     pthread_cond_t cond;
 	int flag;
 
@@ -79,21 +75,17 @@ public:
 	{
 
 		while(go){
+			//printf("run  IN!!!\n");
+			sem_wait(&sem);
 			lock();
-			while(flag<=0)
-				{
-					pthread_cond_wait(&cond,&mutex);
-				}
 			if(from_img!=NULL){
-				from_img->lock();
+		//	from_img->lock();
+		//	printf("run  RenderImageToFrameBuffer_self!!!\n");
 			RenderImageToFrameBuffer_self(from_img);
-				from_img->unlock();
+		//	from_img->unlock();
 			}
-
-
 			unlock();
-			pthread_suspend();
-
+		//	printf("run  out!!!\n");
 
 		}
 		/*
@@ -149,6 +141,12 @@ public:
 		*/
 		flag=0;
 		pthread_init();
+		int res = sem_init(&sem, 0, 0);
+		    if(res == -1)
+		    {
+		        perror("semaphore intitialization failed\n");
+		        exit(EXIT_FAILURE);
+		    }
 
 	}
 	~framebuffer()
@@ -200,11 +198,13 @@ public:
 	}
 
 	void RenderImageToFrameBuffer(image * img){
+		//printf("RenderImageToFrameBuffer in!!!\n");
     	lock();
-		//printf("RenderImageToFrameBuffer!!!\n");
     	from_img=img;
-    	pthread_resume();
+    //	pthread_resume();
     	unlock();
+    	sem_post(&sem);
+    //	printf("RenderImageToFrameBuffer out!!!!\n");
     }
 	void RenderImageToFrameBuffer_self(image * img)
 	{
