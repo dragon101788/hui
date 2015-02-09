@@ -653,8 +653,15 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 {
 	int x;
 	int y;
+
+	if (dst_img->SrcGPUAddr() == 0 || src_img->SrcGPUAddr() == 0)
+		{
+			printf("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
+			return;
+		}
 	dst_img->lock();
 	src_img->lock();
+
 	//printf("$$$HU$$$ AreaCopy1 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	//printf("$$$HU$$$ AreaCopy2 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
