@@ -229,6 +229,25 @@ void FontDev::DrawText(text * ptext, const char *encode, char * showtxt,int buff
 	TTF_DisplayUnicode(ptext, mytxt, final_len, ptext->color, ptext->style,buff_width,buff_height,padding_left,padding_top);
 	free(mytxt);
 }
+
+void FontDev::DrawText(text * ptext, const char *encode, char * showtxt,int buff_width,int buff_height, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd)
+{
+
+	unsigned int final_len = 0;
+	unsigned int buf_len = (txt_len + 1) * sizeof(wchar_t) * 2; //当utf8显示字母时有最大占用
+	wchar_t *mytxt = (wchar_t *) malloc(buf_len); //用来存放unicode
+	if (mytxt == NULL)
+	{
+		huErrExit("DrawText:: malloc failed!\n");
+	}
+	memset(mytxt, 0, buf_len);
+
+	final_len = convert("wchar_t", encode, (char *) showtxt, txt_len, (char *) mytxt, buf_len);
+	final_len /= 4; //byte to wchar_t
+
+	TTF_DisplayUnicode(ptext, mytxt, final_len, ptext->color, ptext->style,buff_width,buff_height,padding_left,padding_top,alphaStart,alphaEnd);
+	free(mytxt);
+}
 //int FontDev::TTF_DisplayAscii(text * ptext, const unsigned char *text, int num, unsigned int color, unsigned char style)
 //{
 //	if (face == NULL)
@@ -406,6 +425,74 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		}
 			//ptext->ft_draw_bitmap(&slot->bitmap, x + slot->bitmap_left, y + Font_H - slot->bitmap_top, color);
 			ptext->ft_draw_bitmap(&slot->bitmap, x + slot->bitmap_left, y +Font_H - slot->bitmap_top, color);
+			x += word_w; //可以从此处下手添加自动换行功能
+
+	}
+
+	printf("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
+	return final_num;
+}
+
+int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
+		int buff_width,int buff_height ,int padding_left,int padding_top,float alphaStart,float alphaEnd)
+{
+	int final_num=0;
+	if (face == NULL)
+	{
+		errexitf("font not initialize %s\r\n", text);
+	}
+	int i;
+	U16 fontCode;
+	FT_GlyphSlot slot = face->glyph;
+	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
+	int x = 2+padding_left;//给点余量吧
+	int y = padding_top;
+	printf("TTF_DisplayUnicode!,num=%d\n", num);
+	printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
+
+	setPixelSize(ptext->fontWidth, ptext->fontHeight);
+	for (i = 0; i < num; i++)
+	{
+		if (style & FONT_BOLD)
+		{
+			FT_Pos strength = (1 << 6);
+			FT_Outline_Embolden(&face->glyph->outline, strength);
+		}
+
+		if (style & FONT_ITALIC) //
+		{
+			FT_Set_Transform(face, &matrix, &pen);
+		}
+
+		fontCode = text[i];
+		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
+		if (ft_error)
+		{
+			printf("Error at load char!\n");
+			return -1;
+		}
+
+		if (style & FONT_BOLD)
+		{
+			FT_GlyphSlot_Embolden(slot);
+		}
+		//Font_H for prevent overflow
+		final_num++;//显示文字数加一
+		int word_w=slot->advance.x >> 6;
+
+		if ((x + (word_w)*1.3 ) > buff_width)
+		{
+			if ((y + (Font_H) * 2*1.2) < buff_height)//换行
+			{
+				x = padding_left;
+				//y +=Font_H*1.2;
+				y +=Font_H;
+			}
+			else
+				break;
+		}
+			//ptext->ft_draw_bitmap(&slot->bitmap, x + slot->bitmap_left, y + Font_H - slot->bitmap_top, color);
+			ptext->ft_draw_bitmap_fade(&slot->bitmap, x + slot->bitmap_left, y +Font_H - slot->bitmap_top, color,alphaStart,alphaEnd);
 			x += word_w; //可以从此处下手添加自动换行功能
 
 	}

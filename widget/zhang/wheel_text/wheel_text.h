@@ -11,9 +11,9 @@ private:
 	int num_min,num_max;
 	int step;
 	int set_num;
-	int node_num;
-public:
 
+public:
+	int node_num;
 
 	wheel_text(){
 		node_num=0;
@@ -87,7 +87,12 @@ public:
 
 			int padding_left=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 			int padding_top=(height-size)/2;
-
+			if(id==0){
+				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
+			}else if(id==parent->node_num-1){
+				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
+			}
+			else
 			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 
 			Flush();
@@ -108,6 +113,7 @@ public:
 		int size;
 		int lenth;
 		int buf_len;
+		int id;
 		wheel_text * parent;
 	};
 
@@ -136,6 +142,7 @@ public:
 				if (nodemp[i] == NULL)
 				{
 					nodemp[i] = new node;
+					nodemp[i]->id=i;
 					nodemp[i]->m_mp.fetch(m_mp["node"][i]);
 					nodemp[i]->parent = this;
 					nodemp[i]->xml_mgr = xml_mgr;
@@ -143,6 +150,7 @@ public:
 				}
 
 	    	}
+
 			if(node_num==3){
 
 				if(set_num-step>=num_min&&(set_num+step<=num_max)){

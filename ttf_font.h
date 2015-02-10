@@ -23,6 +23,7 @@ typedef unsigned short U16;
 
 class text;
 
+
 class FontDev: public Mutex
 { //FontDev字体绘制器 ,阻塞绘制元素，同BLT功能一般
 public:
@@ -94,12 +95,16 @@ public:
 			unsigned int txt_len);
 	void DrawText(text * ptext, const char *encode, char * showtxt,int buff_width,int buff_height,
 				unsigned int txt_len,int padding_left,int padding_top);
+	void DrawText(text * ptext, const char *encode, char * showtxt,int buff_width,
+			int buff_height, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd);
 	int TTF_DisplayAscii(text * ptext, const unsigned char *text, int num,
 			unsigned int color, unsigned char style);
 	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num,
 			unsigned int color, unsigned char style,int buff_width,int buff_height);
 	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
 			int buff_width,int buff_height ,int padding_left,int padding_top);
+	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
+			int buff_width,int buff_height ,int padding_left,int padding_top,float alphaStart,float alphaEnd);
 	FT_Library ft_Lib;
 	FT_Face face;
 	FT_UInt glyph_index;
@@ -191,7 +196,48 @@ public:
 			}
 		}
 	}
+  //字体渐渐隐藏显示
+	void ft_draw_bitmap_fade(FT_Bitmap *bitmap, int dst_x, int dst_y,
+				unsigned int color,float startAlpha,float endAlpha)
+		{
+			int y, x;
+			unsigned char gray;
+			float alpha,fadeStep;
+			if (dst_x + bitmap->width > u32Width)
+			{
+				printf("warning ft_draw_bitmap u32Width[%d] to low\r\n",u32Width);
+				return;
+			}
+			if (dst_y + bitmap->rows > u32Height)
+			{
+				printf("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
+				return;
+			}
+			alpha=startAlpha;
+			fadeStep= (startAlpha-endAlpha)/bitmap->rows;
 
+			for (y = 0; y < bitmap->rows; y++)
+			{
+				alpha-=fadeStep;
+				if (dst_y + y > u32Height)
+				{
+					break;
+				}
+				for (x = 0; x < bitmap->width; x++)
+				{
+					if (dst_x + x > u32Width)
+					{
+						break;
+					}
+					gray = bitmap->buffer[y * bitmap->pitch + x]*alpha;
+					//                  printf("gray=%d\n",gray);
+					if (gray > 0)
+					{
+						LCD_PutPixel(dst_x + x, dst_y + y, color, gray);
+					}
+				}
+			}
+		}
 	//int added_txt(unsigned int w, unsigned int h, unsigned int color);
 	//void free_text();
 	//void Disp_txt(unsigned int * pSrcBuffer, unsigned int SrcBuffer_W, unsigned int x, unsigned int y, unsigned int w,unsigned int h);
@@ -223,6 +269,19 @@ public:
 	//						fontHeight, u32Height);
 	//			}
 				m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len,padding_left,padding_top);
+
+			}
+		}
+	void DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd)
+		{
+			if (m_font != NULL)
+			{
+	//			if (fontHeight > u32Height)
+	//			{
+	//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
+	//						fontHeight, u32Height);
+	//			}
+				m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len,padding_left,padding_top,alphaStart, alphaEnd);
 
 			}
 		}
