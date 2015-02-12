@@ -344,8 +344,8 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		//Font_H for prevent overflow
 		final_num++;//显示文字数加一
 		int word_w=slot->advance.x >> 6;
-
-		if ((x + (word_w)*1.3 ) > buff_width)
+		if ((x + slot->bitmap_left+ (word_w) ) > buff_width)
+		//if ((x + (word_w)*1.1 ) > buff_width)
 		{
 			if ((y + Font_H * 2*1.2) < buff_height)//换行
 			{
@@ -412,7 +412,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		final_num++;//显示文字数加一
 		int word_w=slot->advance.x >> 6;
 
-		if ((x + (word_w)*1.3 ) > buff_width)
+		if ((x + slot->bitmap_left+ (word_w) ) > buff_width)
 		{
 			if ((y + (Font_H) * 2*1.2) < buff_height)//换行
 			{
@@ -480,7 +480,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		final_num++;//显示文字数加一
 		int word_w=slot->advance.x >> 6;
 
-		if ((x + (word_w)*1.3 ) > buff_width)
+		if ((x + slot->bitmap_left+ word_w ) > buff_width)
 		{
 			if ((y + (Font_H) * 2*1.2) < buff_height)//换行
 			{

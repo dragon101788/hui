@@ -72,7 +72,9 @@ public:
 		*/
 		if(align_center){
 			padding_left+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			padding_left>0?padding_left:0;
 			padding_top+=(height-size)/2;
+			padding_top>0?padding_top:0;
 			}
 		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 

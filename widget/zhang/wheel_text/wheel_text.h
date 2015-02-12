@@ -64,6 +64,7 @@ public:
 		void doFlushConfig()
 		{
 			PraseElement();
+			hide=parent->hide;
 			//id = m_mp["id"]->getvalue_int();
 			int red = m_mp["red"]->getvalue_int();
 			int green = m_mp["green"]->getvalue_int();
@@ -86,7 +87,9 @@ public:
 			//ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
 
 			int padding_left=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			padding_left>0?padding_left:0;
 			int padding_top=(height-size)/2;
+			padding_top>0?padding_top:0;
 			if(id==0){
 				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
 			}else if(id==parent->node_num-1){
