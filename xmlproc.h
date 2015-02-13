@@ -78,9 +78,10 @@ private:
 		}
 		void RenderToFramebuffer(framebuffer * fb)
 		{
-			lock();
+			//lock();
+		//	printf("before fb->RenderImageToFrameBuffer(this);!!!!!!!!\r\n");
 			fb->RenderImageToFrameBuffer(this);
-			unlock();
+		//	unlock();
 		}
 	};
 	xmlout out;
@@ -174,8 +175,11 @@ public:
 	{
 		while (go && m_exit)
 		{
+			//printf("before ScheduleProc()!!!!!;\r\n");
 			int ret = ScheduleProc();
-			ProcDraw();
+		//	printf("before ProcDraw();!!!!\r\n");
+			ProcDraw();//隐藏元素时这个函数容易锁死！！！！！！！！！！！！
+		//	printf("before FPSWaitFPS(30);!!!!!\r\n");
 			FPSWaitFPS(30);
 		}
 	}
@@ -184,15 +188,15 @@ public:
 		if (fore == 0 || isDraw == 0)
 			return;
 
-		lock();
+		//lock();
 		if (isDraw != 0 && fore == 1 && done == 1)
 		{
-			//printf("%s RenderFromBuffer\r\n",filename.c_str());
-			out.RenderToFramebuffer(&fb);
+			printf("%s RenderFromBuffer\r\n",filename.c_str());
+			out.RenderToFramebuffer(&fb);//此函会造成锁死
 			fps.debug_timer("<fps>");
 			isDraw = 0;
 		}
-		unlock();
+	//	unlock();
 	}
 	void ProcTouch(touch_sample * samp)
 	{
