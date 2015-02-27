@@ -41,8 +41,7 @@ int hu_abs(int number)
                 x = m_mp["x"]->getvalue_int();
                 y = m_mp["y"]->getvalue_int();
 
-                x=x+this->parent->x;
-                y=y+this->parent->y;
+
                 width = m_mp["width"]->getvalue_int();
                 height = m_mp["height"]->getvalue_int();
 
@@ -63,20 +62,24 @@ int hu_abs(int number)
                 }
 				int temp_x=x;
 				int temp_y=y;
+
 				x=x%this->parent->page_w; //取第一页位置
 				y=y%this->parent->page_h; //取第一页位置
+                x=x+this->parent->x;
+                y=y+this->parent->y;
 				initstack();
 				x=temp_x;//还原x
 				y=temp_y;//还原y
-
-			Flush();
+                x=x+this->parent->x;//x为在屏幕中的绝对位置，而非相对位置！！！
+                y=y+this->parent->y;//y为在屏幕中的绝对位置，而非相对位置！！！
+		//	Flush();
 		}
 
 		void doRender()
 		{
               //  printf("this->x=%d,this->cx=%d\n",x,cx);
                //
-			 if(x<this->parent->width&&y<this->parent->height&&x>=0&&y>=0)
+			 if(x-this->parent->x<this->parent->width&&y-this->parent->y<this->parent->height&&x>=0&&y>=0)
 		      image::Render(&this->parent->img[1], x+this->parent->cx-this->parent->x,
 		    		  	  	  	  	  	  	  	   y+this->parent->cy-this->parent->y,width,height,0,0);
 
