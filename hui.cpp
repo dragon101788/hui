@@ -35,6 +35,19 @@ void post_scfg(HUMap & xmlmp, xmlproc * xml)
 		xml->PostScfg(xmlmp);
 	}
 }
+//批量发送scfg
+
+void post_scfg_set(HUMap & xmlmp, xmlproc * xml)
+{
+
+	for (int i = 0; i < xmlmp.count("scfg"); i++)
+	{
+		HUMap & mp = xmlmp["scfg"][i];
+		post_scfg(mp, xml);
+	}
+
+}
+
 
 void huErrExit(const char * str)
 {
@@ -384,6 +397,63 @@ void Parse_gcfg(HUMap & xmlmp, xmlproc * xml)
 	g_th_msg.msg.send_message(101, info);
 }
 
+
+//各种控制集合，如果单纯的scfg集合，建议使用scfgSet
+
+void ParseSet(HUMap & xmlmp, xmlproc * xml)
+{
+
+	for (int i = 0; i < xmlmp.count("scfg"); i++)
+	{
+		HUMap & mp = xmlmp["scfg"][i];
+		post_scfg(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("include"); i++)
+	{
+		HUMap & mp = xmlmp["include"][i];
+		ParseInclude(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("control"); i++)
+	{
+		HUMap & mp = xmlmp["control"][i];
+		ParseControl(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("jump"); i++)
+	{
+		HUMap & mp = xmlmp["jump"][i];
+		ParseJump(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("widget"); i++)
+	{
+		HUMap & mp = xmlmp["widget"][i];
+		ParseWidget(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("cus"); i++)
+	{
+		HUMap & mp = xmlmp["cus"][i];
+		ParseCUS(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("savecus"); i++)
+	{
+		HUMap & mp = xmlmp["savecus"][i];
+		ParseSAVECUS(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("cs"); i++)
+	{
+		HUMap & mp = xmlmp["cs"][i];
+		ParseCS(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("env"); i++)
+	{
+		HUMap & mp = xmlmp["env"][i];
+		ParseEnv(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("gcfg"); i++)
+	{
+		HUMap & mp = xmlmp["gcfg"][i];
+		Parse_gcfg(mp, xml);
+	}
+}
 //HUTMap<XMLinstan_tf> XMLinstan;
 void init_xml_instan()
 {
@@ -397,6 +467,8 @@ void init_xml_instan()
 	XMLinstan["gcfg"] = Parse_gcfg;
 	XMLinstan["cs"] = ParseCS;
 	XMLinstan["env"] = ParseEnv;
+	XMLinstan["scfgSet"] = post_scfg_set;
+	XMLinstan["set"] = ParseSet;
 }
 int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)
 {
