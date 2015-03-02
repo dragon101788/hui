@@ -39,13 +39,13 @@ void post_scfg(HUMap & xmlmp, xmlproc * xml)
 
 void post_scfg_set(HUMap & xmlmp, xmlproc * xml)
 {
-
+	xml->UnDoneProc();
 	for (int i = 0; i < xmlmp.count("scfg"); i++)
 	{
 		HUMap & mp = xmlmp["scfg"][i];
 		post_scfg(mp, xml);
 	}
-
+	xml->DoneProc();
 }
 
 
@@ -402,7 +402,7 @@ void Parse_gcfg(HUMap & xmlmp, xmlproc * xml)
 
 void ParseSet(HUMap & xmlmp, xmlproc * xml)
 {
-
+	xml->UnDoneProc();
 	for (int i = 0; i < xmlmp.count("scfg"); i++)
 	{
 		HUMap & mp = xmlmp["scfg"][i];
@@ -453,6 +453,7 @@ void ParseSet(HUMap & xmlmp, xmlproc * xml)
 		HUMap & mp = xmlmp["gcfg"][i];
 		Parse_gcfg(mp, xml);
 	}
+	xml->DoneProc();
 }
 //HUTMap<XMLinstan_tf> XMLinstan;
 void init_xml_instan()

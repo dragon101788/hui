@@ -175,11 +175,11 @@ public:
 	{
 		while (go && m_exit)
 		{
-			//printf("before ScheduleProc()!!!!!;\r\n");
+			//以FPSWaitFPS()限定的帧率循环刷新屏幕
 			int ret = ScheduleProc();
-		//	printf("before ProcDraw();!!!!\r\n");
-			ProcDraw();//隐藏元素时这个函数容易锁死！！！！！！！！！！！！
-		//	printf("before FPSWaitFPS(30);!!!!!\r\n");
+
+			ProcDraw();
+
 			FPSWaitFPS(30);
 		}
 	}
