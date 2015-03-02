@@ -4,6 +4,9 @@
 #include "XMLInstal.h"
 #include "layer.h"
 #include "thread_msg.h"
+
+
+extern int msgSkip;//当滑动菜单滚动时应该忽略信息处理，此标志谨慎使用
 class keys_slip_menu: public element,  public timer_element
 {
 public:
@@ -128,6 +131,7 @@ int hu_abs(int number)
 			if (dx == cx)
 			{
 				TimerStop();
+				msgSkip=0;
 				if(isFlip)
 				nodemp[select_id]->Flush();
 			}
@@ -165,6 +169,7 @@ int hu_abs(int number)
 									}
 								printf("++OK\r\n", page);
 								TimerSet(0);
+								msgSkip=1;
 								xml_mgr->PostCS(hustr("page%d", page + 1));
 						}else{
 							isFlip=false;
@@ -196,6 +201,7 @@ int hu_abs(int number)
 					 	 }
 				}
 					 TimerSet(0);
+					 msgSkip=1;
 					xml_mgr->PostCS(hustr("page%d", page + 1));
 			}
 		 else{
