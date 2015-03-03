@@ -23,30 +23,7 @@ using namespace std;
 
 #define DEFAULT_XMLFILE "hu.xml"
 
-void post_scfg(HUMap & xmlmp, xmlproc * xml)
-{
-	if (xmlmp.exist("cus"))
-	{
-		hustr cus = xmlmp["cus"]->getvalue();
-		g_xml_proc[cus]->PostScfg(xmlmp);
-	}
-	else
-	{
-		xml->PostScfg(xmlmp);
-	}
-}
-//批量发送scfg
 
-void post_scfg_set(HUMap & xmlmp, xmlproc * xml)
-{
-	xml->UnDoneProc();
-	for (int i = 0; i < xmlmp.count("scfg"); i++)
-	{
-		HUMap & mp = xmlmp["scfg"][i];
-		post_scfg(mp, xml);
-	}
-	xml->DoneProc();
-}
 
 
 void huErrExit(const char * str)
@@ -397,7 +374,68 @@ void Parse_gcfg(HUMap & xmlmp, xmlproc * xml)
 	g_th_msg.msg.send_message(101, info);
 }
 
+//重新绘制页面所有元素
+void ParseRefreshPage(HUMap & xmlmp, xmlproc * xml)
+{
 
+	element_manager::iterator it;
+	element * ele ;
+	for (it = xml->begin(); it != xml->end(); ++it)
+	{
+		 ele = it->second;
+		 //ele->Render();
+		 ele->Flush();
+		// ele->doFlushConfig();
+		// xml->que.addele( ele);
+	}
+
+
+
+}
+
+//重新绘制页面所有元素
+void ParseRefreshElement(HUMap & xmlmp, xmlproc * xml)
+{
+
+	//xml->UnDoneProc();
+
+	for (int i = 0; i < xmlmp.count("element"); i++)
+	{
+		HUMap & mp = xmlmp["element"][i];
+		const char * name = mp["name"]->getvalue();
+		element * ele = xml->GetElementByName(name);
+		 if(ele!=NULL)
+		 ele->Flush();
+	}
+	//xml->DoneProc();
+
+
+}
+
+void post_scfg(HUMap & xmlmp, xmlproc * xml)
+{
+	if (xmlmp.exist("cus"))
+	{
+		hustr cus = xmlmp["cus"]->getvalue();
+		g_xml_proc[cus]->PostScfg(xmlmp);
+	}
+	else
+	{
+		xml->PostScfg(xmlmp);
+	}
+}
+//批量发送scfg
+
+void post_scfg_set(HUMap & xmlmp, xmlproc * xml)
+{
+	xml->UnDoneProc();
+	for (int i = 0; i < xmlmp.count("scfg"); i++)
+	{
+		HUMap & mp = xmlmp["scfg"][i];
+		post_scfg(mp, xml);
+	}
+	xml->DoneProc();
+}
 //各种控制集合，如果单纯的scfg集合，建议使用scfgSet
 
 void ParseSet(HUMap & xmlmp, xmlproc * xml)
@@ -470,6 +508,9 @@ void init_xml_instan()
 	XMLinstan["env"] = ParseEnv;
 	XMLinstan["scfgSet"] = post_scfg_set;
 	XMLinstan["set"] = ParseSet;
+	XMLinstan["reDrawPage"] = ParseRefreshPage;
+	XMLinstan["reDrawElement"] = ParseRefreshElement;
+
 }
 int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)
 {
@@ -600,7 +641,7 @@ int main(int argc, char *argv[])
 	const char * xmlfile = g_var.getvar("xmlfile");
 	if (xmlfile == NULL)
 	{
-		xmlfile = "hu.xml";
+		xmlfile = "home.xml";
 	}
 //	hustr snapfile("%s.png", xmlfile);
 //	if (access(snapfile, F_OK) == 0)
