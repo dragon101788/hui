@@ -356,7 +356,10 @@ public:
 	~slip_menu()
 	{
 		//printf("~drag_menu\r\n");
-	//	imgs.clear();
+		for (int i = 0; i < node_num; i++)
+		{
+			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);
+    	}
 	}
 //	map<int, dm_image> imgs;
 

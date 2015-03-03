@@ -24,6 +24,9 @@ public:
 	}
 	~wheel_text(){
 
+//		printf("~wheel_text()!!!!!!!!!!!!!!!!!!!\n");
+
+		//nodemp.clear();
 	}
 
 
@@ -31,6 +34,7 @@ public:
 	{
 	public:
 		text ttf;
+
 
 		node()
 		{
@@ -45,6 +49,8 @@ public:
 		}
 		~node()
 		{
+			//printf("~node()!!!!!!!!!!!!!!!!!!!\n");
+			//xml_mgr->DelElement(name);
 		}
 
 		void test(const char * abc)
@@ -63,7 +69,49 @@ public:
 		}
 		void doFlushConfig()
 		{
-			PraseElement();
+
+
+			if(m_mp.exist("name"))
+                name = m_mp["name"]->getvalue();
+        		else{
+        		//	printf("need add a default name!!!!!!!\n");
+        			name=hustr("%s-%d",parent->name.c_str(),id);
+        		}
+			int tmpX = m_mp["x"]->getvalue_int();
+			int tmpY = m_mp["y"]->getvalue_int();
+			width = m_mp["width"]->getvalue_int();
+			height = m_mp["height"]->getvalue_int();
+			//hide = m_mp["hide"]->getvalue_int();
+
+			//控件被移动
+			if (tmpX != x || tmpY != y)
+			{
+				Back();
+				x = tmpX;
+				y = tmpY;
+			}
+			//debug(
+			//		"$$$HU$$$ ElementPrase %s x=%d y=%d width=%d height=%d hide=%d\r\n",
+			//		name.c_str(), x, y, width, height, hide);
+
+			if (m_mp.exist("lay"))
+			{
+				lay = m_mp["lay"]->getvalue_int();
+			}
+			else
+			{
+				lay = 5;
+			}
+
+			if (pSrcBuffer == NULL)
+			{
+				//printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+				SetBuffer(width, height);
+				path.format("ele-%s %dx%d", name.c_str(), width, height);
+			}
+			initstack();
+
+
 			hide=parent->hide;
 			//id = m_mp["id"]->getvalue_int();
 			int red = m_mp["red"]->getvalue_int();
@@ -129,6 +177,15 @@ public:
 				//image::Render(&ttf, 0, 0);
 				//	image::Render(&img, 0, 0, width, height, 0, 0);
 			}
+	void doDelete()
+	{
+
+		for (int i = 0; i < node_num; i++)
+		{
+			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);
+    	}
+
+	}
 	void doFlushConfig()
 		{
 
@@ -145,8 +202,10 @@ public:
 				if (nodemp[i] == NULL)
 				{
 					nodemp[i] = new node;
-					nodemp[i]->id=i;
+
+					//nodemp[i]->name=hustr("%s-%d",name.c_str(),i);
 					nodemp[i]->m_mp.fetch(m_mp["node"][i]);
+					nodemp[i]->id=i;
 					nodemp[i]->parent = this;
 					nodemp[i]->xml_mgr = xml_mgr;
 					nodemp[i]->mgr = mgr;
@@ -211,15 +270,16 @@ public:
 			}
 
 			//Flush();
-
+			xml_mgr->UnDoneProc();//统一刷新
 			for (int i = 0; i < node_num; i++)
 				{
+
 				nodemp[i]->FlushConfig();
 				//printf("nodemp[i]->Flush();!!!!!\n");
 				//		nodemp[i]->ttf.DrawText("UTF-8", (char *) nodemp[i]->txt.c_str(), nodemp[i]->txt.length());
 				//		nodemp[i]->Flush();
 				}
-
+			xml_mgr->DoneProc();
 
 		}
 };

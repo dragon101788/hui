@@ -33,14 +33,25 @@ int hu_abs(int number)
 	{
 	public:
         int cx,cy;
+        int id;
 		node()
 		{ 
+			id=0;
 			cx=0;
 			cy=0;
 		}
+		~node()
+		{
+
+		}
 		void doFlushConfig()
 		{
+			if(m_mp.exist("name"))
                 name = m_mp["name"]->getvalue();
+        		else{
+        		//	printf("need add a default name!!!!!!!\n");
+        			name=hustr("%s-%d",parent->name.c_str(),id);
+        		}
                 x = m_mp["x"]->getvalue_int();
                 y = m_mp["y"]->getvalue_int();
 
@@ -107,6 +118,7 @@ int hu_abs(int number)
 			Flush();
 			if (dy == cy)
 			{
+				msgSkip=0;
 				TimerStop();
 				if(isFlip)
 				nodemp[select_id]->Flush();
@@ -130,8 +142,9 @@ int hu_abs(int number)
 			Flush();
 			if (dx == cx)
 			{
-				TimerStop();
 				msgSkip=0;
+				TimerStop();
+
 				if(isFlip)
 				nodemp[select_id]->Flush();
 			}
@@ -329,6 +342,7 @@ int hu_abs(int number)
 			if (nodemp[i] == NULL)
 			{
 				nodemp[i] = new node;
+				nodemp[i]->id=i;
 				nodemp[i]->m_mp.fetch(m_mp["node"][i]);
 				nodemp[i]->parent = this;
 				nodemp[i]->xml_mgr = xml_mgr;
@@ -384,10 +398,17 @@ int hu_abs(int number)
 	    page_node_num=0;
 	//	timer_element::mutex.SetMutex(this);
 	}
+
+	void doDelete()
+	{
+		for (int i = 0; i < node_num; i++)
+		{
+			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);
+    	}
+	}
 	~keys_slip_menu()
 	{
-		//printf("~drag_menu\r\n");
-	//	imgs.clear();
+
 	}
 //	map<int, dm_image> imgs;
 

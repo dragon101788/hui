@@ -87,7 +87,7 @@ last=list_find_last(L);
 for(i=head;i!=last->next;i=i->next)
 {
 //       free(i->img.pSrcBuffer);
-       delete i;//free(head);//删除原来的头        
+       delete i;//free(head);//删除原来的头
 }
 }
 
@@ -120,7 +120,7 @@ int list_add_next_delete_prior(page_list &L,int w,int h)  //前面删一个，�
 		head->next->prior=NULL;
 	//	free(head->img.pSrcBuffer);
 	//	printf("delete head!!!!\r\n");
-		delete head;//free(head);//删除原来的头 	
+		delete head;//free(head);//删除原来的头
 		}
 	return 0;
 }
@@ -153,7 +153,7 @@ int list_add_prior_delete_next(page_list &L,int w,int h)
 		last->prior->next=NULL;
 	//	free(last->img.pSrcBuffer); 
 	//	printf("delete last!!!\n");     
-		delete last;//free(last);//删除原来的尾     
+		delete last;//free(last);//删除原来的尾
 		}
 	return 0;
 }
@@ -185,6 +185,7 @@ public:
 		free(buffer);
 		free(WStr);
 		destroy_list(mylist);
+		word_num_mp.clear();
 	//	delete mylist;
 		
 	}
@@ -289,7 +290,7 @@ public:
 		{
 			if(page==1)
 			py = 0;
-			else  //向上换页 
+			else  //向上换页
 			{
 				py+=height;
 				sy+=height;
@@ -392,7 +393,7 @@ public:
 		const_page=65000;//txt_len/lenth_once+((txt_len%lenth_once)? 1:0);
 		lenth_final=(txt_len%lenth_once)?txt_len%lenth_once:lenth_once;
 		printf("const_page=%d!!!!!!!!!!\n",const_page);
-		init_list(mylist,width,height);//初始化一个有三个元素的链表 
+		init_list(mylist,width,height);//初始化一个有三个元素的链表
 		printf("list init passed !!!!!\n");
                 ttf.SetBuffer(width, height);
 //                ttf.DrawText("UTF-8", (char *) buffer, lenth_once);
