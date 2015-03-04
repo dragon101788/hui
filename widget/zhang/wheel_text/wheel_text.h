@@ -26,7 +26,7 @@ public:
 
 //		printf("~wheel_text()!!!!!!!!!!!!!!!!!!!\n");
 
-		//nodemp.clear();
+		nodemp.clear();
 	}
 
 

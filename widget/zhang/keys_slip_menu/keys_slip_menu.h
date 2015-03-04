@@ -406,11 +406,12 @@ int hu_abs(int number)
 
 	void doDelete()
 	{
-		xml_mgr->DelTimerElement(this);
+
 		for (int i = 0; i < node_num; i++)
 		{
 			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);
     	}
+		xml_mgr->DelTimerElement(this);
 	}
 	~keys_slip_menu()
 	{
