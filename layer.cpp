@@ -155,6 +155,14 @@ void element::FlushConfig()
 	unlock();
 }
 
+void element::FlushConfigReduced()
+{
+	lock();
+	doFlushConfigReduced();
+	xml_mgr->AddElement(name, this);
+	unlock();
+}
+
 void element::ParseModifRes()
 {
 	for (int i = 0; i < m_mp.count("res"); ++i)

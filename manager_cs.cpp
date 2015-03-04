@@ -73,3 +73,20 @@ void CS_manager::PostScfg(HUMap & mp)
 	}
 	unlock();
 }
+void CS_manager::PostPartialConfig(HUMap & mp)
+{
+	lock();
+	hustr name = mp["name"]->getvalue();
+	//printf("PostCS name = %s\r\n", name.c_str());
+
+	element * ele = elemgr->GetElementByName(name);
+	if (ele != NULL)
+	{
+		ele->GetPartialConfig(mp);
+	}
+	else
+	{
+		printf("PostConfig can't find element [%s]\r\n", name.c_str());
+	}
+	unlock();
+}

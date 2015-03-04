@@ -198,7 +198,6 @@ public:
 		if (tmpsize > SrcSize)
 		{
 			destroy();
-
 		}
 		if (pSrcBuffer == NULL)
 		{
@@ -209,11 +208,6 @@ public:
 			}
 		}
 		SrcSize = tmpsize;
-//		int err = posix_memalign(&pSrcBuffer, 4, SrcSize);
-//		if (err)
-//		{
-//			errexitf("posix_memalign failed: width=%d height=%d %s\n", width, height, strerror(err));
-//		}
 
 		u32Width = width;
 		u32Height = height;

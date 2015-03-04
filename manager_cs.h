@@ -22,6 +22,7 @@ public:
 		return;
 	}
 	void PostScfg(HUMap & mp);
+	void PostPartialConfig(HUMap & mp);
 	void PostCS(HUMap::OrderList & mp);
 	void PostCS(const char * str);
 

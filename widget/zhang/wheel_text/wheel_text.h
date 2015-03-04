@@ -70,20 +70,15 @@ public:
 		}
 		void doFlushConfig()
 		{
-
-
 			if(m_mp.exist("name"))
                 name = m_mp["name"]->getvalue();
         		else{
-        		//	printf("need add a default name!!!!!!!\n");
         			name=hustr("%s-%d",parent->name.c_str(),id);
         		}
 			int tmpX = m_mp["x"]->getvalue_int();
 			int tmpY = m_mp["y"]->getvalue_int();
 			width = m_mp["width"]->getvalue_int();
 			height = m_mp["height"]->getvalue_int();
-			//hide = m_mp["hide"]->getvalue_int();
-
 			//控件被移动
 			if (tmpX != x || tmpY != y)
 			{
@@ -91,10 +86,6 @@ public:
 				x = tmpX;
 				y = tmpY;
 			}
-			//debug(
-			//		"$$$HU$$$ ElementPrase %s x=%d y=%d width=%d height=%d hide=%d\r\n",
-			//		name.c_str(), x, y, width, height, hide);
-
 			if (m_mp.exist("lay"))
 			{
 				lay = m_mp["lay"]->getvalue_int();
@@ -111,14 +102,6 @@ public:
 				path.format("ele-%s %dx%d", name.c_str(), width, height);
 			}
 			initstack();
-
-
-			hide=parent->hide;
-			//id = m_mp["id"]->getvalue_int();
-			int red = m_mp["red"]->getvalue_int();
-			int green = m_mp["green"]->getvalue_int();
-			int blue = m_mp["blue"]->getvalue_int();
-			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
 			font = m_mp["font"]->getvalue();
 			style = (unsigned char) m_mp["style"]->getvalue_int();
 			size = m_mp["size"]->getvalue_int();
@@ -130,10 +113,22 @@ public:
 			ttf.color = color;
 			ttf.style = style;
 			//printf("width=%d, height= %d\r\n", width,height);
-			ttf.SetBuffer(width, height);
 
-			//x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
-			//ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
+			doFlushConfigReduced();
+
+		}
+		//仅将后期可能需要改变对的参数放在这里面
+		void doFlushConfigReduced()
+		{
+
+			hide=parent->hide;
+			int red = m_mp["red"]->getvalue_int();
+			int green = m_mp["green"]->getvalue_int();
+			int blue = m_mp["blue"]->getvalue_int();
+			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
+
+			ttf.SetBuffer(width, height);
+			//ttf.cleanBuf();
 
 			int padding_left=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 			padding_left>0?padding_left:0;
@@ -149,6 +144,7 @@ public:
 
 			Flush();
 		}
+
 		void doRender()
 		{
 			//printf("in mode doRender()!!!!!\n");
@@ -189,13 +185,10 @@ public:
 	}
 	void doFlushConfig()
 		{
-
 			PraseElement();
-
 			num_max = m_mp["max"]->getvalue_int();
 			num_min = m_mp["min"]->getvalue_int();
 			step = m_mp["step"]->getvalue_int();
-			set_num= m_mp["set_num"]->getvalue_int();
 
 			node_num=m_mp.count("node");
 			for (int i = 0; i < node_num; i++)
@@ -213,76 +206,93 @@ public:
 				}
 
 	    	}
-
-			if(node_num==3){
-
-				if(set_num-step>=num_min&&(set_num+step<=num_max)){
-					nodemp[0]->txt=hustr("%d",set_num+step);
-					nodemp[1]->txt=hustr("%d",set_num);
-					nodemp[2]->txt=hustr("%d",set_num-step);
-				}
-				else if(set_num==num_min){
-					nodemp[2]->txt=hustr("%d",num_max);
-					nodemp[1]->txt=hustr("%d",set_num);
-					nodemp[0]->txt=hustr("%d",set_num+step);
-
-				}
-				else if(set_num==num_max){
-					nodemp[2]->txt=hustr("%d",set_num-step);
-					nodemp[1]->txt=hustr("%d",set_num);
-					nodemp[0]->txt=hustr("%d",num_min);
-				}
-			}else if(node_num==5){
-				if(set_num-step*2>=num_min&&(set_num+step*2<=num_max)){
-					nodemp[0]->txt=hustr("%d",set_num+step*2);
-					nodemp[1]->txt=hustr("%d",set_num+step);
-					nodemp[2]->txt=hustr("%d",set_num);
-					nodemp[3]->txt=hustr("%d",set_num-step);
-					nodemp[4]->txt=hustr("%d",set_num-step*2);
-				}
-				else if(set_num==num_max){
-					nodemp[0]->txt=hustr("%d",num_min+step);
-					nodemp[1]->txt=hustr("%d",num_min);
-					nodemp[2]->txt=hustr("%d",set_num);
-					nodemp[3]->txt=hustr("%d",set_num-step);
-					nodemp[4]->txt=hustr("%d",set_num-step*2);
-				}
-				else if(set_num==num_max-1){
-					nodemp[0]->txt=hustr("%d",num_min);
-					nodemp[1]->txt=hustr("%d",set_num+step);
-					nodemp[2]->txt=hustr("%d",set_num);
-					nodemp[3]->txt=hustr("%d",set_num-step);
-					nodemp[4]->txt=hustr("%d",set_num-step*2);
-				}
-				else if(set_num==num_min){
-					nodemp[0]->txt=hustr("%d",set_num+step*2);
-					nodemp[1]->txt=hustr("%d",set_num+step);
-					nodemp[2]->txt=hustr("%d",set_num);
-					nodemp[3]->txt=hustr("%d",num_max);
-					nodemp[4]->txt=hustr("%d",num_max-step);
-				}
-				else if(set_num==num_min+1){
-					nodemp[0]->txt=hustr("%d",set_num+step*2);
-					nodemp[1]->txt=hustr("%d",set_num+step);
-					nodemp[2]->txt=hustr("%d",set_num);
-					nodemp[3]->txt=hustr("%d",num_min);
-					nodemp[4]->txt=hustr("%d",num_max);
-				}
-			}
-
-			//Flush();
+			FlushConfigCom();
 			xml_mgr->UnDoneProc();//统一刷新
 			for (int i = 0; i < node_num; i++)
 				{
-
 				nodemp[i]->FlushConfig();
-				//printf("nodemp[i]->Flush();!!!!!\n");
-				//		nodemp[i]->ttf.DrawText("UTF-8", (char *) nodemp[i]->txt.c_str(), nodemp[i]->txt.length());
-				//		nodemp[i]->Flush();
 				}
 			xml_mgr->DoneProc();
-
 		}
+	//此函数仅用于刷新外部需要刷新的情况
+	void doFlushConfigReduced()
+			{
+				hide = m_mp["hide"]->getvalue_int();
+				//set_num= m_mp["set_num"]->getvalue_int();
+				FlushConfigCom();
+				xml_mgr->UnDoneProc();//统一刷新
+				for (int i = 0; i < node_num; i++)
+					{
+					nodemp[i]->FlushConfigReduced();
+					}
+				xml_mgr->DoneProc();
+			}
+	void FlushConfigCom()
+				{
+
+					printf("doFlushConfigCom()!!!!!!!  \n");
+					set_num= m_mp["set_num"]->getvalue_int();
+					if(node_num==3){
+
+						if(set_num-step>=num_min&&(set_num+step<=num_max)){
+							nodemp[0]->txt=hustr("%d",set_num+step);
+							nodemp[1]->txt=hustr("%d",set_num);
+							nodemp[2]->txt=hustr("%d",set_num-step);
+						}
+						else if(set_num==num_min){
+							nodemp[2]->txt=hustr("%d",num_max);
+							nodemp[1]->txt=hustr("%d",set_num);
+							nodemp[0]->txt=hustr("%d",set_num+step);
+
+						}
+						else if(set_num==num_max){
+							nodemp[2]->txt=hustr("%d",set_num-step);
+							nodemp[1]->txt=hustr("%d",set_num);
+							nodemp[0]->txt=hustr("%d",num_min);
+						}
+					}else if(node_num==5){
+						if(set_num-step*2>=num_min&&(set_num+step*2<=num_max)){
+							nodemp[0]->txt=hustr("%d",set_num+step*2);
+							nodemp[1]->txt=hustr("%d",set_num+step);
+							nodemp[2]->txt=hustr("%d",set_num);
+							nodemp[3]->txt=hustr("%d",set_num-step);
+							nodemp[4]->txt=hustr("%d",set_num-step*2);
+						}
+						else if(set_num==num_max){
+							nodemp[0]->txt=hustr("%d",num_min+step);
+							nodemp[1]->txt=hustr("%d",num_min);
+							nodemp[2]->txt=hustr("%d",set_num);
+							nodemp[3]->txt=hustr("%d",set_num-step);
+							nodemp[4]->txt=hustr("%d",set_num-step*2);
+						}
+						else if(set_num==num_max-1){
+							nodemp[0]->txt=hustr("%d",num_min);
+							nodemp[1]->txt=hustr("%d",set_num+step);
+							nodemp[2]->txt=hustr("%d",set_num);
+							nodemp[3]->txt=hustr("%d",set_num-step);
+							nodemp[4]->txt=hustr("%d",set_num-step*2);
+						}
+						else if(set_num==num_min){
+							nodemp[0]->txt=hustr("%d",set_num+step*2);
+							nodemp[1]->txt=hustr("%d",set_num+step);
+							nodemp[2]->txt=hustr("%d",set_num);
+							nodemp[3]->txt=hustr("%d",num_max);
+							nodemp[4]->txt=hustr("%d",num_max-step);
+						}
+						else if(set_num==num_min+1){
+							nodemp[0]->txt=hustr("%d",set_num+step*2);
+							nodemp[1]->txt=hustr("%d",set_num+step);
+							nodemp[2]->txt=hustr("%d",set_num);
+							nodemp[3]->txt=hustr("%d",num_min);
+							nodemp[4]->txt=hustr("%d",num_max);
+						}
+					}
+
+				}
+
+
+
+
 };
 
 

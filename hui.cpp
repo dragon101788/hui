@@ -424,6 +424,20 @@ void post_scfg(HUMap & xmlmp, xmlproc * xml)
 		xml->PostScfg(xmlmp);
 	}
 }
+void parseConfig(HUMap & xmlmp, xmlproc * xml)
+{
+	if (xmlmp.exist("cus"))
+	{
+		hustr cus = xmlmp["cus"]->getvalue();
+		g_xml_proc[cus]->PostPartialConfig(xmlmp);
+	}
+	else
+	{
+		xml->PostPartialConfig(xmlmp);
+	}
+}
+
+
 //批量发送scfg
 
 void post_scfg_set(HUMap & xmlmp, xmlproc * xml)
@@ -503,6 +517,7 @@ void init_xml_instan()
 	XMLinstan["cus"] = ParseCUS;
 	XMLinstan["savecus"] = ParseSAVECUS;
 	XMLinstan["scfg"] = post_scfg;
+	XMLinstan["parseConfig"] = parseConfig;
 	XMLinstan["gcfg"] = Parse_gcfg;
 	XMLinstan["cs"] = ParseCS;
 	XMLinstan["env"] = ParseEnv;

@@ -234,6 +234,7 @@ class element: public schedule_ele, public image, virtual public Mutex
 public:
 	HUMap m_mp;
 	virtual void doFlushConfig() = 0;
+	virtual void doFlushConfigReduced(){};
 	virtual void doRender() = 0;
 	virtual void doGetInfo(info & info)
 	{
@@ -303,6 +304,7 @@ public:
 	void Back();
 
 	void FlushConfig();
+	void FlushConfigReduced();
 
 	void ParseModifRes();
 	void PraseElement()
@@ -351,6 +353,18 @@ public:
 			m_mp[it.key().c_str()] = it.value().getvalue();
 		}
 		FlushConfig();
+		unlock();
+	}
+
+	void GetPartialConfig(HUMap &mp)
+	{
+		lock();
+		HUMap::iterator it;
+		for (it = mp.begin(); it != mp.end(); ++it)
+		{
+			m_mp[it.key().c_str()] = it.value().getvalue();
+		}
+		FlushConfigReduced();
 		unlock();
 	}
 	void ResetEB()
