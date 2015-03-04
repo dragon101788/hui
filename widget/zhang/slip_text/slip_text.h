@@ -189,6 +189,14 @@ public:
 	//	delete mylist;
 		
 	}
+
+
+	void doDelete()
+	{
+
+		xml_mgr->DelTimerElement(this);
+		xml_mgr->DelTouchElement(this);
+	}
 	void doTouchDown()
 	{
 		Flush();
@@ -225,10 +233,6 @@ public:
 		Flush();
 	}
 
-	void doDelete()
-	{
-		xml_mgr->DelTouchElement(this);
-	}
 	int doTimer(int tm)
 	{	
 	//	if(const_page!=1)	

@@ -144,7 +144,7 @@ public:
 	}
 	void destroy()
 	{
-		printf("destroy\n");
+		//printf("destroy ttf\n");
 
 	}
 	void LCD_PutPixel(unsigned int x, unsigned int y, unsigned int color,

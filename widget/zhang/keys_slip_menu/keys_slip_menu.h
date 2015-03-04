@@ -76,16 +76,16 @@ int hu_abs(int number)
                 }
 				int temp_x=x;
 				int temp_y=y;
-
-				x=x%this->parent->page_w; //取第一页位置
-				y=y%this->parent->page_h; //取第一页位置
-                x=x+this->parent->x;
-                y=y+this->parent->y;
+				hide=parent->hide;
+				x=x%parent->page_w; //取第一页位置
+				y=y%parent->page_h; //取第一页位置
+                x=x+parent->x;
+                y=y+parent->y;
 				initstack();
 				x=temp_x;//还原x
 				y=temp_y;//还原y
-                x=x+this->parent->x;//x为在屏幕中的绝对位置，而非相对位置！！！
-                y=y+this->parent->y;//y为在屏幕中的绝对位置，而非相对位置！！！
+                x=x+parent->x;//x为在屏幕中的绝对位置，而非相对位置！！！
+                y=y+parent->y;//y为在屏幕中的绝对位置，而非相对位置！！！
 		//	Flush();
 		}
 
@@ -93,9 +93,9 @@ int hu_abs(int number)
 		{
               //  printf("this->x=%d,this->cx=%d\n",x,cx);
                //
-			 if(x-this->parent->x<this->parent->width&&y-this->parent->y<this->parent->height&&x>=0&&y>=0)
-		      image::Render(&this->parent->img[1], x+this->parent->cx-this->parent->x,
-		    		  	  	  	  	  	  	  	   y+this->parent->cy-this->parent->y,width,height,0,0);
+			 if(x-parent->x<parent->width&&y-parent->y<parent->height&&x>=0&&y>=0)
+		      image::Render(&parent->img[1], x+parent->cx-parent->x,
+		    		  	  	  	  	  	  	  	   y+parent->cy-parent->y,width,height,0,0);
 
 		      //  image::Render(&img[0],               cx ,                                0,    (int)page_w, (int)height, 0,0);
 		}
@@ -325,12 +325,17 @@ int hu_abs(int number)
 				}
 				img[j].path.format("slip_menu-%s output", name.c_str());
 				img[j].SetBuffer(sum_w, sum_h);
-
-				for (int i = 0; i < tmp.size(); i++)
+				int size=  tmp.size();
+				for (int i = 0; i < size; i++)
 				{
 					img[j].Render(&tmp[i], tmp[i].dx,tmp[i].dy);
+					tmp.erase(i);
+					//tmp[i].destroy();
 				}
 				img[j].SaveResource(filename);
+
+
+
 			}
 		   }
 		  }
@@ -401,6 +406,7 @@ int hu_abs(int number)
 
 	void doDelete()
 	{
+		xml_mgr->DelTimerElement(this);
 		for (int i = 0; i < node_num; i++)
 		{
 			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);

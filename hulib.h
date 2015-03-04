@@ -380,15 +380,15 @@ public:
 		printf("call base thread run\r\n");
 	}
 
-	virtual int destory()
+	virtual int destroy()
 	{
-		printf("call base thread destory\r\n");
+		printf("call base thread destroy\r\n");
 	}
 	static void cleanup(void * arg)
 	{
 		thread * is = (thread *) arg;
 		printf("[%s] thread asynchronous interrupt\r\n", is->name.c_str());
-		is->destory();
+		is->destroy();
 	}
 	static void * create_thread(void *arg)
 	{

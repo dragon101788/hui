@@ -44,6 +44,7 @@ public:
 
 	image *from_img;
 	sem_t sem;//信号量
+	/*
     pthread_cond_t cond;
 	int flag;
 
@@ -68,7 +69,7 @@ public:
 	    unlock();
 	}
 
-
+*/
 
 
 	int run()
@@ -139,8 +140,8 @@ public:
 		in_img.SetBuffer(u32Width, u32Height);
 		out_img.SetBuffer(u32Width, u32Height);
 		*/
-		flag=0;
-		pthread_init();
+		//flag=0;
+		//pthread_init();
 		int res = sem_init(&sem, 0, 0);
 		    if(res == -1)
 		    {
@@ -151,7 +152,7 @@ public:
 	}
 	~framebuffer()
 	{
-		Destory();
+		Destroy();
 	}
 	int Accept()
 	{
@@ -184,9 +185,9 @@ public:
 		return 0;
 	}
 
-	void Destory()
+	void Destroy()
 	{
-		printf("$$$HU$$$ framebuffer destory\r\n");
+		printf("$$$HU$$$ framebuffer Destroy\r\n");
 		if (pSrcBuffer != NULL && pSrcBuffer != MAP_FAILED)
 		{
 			munmap(pSrcBuffer, SrcSize);

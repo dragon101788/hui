@@ -105,7 +105,7 @@ public:
 	{
 		if (SrcSize < img.SrcSize)
 		{
-			destory();
+			destroy();
 		}
 		SetBuffer(img.u32Width, img.u32Height);
 		memcpy(pSrcBuffer, img.pSrcBuffer, SrcSize);
@@ -156,7 +156,7 @@ public:
 
 		if (path != filepath)
 		{
-			destory();
+			destroy();
 			path = filepath;
 		}
 	}
@@ -197,7 +197,7 @@ public:
 		int tmpsize = width * height * dep;
 		if (tmpsize > SrcSize)
 		{
-			destory();
+			destroy();
 
 		}
 		if (pSrcBuffer == NULL)
@@ -416,7 +416,7 @@ public:
 
 	virtual ~image()
 	{
-		destory();
+		destroy();
 	}
 
 	//释放空间并不改变其他内容
@@ -424,17 +424,17 @@ public:
 	{
 		if (pSrcBuffer != NULL)
 		{
-			debug("destory image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
+			debug("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
 			free(pSrcBuffer);
 			pSrcBuffer = NULL;
 		}
 	}
-	void destory()
+	void destroy()
 	{
 
 		if (pSrcBuffer != NULL)
 		{
-			debug("destory image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
+			debug("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
 			free(pSrcBuffer);
 			pSrcBuffer = NULL;
 			SrcSize = 0;

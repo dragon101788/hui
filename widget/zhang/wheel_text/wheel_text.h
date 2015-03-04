@@ -33,7 +33,7 @@ public:
 	class node: public element
 	{
 	public:
-		text ttf;
+
 
 
 		node()
@@ -49,6 +49,7 @@ public:
 		}
 		~node()
 		{
+
 			//printf("~node()!!!!!!!!!!!!!!!!!!!\n");
 			//xml_mgr->DelElement(name);
 		}
@@ -159,7 +160,7 @@ public:
 		unsigned int color;
 		hustr font;	//保存路径
 		hustr txt;
-
+		text ttf;
 		unsigned char style;
 		int size;
 		int lenth;

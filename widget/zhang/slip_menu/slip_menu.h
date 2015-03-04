@@ -29,6 +29,11 @@ public:
 	class node: public element, public touch_element
 	{
 	public:
+
+		void doDelete(){
+			xml_mgr->DelTouchElement(this);
+		}
+
 		void doTouchDown()
 		{
 			//printf("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
@@ -360,6 +365,11 @@ public:
 		{
 			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);
     	}
+	}
+	void doDelete()
+	{
+		xml_mgr->DelTimerElement(this);
+		xml_mgr->DelTouchElement(this);
 	}
 //	map<int, dm_image> imgs;
 
