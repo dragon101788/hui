@@ -514,6 +514,15 @@ void ParseFont(HUMap & xmlmp, xmlproc * xml)
 	path = xmlmp["path"]->getvalue();
 
 	printf("ParseFont %s=%s\n", name, path);
+	map<hustr, FontDev>::iterator it;
+	for (it = font_mp.begin(); it != font_mp.end(); ++it)
+	{
+
+		if(it->first==name){
+			printf("font %s had init before\n", name);
+			return ;
+		}
+	}
 	font_mp[name].TTF_Init(path, FT_LOAD_NO_BITMAP | FT_LOAD_RENDER);
 	//printf("get font_mp %x %x\r\n",font_mp[name].face,font_mp[name].ft_Lib);
 }
