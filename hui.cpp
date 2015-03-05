@@ -424,7 +424,8 @@ void post_scfg(HUMap & xmlmp, xmlproc * xml)
 		xml->PostScfg(xmlmp);
 	}
 }
-void parseConfig(HUMap & xmlmp, xmlproc * xml)
+//用于改变动态的参数
+void sendDynamicConfig(HUMap & xmlmp, xmlproc * xml)
 {
 	if (xmlmp.exist("cus"))
 	{
@@ -450,6 +451,17 @@ void post_scfg_set(HUMap & xmlmp, xmlproc * xml)
 	}
 	xml->DoneProc();
 }
+void post_sdcfg_set(HUMap & xmlmp, xmlproc * xml)
+{
+	xml->UnDoneProc();
+	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
+	{
+		HUMap & mp = xmlmp["sdcfg"][i];
+		sendDynamicConfig(mp, xml);
+	}
+	xml->DoneProc();
+}
+
 //各种控制集合，如果单纯的scfg集合，建议使用scfgSet
 
 void ParseSet(HUMap & xmlmp, xmlproc * xml)
@@ -517,11 +529,12 @@ void init_xml_instan()
 	XMLinstan["cus"] = ParseCUS;
 	XMLinstan["savecus"] = ParseSAVECUS;
 	XMLinstan["scfg"] = post_scfg;
-	XMLinstan["parseConfig"] = parseConfig;
+	XMLinstan["sdcfg"] = sendDynamicConfig;
 	XMLinstan["gcfg"] = Parse_gcfg;
 	XMLinstan["cs"] = ParseCS;
 	XMLinstan["env"] = ParseEnv;
 	XMLinstan["scfgSet"] = post_scfg_set;
+	XMLinstan["sdcfgSet"] = post_sdcfg_set;
 	XMLinstan["set"] = ParseSet;
 	XMLinstan["reDrawPage"] = ParseRefreshPage;
 	XMLinstan["reDrawElement"] = ParseRefreshElement;
