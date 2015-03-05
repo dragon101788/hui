@@ -13,13 +13,29 @@ template<class T>
 void Install_Element(HUMap &xmlmp, xmlproc * xml)
 {
 	//xml->mtx.lock();
+
+	const char * name = xmlmp["name"]->getvalue();
+	element * ele;
+	element_manager::iterator it;
+	for (it = xml->begin(); it != xml->end(); ++it)
+	{
+		 ele = it->second;
+		if(ele->name==name){
+			printf("element %s has already added!!!\n",name);
+			return ;
+		}
+	}
 	T * te = new T;
 	te->m_mp.fetch(xmlmp);
 	te->xml_mgr = xml;
 	te->mgr = xml;
 	te->FlushConfig();
 	//xml->mtx.unlock();
+
+
 }
+
+
 
 class InstallXMLinstan
 {

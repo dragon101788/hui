@@ -54,7 +54,7 @@ int hu_abs(int number)
         			name=hustr("%s-%d",parent->name.c_str(),id);
         		}
 
-			printf("%s,doFlushConfig\n",name.c_str());
+		//	printf("%s,doFlushConfig\n",name.c_str());
                 x = m_mp["x"]->getvalue_int();
                 y = m_mp["y"]->getvalue_int();
 
@@ -93,7 +93,7 @@ int hu_abs(int number)
 		}
 		void doFlushConfigReduced()
 		{
-			printf("%s,doFlushConfigReduced node\n",name.c_str());
+		//	printf("%s,doFlushConfigReduced node\n",name.c_str());
 			hide=parent->hide;
 			x = m_mp["x"]->getvalue_int();
 			y = m_mp["y"]->getvalue_int();
@@ -272,7 +272,7 @@ int hu_abs(int number)
 
 	void doRender()
 	{
-		printf("%s,doRender\n",name.c_str());
+	//	printf("%s,doRender\n",name.c_str());
 		image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
 		if(!isFlip)
 		nodemp[select_id]->Flush();//都使用第一页的节点显示
@@ -287,7 +287,7 @@ int hu_abs(int number)
 		if(m_mp["cached"]->getvalue_int())
 		 hide=1;
 		noAnimation=true;
-		printf("%s,doFlushConfig\n",name.c_str());
+	//	printf("%s,doFlushConfig\n",name.c_str());
 		if (m_mp.exist("page"))
 		const_page = m_mp["page"]->getvalue_int()-1;//0代表1页，2代表3页,在xml中1代表1页
                 rsp = m_mp["rsp"]->getvalue_int();
@@ -414,7 +414,7 @@ int hu_abs(int number)
 	}
 	void doFlushConfigReduced()
 	{
-		printf("%s,doFlushConfigReduced\n",name.c_str());
+	//	printf("%s,doFlushConfigReduced\n",name.c_str());
 		hide = m_mp["hide"]->getvalue_int();
 		select_id=m_mp["select"]->getvalue_int();
 		//noAnimation=m_mp["noAnim"]->getvalue_int();
@@ -476,7 +476,6 @@ int hu_abs(int number)
 	{
 
 	}
-//	map<int, dm_image> imgs;
 
 	int sum_w;//menu的宽度
 	int sum_h; 
