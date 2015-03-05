@@ -71,6 +71,18 @@ public:
 		Flush();
 	}
 
+	void doFlushConfigReduced()
+	{
+
+		exec.parse(m_mp);
+		SetRes(0, m_mp["up"]->getvalue());
+		SetRes(1, m_mp["dn"]->getvalue());
+
+		setTextRes();//设置文字相关属性
+
+
+		Flush();
+	}
 	void setTextRes(){
 
 

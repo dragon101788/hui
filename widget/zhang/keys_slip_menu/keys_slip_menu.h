@@ -46,12 +46,15 @@ int hu_abs(int number)
 		}
 		void doFlushConfig()
 		{
+
 			if(m_mp.exist("name"))
                 name = m_mp["name"]->getvalue();
         		else{
         		//	printf("need add a default name!!!!!!!\n");
         			name=hustr("%s-%d",parent->name.c_str(),id);
         		}
+
+			printf("%s,doFlushConfig\n",name.c_str());
                 x = m_mp["x"]->getvalue_int();
                 y = m_mp["y"]->getvalue_int();
 
@@ -86,13 +89,23 @@ int hu_abs(int number)
 				y=temp_y;//还原y
                 x=x+parent->x;//x为在屏幕中的绝对位置，而非相对位置！！！
                 y=y+parent->y;//y为在屏幕中的绝对位置，而非相对位置！！！
-		//	Flush();
-		}
 
+		}
+		void doFlushConfigReduced()
+		{
+			printf("%s,doFlushConfigReduced node\n",name.c_str());
+			hide=parent->hide;
+			x = m_mp["x"]->getvalue_int();
+			y = m_mp["y"]->getvalue_int();
+
+			x=x+parent->x;//x为在屏幕中的绝对位置，而非相对位置！！！
+			y=y+parent->y;//y为在屏幕中的绝对位置，而非相对位置！！！
+		}
 		void doRender()
 		{
               //  printf("this->x=%d,this->cx=%d\n",x,cx);
                //
+			printf("%s,doRender node\n",name.c_str());
 			 if(x-parent->x<parent->width&&y-parent->y<parent->height&&x>=0&&y>=0)
 		      image::Render(&parent->img[1], x+parent->cx-parent->x,
 		    		  	  	  	  	  	  	  	   y+parent->cy-parent->y,width,height,0,0);
@@ -181,8 +194,16 @@ int hu_abs(int number)
 										 }
 									}
 								printf("++OK\r\n", page);
+								if(noAnimation){//首次载入直接进入当前位置，跳过动画
+									//noAnimation=false;
+									isFlip=false;//isFlip最好理解为是否需要动画
+									cy=dy;
+									cx=dx;
+
+								}else{
 								TimerSet(0);
 								msgSkip=1;
+								}
 								xml_mgr->PostCS(hustr("page%d", page + 1));
 						}else{
 							isFlip=false;
@@ -213,8 +234,17 @@ int hu_abs(int number)
 							 nodemp[i]->cx+=page_w*cnt;
 					 	 }
 				}
+					if(noAnimation){//首次载入直接进入当前位置，跳过动画
+						//noAnimation=false;
+						isFlip=false;//isFlip最好理解为是否需要动画
+
+						cy=dy;
+						cx=dx;
+
+					}else{
 					 TimerSet(0);
 					 msgSkip=1;
+					}
 					xml_mgr->PostCS(hustr("page%d", page + 1));
 			}
 		 else{
@@ -242,15 +272,22 @@ int hu_abs(int number)
 
 	void doRender()
 	{
+		printf("%s,doRender\n",name.c_str());
 		image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
 		if(!isFlip)
 		nodemp[select_id]->Flush();//都使用第一页的节点显示
+
+
 	}
 	void doFlushConfig()
 	{
 		int i,j; 
 		PraseElement();
-
+		//cached与hide唯一的区别在于，cache仅在初始化时隐藏，通过sdcfg送任何参数都会将其显示出来
+		if(m_mp["cached"]->getvalue_int())
+		 hide=1;
+		noAnimation=true;
+		printf("%s,doFlushConfig\n",name.c_str());
 		if (m_mp.exist("page"))
 		const_page = m_mp["page"]->getvalue_int()-1;//0代表1页，2代表3页,在xml中1代表1页
                 rsp = m_mp["rsp"]->getvalue_int();
@@ -261,7 +298,7 @@ int hu_abs(int number)
 		if (m_mp.exist("vertical_mode")){
 			vertical_mode=m_mp["vertical_mode"]->getvalue_int();
 		}
-
+		//noAnimation=m_mp["noAnim"]->getvalue_int();
 		page_w=width;
 		page_h=height;
 		if(vertical_mode){
@@ -339,9 +376,13 @@ int hu_abs(int number)
 			}
 		   }
 		  }
-	       	 }
+	     }
 
-                node_num=m_mp.count("node");
+		node_num=m_mp.count("node");
+		if (m_mp.exist("page_node_num"))
+				page_node_num=m_mp["page_node_num"]->getvalue_int();
+		else
+			page_node_num=node_num/(const_page+1);
 		for (int i = 0; i < node_num; i++)
 		{
 			if (nodemp[i] == NULL)
@@ -354,18 +395,11 @@ int hu_abs(int number)
 				nodemp[i]->mgr = mgr;
 			}
 
-			if (m_mp.exist("page_node_num"))
-			        page_node_num=m_mp["page_node_num"]->getvalue_int();
-			else
-				page_node_num=node_num/(const_page+1);
+
 			nodemp[i]->FlushConfig();
 
-
-		//	nodemp[i]->exec.name = name;
 		}
-	//	touch_init_area(x, y, page_w, height);
 
-	//	xml_mgr->AddEleArea( this);
 
 		xml_mgr->AddTimerElement( this);
 		changePage();
@@ -373,13 +407,38 @@ int hu_abs(int number)
 			nodemp[select_id]->y+=nodemp[select_id]->cy;
 		else
 		nodemp[select_id]->x+=nodemp[select_id]->cx;
+
 		Flush();
 
+
 	}
+	void doFlushConfigReduced()
+	{
+		printf("%s,doFlushConfigReduced\n",name.c_str());
+		hide = m_mp["hide"]->getvalue_int();
+		select_id=m_mp["select"]->getvalue_int();
+		//noAnimation=m_mp["noAnim"]->getvalue_int();
+		changePage();
+		for (int i = 0; i < node_num; i++)
+		{
+			nodemp[i]->FlushConfigReduced();
+
+		}
+		if(vertical_mode)
+			nodemp[select_id]->y+=nodemp[select_id]->cy;
+		else
+		nodemp[select_id]->x+=nodemp[select_id]->cx;
+		Flush();
+		if(noAnimation)
+			noAnimation=false;
+	}
+
+
 	keys_slip_menu()
 	{
 		pic_sc=NULL;
 		isFlip=false;
+		//noAnimation=true;
 		node_name=NULL;
 		sum_w = 0;
 		sum_h = 0;
@@ -423,7 +482,7 @@ int hu_abs(int number)
 	int sum_h; 
 	int page_w;//一页的宽度
 	int page_h;//一页的高度
-
+	bool noAnimation;
 	//int op;
 	int select_id;  //哪张图片选中
 	bool isFlip;

@@ -40,10 +40,22 @@ public:
 			printf("doFlushConfig %d %s\r\n",i, m_mp["node"][i]->getvalue());
 			SetRes(i, m_mp["node"][i]->getvalue());
 		}
-
 		ParseModifRes();
+		if(!m_mp["cached"]->getvalue_int()){//如果cached=1标志就不绘制，等待下一次动态参数调整后统一绘制
+			Flush();
+		}
+	}
+	void doFlushConfigReduced()
+	{
+		hide = m_mp["hide"]->getvalue_int();
+		xpos = m_mp["xpos"]->getvalue_int();
+		ypos = m_mp["ypos"]->getvalue_int();
+		id = m_mp["id"]->getvalue_int();
+
 		Flush();
 	}
+
+
 	void doRender()
 	{
 		image::Render(&res[id], xpos, ypos, width, height, 0, 0);

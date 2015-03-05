@@ -114,11 +114,20 @@ public:
 			ttf.style = style;
 			//printf("width=%d, height= %d\r\n", width,height);
 
-			doFlushConfigReduced();
+			doFlushConfigCom();
+			if(!m_mp["cached"]->getvalue_int()){
+				Flush();
+			}
 
 		}
 		//仅将后期可能需要改变对的参数放在这里面
+
 		void doFlushConfigReduced()
+		{
+			doFlushConfigCom();
+			Flush();
+		}
+		void doFlushConfigCom()
 		{
 
 			hide=parent->hide;
@@ -126,7 +135,7 @@ public:
 			int green = m_mp["green"]->getvalue_int();
 			int blue = m_mp["blue"]->getvalue_int();
 			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
-
+			ttf.color = color;
 			ttf.SetBuffer(width, height);
 			//ttf.cleanBuf();
 
@@ -142,7 +151,7 @@ public:
 			else
 			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 
-			Flush();
+
 		}
 
 		void doRender()
@@ -213,6 +222,7 @@ public:
 				nodemp[i]->FlushConfig();
 				}
 			xml_mgr->DoneProc();
+
 		}
 	//此函数仅用于刷新外部需要刷新的情况
 	void doFlushConfigReduced()

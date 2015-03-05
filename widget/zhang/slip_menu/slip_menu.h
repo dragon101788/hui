@@ -240,6 +240,8 @@ public:
 	{
 		int i,j; 
 		PraseElement();
+		if(m_mp["cached"]->getvalue_int())//如果存在noDraw标志就不绘制，等待下一次动态参数
+			hide=1;
 		x_lock = m_mp["x_lock"]->getvalue_int();
 		y_lock = m_mp["y_lock"]->getvalue_int();
 		if (m_mp.exist("page"))
@@ -323,7 +325,8 @@ public:
 				nodemp[i]->xml_mgr = xml_mgr;
 				nodemp[i]->mgr = mgr;
 			}
-			nodemp[i]->FlushConfig();
+
+				nodemp[i]->FlushConfig();
 			nodemp[i]->touch_lock = touch_lock;
 			nodemp[i]->exec.parse(m_mp["node"][i]); // = mp["node"][i]["var"]getvalue();
 		//	nodemp[i]->exec.name = name;
@@ -333,6 +336,28 @@ public:
 		xml_mgr->AddEleArea( this);
 
 		xml_mgr->AddTimerElement( this);
+
+			Flush();
+
+	}
+
+	void doFlushConfigReduced()
+	{
+		int i,j;
+		x_lock = m_mp["x_lock"]->getvalue_int();
+		y_lock = m_mp["y_lock"]->getvalue_int();
+		if (m_mp.exist("page"))
+
+		int touch_lock = m_mp["lock"]->getvalue_int();
+
+		for (int i = 0; i < node_num; i++)
+		{
+
+			nodemp[i]->FlushConfig();
+			nodemp[i]->touch_lock = touch_lock;
+			nodemp[i]->exec.parse(m_mp["node"][i]); // = mp["node"][i]["var"]getvalue();
+		//	nodemp[i]->exec.name = name;
+		}
 		Flush();
 
 	}
