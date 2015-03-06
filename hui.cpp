@@ -517,6 +517,16 @@ void ParseSet(HUMap & xmlmp, xmlproc * xml)
 		HUMap & mp = xmlmp["gcfg"][i];
 		Parse_gcfg(mp, xml);
 	}
+	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
+	{
+		HUMap & mp = xmlmp["sdcfg"][i];
+		sendDynamicConfig(mp, xml);
+	}
+	for (int i = 0; i < xmlmp.count("reDrawElement"); i++)
+	{
+		HUMap & mp = xmlmp["reDrawElement"][i];
+		ParseRefreshElement(mp, xml);
+	}
 	xml->DoneProc();
 }
 //HUTMap<XMLinstan_tf> XMLinstan;
