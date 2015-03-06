@@ -6,14 +6,14 @@
 #include <map>
 using namespace std;
 
-typedef void (*XMLinstan_tf)(HUMap & xmlmp, xmlproc * xml);
+typedef void (*XMLinstan_tf)(hustr parentName,HUMap & xmlmp, xmlproc * xml);
 extern map<hustr, XMLinstan_tf> XMLinstan;
 
 template<class T>
-void Install_Element(HUMap &xmlmp, xmlproc * xml)
+void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 {
 	//xml->mtx.lock();
-
+	debug("parent name=%s !!!!\n",parentName.c_str());
 	const char * name = xmlmp["name"]->getvalue();
 	element * ele;
 	element_manager::iterator it;
@@ -29,6 +29,8 @@ void Install_Element(HUMap &xmlmp, xmlproc * xml)
 	te->m_mp.fetch(xmlmp);
 	te->xml_mgr = xml;
 	te->mgr = xml;
+	if(parentName!=NULL)
+	te->parent=xml->GetElementByName(parentName.c_str());
 	te->FlushConfig();
 	//xml->mtx.unlock();
 

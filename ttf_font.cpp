@@ -507,7 +507,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 map<hustr, FontDev> font_mp;
 
 
-void ParseFont(HUMap & xmlmp, xmlproc * xml)
+void ParseFont(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	const char * path;
 	const char * name = xmlmp["name"]->getvalue();

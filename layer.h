@@ -233,6 +233,7 @@ class element: public schedule_ele, public image, virtual public Mutex
 {
 public:
 	HUMap m_mp;
+	element * parent;
 	virtual void doFlushConfig() = 0;
 	virtual void doFlushConfigReduced(){};
 	virtual void doRender() = 0;
@@ -272,6 +273,8 @@ public:
 	void onSchedule()
 	{
 		debug("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
+		if(parent!=NULL)
+		debug(" parent is %s !!!!!!!!!!1\n",parent->name.c_str());
 		Render();
 		//debug("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
 	}
@@ -284,6 +287,7 @@ public:
 		width = 0;
 		lay = 0;
 		mgr = NULL;
+
 		//RegistdoFlushConfig(element);
 	}
 
@@ -343,6 +347,7 @@ public:
 			path.format("ele-%s %dx%d", name.c_str(), width, height);
 		}
 		initstack();
+
 	}
 	void ModifXmlMap(HUMap &mp)
 	{

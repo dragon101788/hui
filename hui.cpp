@@ -150,7 +150,7 @@ int InitSystem()
 	return 0;
 }
 
-void ParseCUS(HUMap & xmlmp, xmlproc * xml)
+void ParseCUS(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	hustr cus = xmlmp["xmlfile"]->getvalue();
 	//g_cur_xml = &g_xml_proc[cus];
@@ -159,7 +159,7 @@ void ParseCUS(HUMap & xmlmp, xmlproc * xml)
 	g_xml_proc[cus]->doLoader();
 }
 
-void ParseJump(HUMap & xmlmp, xmlproc * xml)
+void ParseJump(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	hustr jump = xmlmp["xmlfile"]->getvalue();
 	hustr snap = xmlmp["snap"]->getvalue();
@@ -170,7 +170,7 @@ void ParseJump(HUMap & xmlmp, xmlproc * xml)
 }
 
 
-void ParseWidget(HUMap & xmlmp, xmlproc * xml)
+void ParseWidget(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	hustr dlfile = xmlmp["dlfile"]->getvalue();
 	g_dl_map[dlfile].open(dlfile);
@@ -180,12 +180,12 @@ void ParseWidget(HUMap & xmlmp, xmlproc * xml)
 }
 
 
-void ParseSAVECUS(HUMap & xmlmp, xmlproc * xml)
+void ParseSAVECUS(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	printf("ParseSAVECUS %s\r\n", xml->filename.c_str());
 	g_xml_proc[xml->filename] = g_cur_xml;
 }
-void ParseEnv(HUMap & xmlmp, xmlproc * xml)
+void ParseEnv(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	HUMap::iterator it;
 	for (it = xmlmp.begin(); it != xmlmp.end(); ++it)
@@ -196,7 +196,7 @@ void ParseEnv(HUMap & xmlmp, xmlproc * xml)
 	}
 }
 
-void ParseControl(HUMap & xmlmp, xmlproc * xml)
+void ParseControl(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	hustr event = xmlmp["event"]->getvalue();
 
@@ -337,7 +337,7 @@ void ParseControl(HUMap & xmlmp, xmlproc * xml)
 
 //XMLMap xmlmp;
 
-void ParseInclude(HUMap & xmlmp, xmlproc * xml)
+void ParseInclude(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 
 	const char * filename = xmlmp["xmlfile"]->getvalue();
@@ -356,12 +356,12 @@ void ParseInclude(HUMap & xmlmp, xmlproc * xml)
 
 }
 
-void ParseCS(HUMap & xmlmp, xmlproc * xml)
+void ParseCS(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	xml->CreateCS(xmlmp["name"]->getvalue(), xmlmp);
 }
 
-void Parse_gcfg(HUMap & xmlmp, xmlproc * xml)
+void Parse_gcfg(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	const char * name = xmlmp["name"]->getvalue();
 	info info;
@@ -375,7 +375,7 @@ void Parse_gcfg(HUMap & xmlmp, xmlproc * xml)
 }
 
 //重新绘制页面所有元素
-void ParseRefreshPage(HUMap & xmlmp, xmlproc * xml)
+void ParseRefreshPage(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 
 	element_manager::iterator it;
@@ -394,7 +394,7 @@ void ParseRefreshPage(HUMap & xmlmp, xmlproc * xml)
 }
 
 //重新绘制页面所有元素
-void ParseRefreshElement(HUMap & xmlmp, xmlproc * xml)
+void ParseRefreshElement(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 
 	//xml->UnDoneProc();
@@ -412,7 +412,7 @@ void ParseRefreshElement(HUMap & xmlmp, xmlproc * xml)
 
 }
 
-void post_scfg(HUMap & xmlmp, xmlproc * xml)
+void post_scfg(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	if (xmlmp.exist("cus"))
 	{
@@ -425,7 +425,7 @@ void post_scfg(HUMap & xmlmp, xmlproc * xml)
 	}
 }
 //用于改变动态的参数
-void sendDynamicConfig(HUMap & xmlmp, xmlproc * xml)
+void sendDynamicConfig(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	if (xmlmp.exist("cus"))
 	{
@@ -441,91 +441,91 @@ void sendDynamicConfig(HUMap & xmlmp, xmlproc * xml)
 
 //批量发送scfg
 
-void post_scfg_set(HUMap & xmlmp, xmlproc * xml)
+void post_scfg_set(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	xml->UnDoneProc();
 	for (int i = 0; i < xmlmp.count("scfg"); i++)
 	{
 		HUMap & mp = xmlmp["scfg"][i];
-		post_scfg(mp, xml);
+		post_scfg(parentName,mp, xml);
 	}
 	xml->DoneProc();
 }
-void post_sdcfg_set(HUMap & xmlmp, xmlproc * xml)
+void post_sdcfg_set(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	xml->UnDoneProc();
 	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
 	{
 		HUMap & mp = xmlmp["sdcfg"][i];
-		sendDynamicConfig(mp, xml);
+		sendDynamicConfig(parentName,mp, xml);
 	}
 	xml->DoneProc();
 }
 
 //各种控制集合，如果单纯的scfg集合，建议使用scfgSet
 
-void ParseSet(HUMap & xmlmp, xmlproc * xml)
+void ParseSet(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 	xml->UnDoneProc();
 	for (int i = 0; i < xmlmp.count("scfg"); i++)
 	{
 		HUMap & mp = xmlmp["scfg"][i];
-		post_scfg(mp, xml);
+		post_scfg(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("include"); i++)
 	{
 		HUMap & mp = xmlmp["include"][i];
-		ParseInclude(mp, xml);
+		ParseInclude(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("control"); i++)
 	{
 		HUMap & mp = xmlmp["control"][i];
-		ParseControl(mp, xml);
+		ParseControl(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("jump"); i++)
 	{
 		HUMap & mp = xmlmp["jump"][i];
-		ParseJump(mp, xml);
+		ParseJump(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("widget"); i++)
 	{
 		HUMap & mp = xmlmp["widget"][i];
-		ParseWidget(mp, xml);
+		ParseWidget(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("cus"); i++)
 	{
 		HUMap & mp = xmlmp["cus"][i];
-		ParseCUS(mp, xml);
+		ParseCUS(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("savecus"); i++)
 	{
 		HUMap & mp = xmlmp["savecus"][i];
-		ParseSAVECUS(mp, xml);
+		ParseSAVECUS(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("cs"); i++)
 	{
 		HUMap & mp = xmlmp["cs"][i];
-		ParseCS(mp, xml);
+		ParseCS(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("env"); i++)
 	{
 		HUMap & mp = xmlmp["env"][i];
-		ParseEnv(mp, xml);
+		ParseEnv(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("gcfg"); i++)
 	{
 		HUMap & mp = xmlmp["gcfg"][i];
-		Parse_gcfg(mp, xml);
+		Parse_gcfg(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
 	{
 		HUMap & mp = xmlmp["sdcfg"][i];
-		sendDynamicConfig(mp, xml);
+		sendDynamicConfig(parentName,mp, xml);
 	}
 	for (int i = 0; i < xmlmp.count("reDrawElement"); i++)
 	{
 		HUMap & mp = xmlmp["reDrawElement"][i];
-		ParseRefreshElement(mp, xml);
+		ParseRefreshElement(parentName,mp, xml);
 	}
 	xml->DoneProc();
 }
@@ -550,15 +550,17 @@ void init_xml_instan()
 	XMLinstan["reDrawElement"] = ParseRefreshElement;
 
 }
-int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)
+//int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)
+int ParseXMLElement2(hustr parentName,hustr name, HUMap & xmlmp, xmlproc * xml)
 {
 	debug("$$$HU$$$ Parse [%s]\r\n", name.c_str());
+
 	//xmlmp.display();
 	XMLinstan_tf fun = XMLinstan[name];
 	if (fun != NULL)
 	{
 		//xml->done = 0;
-		fun(xmlmp, xml);
+		fun(parentName,xmlmp, xml);  //调用Install_Element(HUMap &xmlmp, xmlproc * xml)
 		//xml->done = 1;
 	}
 	else

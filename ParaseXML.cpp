@@ -63,8 +63,8 @@ void ParaseUpdateXml2(TiXmlNode* pParent, HUMap & xmlmp)
 
 }
 
-int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml);
-void ParaseUpdateXml3(TiXmlNode* pParent, xmlproc * xml)
+int ParseXMLElement2(hustr parentName,hustr name, HUMap & xmlmp, xmlproc * xml);
+void ParaseUpdateXml3(hustr parentName,TiXmlNode* pParent, xmlproc * xml)
 {
 	if (pParent == NULL)
 	{
@@ -98,8 +98,16 @@ void ParaseUpdateXml3(TiXmlNode* pParent, xmlproc * xml)
 			ParaseUpdateXml2(pchild, mp);
 		}
 
-		ParseXMLElement2(name, mp, xml);
+		//added by zhangtian this is a ele name ,not ele type
+		hustr  parent_name = mp["name"]->getvalue();
 
+		ParseXMLElement2(parentName,name, mp, xml);
+
+		//added by zhangtian for element nest
+		if (pchild->FirstChild() != NULL && pchild->FirstChild()->Type() == TiXmlNode::TINYXML_ELEMENT)
+		{
+			ParaseUpdateXml3(parent_name,pchild, xml);//用于元素嵌套
+		}
 		pchild = pchild->NextSibling();
 	}
 
@@ -121,7 +129,7 @@ void ParaseTinyXmlFile(const char * file, xmlproc * xml)
 		return;
 	}
 
-	ParaseUpdateXml3(root, xml);
+	ParaseUpdateXml3("",root, xml);
 
 }
 

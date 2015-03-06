@@ -6,7 +6,8 @@ extern int go;
 #include "xmlproc.h"
 #include "HuMsg.h"
 extern int msgSkip;
-void ParaseUpdateXml3(TiXmlNode* pParent, xmlproc * xml);
+//void ParaseUpdateXml3(TiXmlNode* pParent, xmlproc * xml);
+void ParaseUpdateXml3(hustr parentName,TiXmlNode* pParent, xmlproc * xml);
 int ParseXMLElement(HUMap & xmlmp);
 void GetInfo(const char * name, info & info);
 
@@ -32,7 +33,7 @@ public:
 			if(!msgSkip){//当滑动菜单滚动时应该忽略信息处理，此标志谨慎使用
 			TiXmlDocument xml;
 			xml.Parse(qbuf.mtext);
-			ParaseUpdateXml3(&xml, g_cur_xml);
+			ParaseUpdateXml3(NULL,&xml, g_cur_xml);
 			}
 
 		}
