@@ -13,7 +13,7 @@ public:
 	public:
 		void doTouchDown()
 		{
-			//printf("$$$HU$$$ %s %s GetTouchX()=%d GetTouchY()=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,GetTouchX(),GetTouchY(),top,bottom,left,right);
+			//debug("$$$HU$$$ %s %s GetTouchX()=%d GetTouchY()=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,GetTouchX(),GetTouchY(),top,bottom,left,right);
 			if (isdn == 1)
 				return;
 
@@ -60,7 +60,7 @@ public:
 
 			Flush();
 
-			//printf("init end\r\n");
+			//debug("init end\r\n");
 		}
 		void doRender()
 		{
@@ -137,7 +137,7 @@ public:
 
 		Flush();
 
-		printf("Radio_buttons OK\r\n");
+		debug("Radio_buttons OK\r\n");
 	}
 	void doRender()
 	{

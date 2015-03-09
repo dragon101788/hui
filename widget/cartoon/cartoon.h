@@ -23,7 +23,7 @@ public:
 
 	int doTimer(int tm)
 	{
-		//printf("OnTimer time=%d\r\n", fps_time + images[id].ntime);
+		//debug("OnTimer time=%d\r\n", fps_time + images[id].ntime);
 		TimerSet(tm + fps_time + images[id].ntime);
 		if (images[id].exec.have)
 		{
@@ -62,7 +62,7 @@ public:
 		{
 			for (int i = 0; i < m_mp.count("autonode"); i++)
 			{
-				//printf("autonode %d %d\r\n", i, m_mp["autonode"].BrotherCount());
+				//debug("autonode %d %d\r\n", i, m_mp["autonode"].BrotherCount());
 				HUMap & mp = m_mp["autonode"][i];
 				hustr fmt = mp["format"]->getvalue();
 				hustr cnt = mp["id"]->getvalue();
@@ -71,7 +71,7 @@ public:
 				int min = strtoul(cnt.str_key("-"), NULL, 10);
 				int max = strtoul(cnt.str_value("-"), NULL, 10);
 				fmt.Replace("$", "%");
-				//printf("autonode %s %d-%d %d\r\n", fmt.c_str(), min, max, ntime);
+				//debug("autonode %s %d-%d %d\r\n", fmt.c_str(), min, max, ntime);
 				hustr path;
 				for (int i = min; i <= max; i++)
 				{
@@ -80,7 +80,7 @@ public:
 					images[i].SetResource(path);
 					images[id].ntime = ntime;
 
-					//printf("%i %s\r\n", i, path.c_str());
+					//debug("%i %s\r\n", i, path.c_str());
 				}
 
 			}
@@ -94,7 +94,7 @@ public:
 				if (mp.exist("id"))
 				{
 					int id = mp["id"]->getvalue_int();
-					//printf("node id=%d\r\n", id);
+					//debug("node id=%d\r\n", id);
 					images[id].SetResource(mp->getvalue());
 					images[id].ntime = mp["ntime"]->getvalue_int();
 					images[id].exec.parse(mp);
@@ -102,7 +102,7 @@ public:
 				else
 				{
 					int id = images.size();
-					//printf("node id=%d\r\n", id);
+					//debug("node id=%d\r\n", id);
 					images[id].SetResource(mp->getvalue());
 					images[id].ntime = mp["ntime"]->getvalue_int();
 					images[id].exec.parse(mp);

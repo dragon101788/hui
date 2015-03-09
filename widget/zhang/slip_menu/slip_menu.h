@@ -36,8 +36,8 @@ public:
 
 		void doTouchDown()
 		{
-			//printf("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
-	//		printf("node :doTouchDown isdn=%d \n",isdn);
+			//debug("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
+	//		debug("node :doTouchDown isdn=%d \n",isdn);
 			if (isdn == 1)
 				return;
 
@@ -47,7 +47,7 @@ public:
 		void doTouchUp()
 		{
 	
-	//		printf("node :doTouchUp isdn=%d\n",isdn);
+	//		debug("node :doTouchUp isdn=%d\n",isdn);
 			if (isdn == 0)
 				return;
 
@@ -56,7 +56,7 @@ public:
 
 		void doTouchActive()
 		{
-	//		printf("node :doTouchActive\n");
+	//		debug("node :doTouchActive\n");
 			//exec.start();
 			xml_mgr->AddExec(0, exec);
 		}
@@ -85,7 +85,7 @@ public:
 
                 if (isNULL())
                 {
-                        //printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+                        //debug("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
                         SetBuffer(width, height);
                         path.format("ele-%s %dx%d", name.c_str(), width, height);
                 }
@@ -102,8 +102,8 @@ public:
 
 		void doRender()
 		{
-//			printf("node render name=%s ,x=%d!!!!!!!\n small_pic_x=%d y-this->parent->y=%d\n",name.c_str(),x, x+this->parent->cx-this->parent->mx-this->parent->x,y-this->parent->y);
-//			printf("\n");
+//			debug("node render name=%s ,x=%d!!!!!!!\n small_pic_x=%d y-this->parent->y=%d\n",name.c_str(),x, x+this->parent->cx-this->parent->mx-this->parent->x,y-this->parent->y);
+//			debug("\n");
 		        image::Render(&this->parent->img[isdn], x+this->parent->cx-this->parent->mx-this->parent->x, y-this->parent->y,width,height,0,0);
 		}
                 HuExec exec;
@@ -112,7 +112,7 @@ public:
 
 	int doTimer(int tm)
 	{
-	//	printf("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
+	//	debug("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
 		for (int i = 0; i < rcn && cx > dx; i++)
 			if (cx > dx) //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)
 				cx--;
@@ -132,7 +132,7 @@ public:
 	}
 	void doTouchDown()
 	{
-	//	printf("touch_area\r\n");
+	//	debug("touch_area\r\n");
 	//	origin_in();//设置原点或计算移动距离
 
 		if (dx != cx)
@@ -165,18 +165,18 @@ public:
 
 	void doTouchUp()
 	{
-		//printf("free_area ori.move_x()=%d\r\n", ori.move_x());
-	//	printf("cx=%d dx=%d!!!!!!!\n",cx,dx);
+		//debug("free_area ori.move_x()=%d\r\n", ori.move_x());
+	//	debug("cx=%d dx=%d!!!!!!!\n",cx,dx);
 	//	mx = 0;
                 cx=cx-mx;
 		mx=0;
 		if (hu_abs(move_x()) > remax)
 		{ //移动页面
-			printf("move\r\n");
+			debug("move\r\n");
 		//	cx = cx - ori.move_x();
 			if (move_x() > 0)//右移，页面减1
 			{
-				printf("--\r\n");
+				debug("--\r\n");
 				if (page - 1 >= 0)
 				{
 					page--;
@@ -192,8 +192,8 @@ public:
 			}
 			else//左移，页面加一
 			{
-	//			printf("++%d\r\n", page);
-	//			printf("sum_w=%d page_w=%d\r\n", sum_w, page_w);
+	//			debug("++%d\r\n", page);
+	//			debug("sum_w=%d page_w=%d\r\n", sum_w, page_w);
 				if (page + 1 < (sum_w + page_w - 1) / page_w)
 				{
 					page++;
@@ -205,7 +205,7 @@ public:
                				 }
 
 				}
-				printf("++OK\r\n", page);
+				debug("++OK\r\n", page);
 
 
 			}
@@ -282,7 +282,7 @@ public:
 		   }
 	       	  else //使用小图片
 	      	   {
-			printf("use small pic!!!!!!!!!!!!!!!!!!!\n");
+			debug("use small pic!!!!!!!!!!!!!!!!!!!\n");
 			hustr filename("%s_%d.png", name.c_str(),j);
 			if (access_Image(filename))
 			{
@@ -385,7 +385,7 @@ public:
 	}
 	~slip_menu()
 	{
-		//printf("~drag_menu\r\n");
+		//debug("~drag_menu\r\n");
 		for (int i = 0; i < node_num; i++)
 		{
 			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);

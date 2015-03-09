@@ -6,5 +6,5 @@ static InstallXMLinstan install("Radio_buttons",Install_Element<Radio_buttons>);
 
 hucall int init(HUMap & mp,void * data)
 {
-	printf("module init\r\n");
+	debug("module init\r\n");
 }

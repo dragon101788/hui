@@ -50,11 +50,11 @@ int hu_abs(int number)
 			if(m_mp.exist("name"))
                 name = m_mp["name"]->getvalue();
         		else{
-        		//	printf("need add a default name!!!!!!!\n");
+        		//	debug("need add a default name!!!!!!!\n");
         			name=hustr("%s-%d",parent->name.c_str(),id);
         		}
 
-		//	printf("%s,doFlushConfig\n",name.c_str());
+		//	debug("%s,doFlushConfig\n",name.c_str());
                 x = m_mp["x"]->getvalue_int();
                 y = m_mp["y"]->getvalue_int();
 
@@ -73,7 +73,7 @@ int hu_abs(int number)
 
                 if (isNULL())
                 {
-                        //printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+                        //debug("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
                         SetBuffer(width, height);
                         path.format("ele-%s %dx%d", name.c_str(), width, height);
                 }
@@ -93,7 +93,7 @@ int hu_abs(int number)
 		}
 		void doFlushConfigReduced()
 		{
-		//	printf("%s,doFlushConfigReduced node\n",name.c_str());
+		//	debug("%s,doFlushConfigReduced node\n",name.c_str());
 			hide=parent->hide;
 			x = m_mp["x"]->getvalue_int();
 			y = m_mp["y"]->getvalue_int();
@@ -103,9 +103,9 @@ int hu_abs(int number)
 		}
 		void doRender()
 		{
-              //  printf("this->x=%d,this->cx=%d\n",x,cx);
+              //  debug("this->x=%d,this->cx=%d\n",x,cx);
                //
-			printf("%s,doRender node\n",name.c_str());
+			debug("%s,doRender node\n",name.c_str());
 			 if(x-parent->x<parent->width&&y-parent->y<parent->height&&x>=0&&y>=0)
 		      image::Render(&parent->img[1], x+parent->cx-parent->x,
 		    		  	  	  	  	  	  	  	   y+parent->cy-parent->y,width,height,0,0);
@@ -118,7 +118,7 @@ int hu_abs(int number)
 
 	int doTimer(int tm)
 	{
-	//	printf("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
+	//	debug("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
 		if(vertical_mode){
 			for (int i = 0; i < rcn && cy > dy; i++)
 				if (cy > dy){ //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)page-
@@ -170,8 +170,8 @@ int hu_abs(int number)
 
 
 	void changePage(){
-		//printf("page_node_num=%d\r\n", page_node_num);
-		//printf("page=%d\r\n", page);
+		//debug("page_node_num=%d\r\n", page_node_num);
+		//debug("page=%d\r\n", page);
 		if (select_id>=page_node_num*(page+1))//右移，页面+1
 		{
 			int cnt =select_id/(page_node_num*(page+1));
@@ -193,7 +193,7 @@ int hu_abs(int number)
 										  nodemp[i]->cx-=page_w*cnt;
 										 }
 									}
-								printf("++OK\r\n", page);
+								debug("++OK\r\n", page);
 								if(noAnimation){//首次载入直接进入当前位置，跳过动画
 									//noAnimation=false;
 									isFlip=false;//isFlip最好理解为是否需要动画
@@ -218,7 +218,7 @@ int hu_abs(int number)
 			 int cnt = (page_node_num*(page+1)-(select_id+1))/page_node_num;
 			if(page-cnt>=0){
 			    isFlip=true;
-				printf("--\r\n");
+				debug("--\r\n");
 
 				page-=cnt;
 				if(vertical_mode){
@@ -265,14 +265,14 @@ int hu_abs(int number)
 			GetElementInfo(info);
 
 			info.AddInfo("select", select_id);
-			printf("in doGetInfo() select_id=%d\r\n", select_id);
+			debug("in doGetInfo() select_id=%d\r\n", select_id);
 		//	changePage();
 
 		}
 
 	void doRender()
 	{
-	//	printf("%s,doRender\n",name.c_str());
+	//	debug("%s,doRender\n",name.c_str());
 		image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
 		if(!isFlip)
 		nodemp[select_id]->Flush();//都使用第一页的节点显示
@@ -287,7 +287,7 @@ int hu_abs(int number)
 		if(m_mp["cached"]->getvalue_int())
 		 hide=1;
 		noAnimation=true;
-	//	printf("%s,doFlushConfig\n",name.c_str());
+	//	debug("%s,doFlushConfig\n",name.c_str());
 		if (m_mp.exist("page"))
 		const_page = m_mp["page"]->getvalue_int()-1;//0代表1页，2代表3页,在xml中1代表1页
                 rsp = m_mp["rsp"]->getvalue_int();
@@ -341,7 +341,7 @@ int hu_abs(int number)
 		   }
 	       	  else //使用小图片
 	      	   {
-			printf("use small pic!!!!!!!!!!!!!!!!!!!\n");
+			debug("use small pic!!!!!!!!!!!!!!!!!!!\n");
 			hustr filename("%s_%d.png", name.c_str(),j);
 			if (access_Image(filename))
 			{
@@ -414,7 +414,7 @@ int hu_abs(int number)
 	}
 	void doFlushConfigReduced()
 	{
-	//	printf("%s,doFlushConfigReduced\n",name.c_str());
+	//	debug("%s,doFlushConfigReduced\n",name.c_str());
 		hide = m_mp["hide"]->getvalue_int();
 		select_id=m_mp["select"]->getvalue_int();
 		//noAnimation=m_mp["noAnim"]->getvalue_int();

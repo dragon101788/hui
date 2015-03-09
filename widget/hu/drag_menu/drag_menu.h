@@ -32,7 +32,7 @@ public:
 	};
 	int doTimer(int tm)
 	{
-		//printf("drag_menu::OnTimer %dms cx=%d dx=%d\r\n", tm,cx,dx);
+		//debug("drag_menu::OnTimer %dms cx=%d dx=%d\r\n", tm,cx,dx);
 		for (int i = 0; i < rcn && cx > dx; i++)
 			if (cx > dx)
 				cx--;
@@ -75,36 +75,36 @@ public:
 
 	void doTouchUp()
 	{
-		//printf("free_area ori.move_x()=%d\r\n", ori.move_x());
+		//debug("free_area ori.move_x()=%d\r\n", ori.move_x());
 
 		mx = 0;
 		if (hu_abs(move_x()) > remax)
 		{ //移动页面
-			printf("move\r\n");
+			debug("move\r\n");
 			if (move_x() > 0)
 			{
-				printf("--\r\n");
+				debug("--\r\n");
 				if (page - 1 >= 0)
 					page--;
 
 			}
 			else
 			{
-				printf("++%d\r\n", page);
-				printf("sum_w=%d page_w=%d ind_w=%d\r\n", sum_w, page_w, ind_w);
+				debug("++%d\r\n", page);
+				debug("sum_w=%d page_w=%d ind_w=%d\r\n", sum_w, page_w, ind_w);
 				if (page + 1 < (sum_w + page_w - 1) / page_w)
 					page++;
-				printf("++OK\r\n", page);
+				debug("++OK\r\n", page);
 			}
 
-			printf("page = %d\r\n", page);
+			debug("page = %d\r\n", page);
 			for (int i = 0; i < imgs.size(); i++)
 			{
 
 				dm_image * obj = &imgs[i];
 				if (i >= page * row)
 				{
-					//printf("page=%d i=%d\r\n",page,i);
+					//debug("page=%d i=%d\r\n",page,i);
 					//if (cx - ori.move_x() > 0 && cx - ori.move_x() < sum_w)
 					dx = obj->dx;
 					TimerSet(0);
@@ -122,7 +122,7 @@ public:
 				dm_image * obj = &imgs[i];
 				if (i >= page * row)
 				{
-					//printf("page=%d i=%d\r\n",page,i);
+					//debug("page=%d i=%d\r\n",page,i);
 					//if (cx - ori.move_x() > 0 && cx - ori.move_x() < sum_w)
 					cx = cx - move_x();
 					dx = obj->dx;
@@ -138,12 +138,12 @@ public:
 //			{
 //
 //				dm_image * obj = &imgs[i];
-//				//printf("imgs[%d].dx=%d imgs[%d].dx=%d hu_abs(x)+GetTouchX()=%d\r\n",i,imgs[i].dx,i+1,imgs[i+1].dx,hu_abs(x)+GetTouchX());
+//				//debug("imgs[%d].dx=%d imgs[%d].dx=%d hu_abs(x)+GetTouchX()=%d\r\n",i,imgs[i].dx,i+1,imgs[i+1].dx,hu_abs(x)+GetTouchX());
 //				//if (imgs[i].dx < hu_abs(x) + GetTouchX() && imgs[i + 1].dx > hu_abs(x) + GetTouchX())
 //
 ////				if (imgs[i].dx > cx + GetTouchX())
 ////				{
-////					printf("i=%d\r\n", i);
+////					debug("i=%d\r\n", i);
 ////
 ////					index = i;
 ////					xml_mgr->PostCS(hustr("index%d", 1 + ((index - 1) % row)));
@@ -151,7 +151,7 @@ public:
 ////					break;
 ////				}
 //			}
-		//printf("%d %d %d\r\n", imgs[i].dx, cx + GetTouchX(), (cx + GetTouchX()) / ind_w);
+		//debug("%d %d %d\r\n", imgs[i].dx, cx + GetTouchX(), (cx + GetTouchX()) / ind_w);
 			index = (cx + GetTouchX()) / ind_w;
 			xml_mgr->PostCS(hustr("index%d", index));
 			select = &imgs[index];
@@ -172,7 +172,7 @@ public:
 	{
 		if (isdn && hu_abs(move_x()) < remin && cx + (GetTouchX() - x) < sum_w)
 		{
-			printf("%d %d %d %d\r\n", cx, GetTouchX(), x, sum_w);
+			debug("%d %d %d %d\r\n", cx, GetTouchX(), x, sum_w);
 			image::Render(&active,
 					move_x() + active_x + ((GetTouchX() - x) / ind_w) * ind_w,
 					move_y() + active_y);
@@ -300,7 +300,7 @@ public:
 	}
 	~drag_menu()
 	{
-		//printf("~drag_menu\r\n");
+		//debug("~drag_menu\r\n");
 		imgs.clear();
 	}
 	map<int, dm_image> imgs;

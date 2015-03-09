@@ -171,7 +171,7 @@ ssize_t FontDev::convert(const char *tocode, const char *fromcode, char *inbufp,
 	ic = iconv_open(tocode, fromcode);
 	if (ic == (iconv_t) -1)
 	{
-		printf("iconv_open failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
+		debug("iconv_open failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
 		return -1;
 	}
 	while (inbytesleft > 0)
@@ -179,14 +179,14 @@ ssize_t FontDev::convert(const char *tocode, const char *fromcode, char *inbufp,
 		ret = iconv(ic, &inbufp, &inbytesleft, &outbufp, &outbytes);
 		if (ret == -1)
 		{
-			printf("iconv failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
+			debug("iconv failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
 			return -1;
 		}
 	}
 	ret = iconv_close(ic);
 	if (ret == -1)
 	{
-		printf("iconv_close failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
+		debug("iconv_close failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
 		return -1;
 	}
 	return outbytesleft - outbytes;
@@ -312,8 +312,8 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2;//给点余量吧
 	int y = 0;
-	printf("TTF_DisplayUnicode!,num=%d\n", num);
-	printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
+	debug("TTF_DisplayUnicode!,num=%d\n", num);
+	debug("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	for (i = 0; i < num; i++)
@@ -333,7 +333,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
-			printf("Error at load char!\n");
+			debug("Error at load char!\n");
 			return -1;
 		}
 
@@ -362,7 +362,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 	}
 
-	printf("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
+	debug("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
 	return final_num;
 }
 int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
@@ -379,8 +379,8 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2+padding_left;//给点余量吧
 	int y = padding_top;
-	printf("TTF_DisplayUnicode!,num=%d\n", num);
-	printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
+	debug("TTF_DisplayUnicode!,num=%d\n", num);
+	debug("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	for (i = 0; i < num; i++)
@@ -400,7 +400,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
-			printf("Error at load char!\n");
+			debug("Error at load char!\n");
 			return -1;
 		}
 
@@ -429,7 +429,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 	}
 
-	printf("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
+	debug("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
 	return final_num;
 }
 
@@ -447,8 +447,8 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2+padding_left;//给点余量吧
 	int y = padding_top;
-	printf("TTF_DisplayUnicode!,num=%d\n", num);
-	printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
+	debug("TTF_DisplayUnicode!,num=%d\n", num);
+	debug("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	for (i = 0; i < num; i++)
@@ -468,7 +468,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
-			printf("Error at load char!\n");
+			debug("Error at load char!\n");
 			return -1;
 		}
 
@@ -497,7 +497,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 	}
 
-	printf("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
+	debug("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
 	return final_num;
 }
 
@@ -513,13 +513,13 @@ void ParseFont(HUMap & xmlmp, xmlproc * xml)
 	const char * name = xmlmp["name"]->getvalue();
 	path = xmlmp["path"]->getvalue();
 
-	printf("ParseFont %s=%s\n", name, path);
+	debug("ParseFont %s=%s\n", name, path);
 	map<hustr, FontDev>::iterator it;
 	for (it = font_mp.begin(); it != font_mp.end(); ++it)
 	{
 
 		if(it->first==name){
-			printf("font %s had init before\n", name);
+			debug("font %s had init before\n", name);
 			return ;
 		}
 	}

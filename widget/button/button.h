@@ -10,11 +10,11 @@ class button: public element, public touch_element
 public:
 	void doTouchDown()
 	{
-		//printf("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
+		//debug("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
 		if (isdn == 1)
 			return;
 
-		//printf("%s touch\r\n", name.c_str());
+		//debug("%s touch\r\n", name.c_str());
 
 		Flush();
 	}
@@ -24,7 +24,7 @@ public:
 		if (isdn == 0)
 			return;
 
-		//printf("%s free\r\n", name.c_str());
+		//debug("%s free\r\n", name.c_str());
 
 		Flush();
 	}
