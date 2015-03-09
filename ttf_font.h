@@ -254,8 +254,9 @@ public:
 //				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
 //						fontHeight, u32Height);
 //			}
+			this->lock();
 			m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len);
-
+			this->unlock();
 		}
 	}
 
@@ -268,8 +269,9 @@ public:
 	//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
 	//						fontHeight, u32Height);
 	//			}
+				this->lock();
 				m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len,padding_left,padding_top);
-
+				this->unlock();
 			}
 		}
 	void DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd)
@@ -281,8 +283,9 @@ public:
 	//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
 	//						fontHeight, u32Height);
 	//			}
+				this->lock();
 				m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len,padding_left,padding_top,alphaStart, alphaEnd);
-
+				this->unlock();
 			}
 		}
 	int  DrawText_unicode( wchar_t * showtxt, unsigned int txt_len)

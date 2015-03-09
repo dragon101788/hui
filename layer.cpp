@@ -120,12 +120,13 @@ void element::initstack()
 
 void element::Render()
 {
-	lock();
-	RenderEB();
+
+	//lock();
+	RenderEB();  //底层 ，使用的内存复制
 
 	if (hide == 0)
 	{
-		doRender();
+		doRender(); //上层，使用的图层叠加
 	}
 	else
 	{
@@ -133,8 +134,11 @@ void element::Render()
 	}
 
 	xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
-	RenderET();
-	unlock();
+
+	//debug("before RenderET %s hide\r\n", name.c_str());
+	RenderET();  //，下层有变动，通知上层控件更新//删除元素容易导致这里锁死
+	//debug("after RenderET() %s \r\n", name.c_str());
+	//unlock();
 }
 
 void element::Back()

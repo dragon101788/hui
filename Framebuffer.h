@@ -80,10 +80,8 @@ public:
 			sem_wait(&sem);
 			lock();
 			if(from_img!=NULL){
-		//	from_img->lock();
 		//	printf("run  RenderImageToFrameBuffer_self!!!\n");
 			RenderImageToFrameBuffer_self(from_img);
-		//	from_img->unlock();
 			}
 			unlock();
 		//	printf("run  out!!!\n");

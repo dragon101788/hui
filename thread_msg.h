@@ -28,12 +28,15 @@ public:
 		{
 
 			hu_msgbuf qbuf;
+			debug("before msg.read_message!!!!\r\n");
 			msg.read_message(100, &qbuf);//在这里阻塞
 			if(!msgSkip){//当滑动菜单滚动时应该忽略信息处理，此标志谨慎使用
 			TiXmlDocument xml;
 			xml.Parse(qbuf.mtext);
+			debug("before ParaseUpdateXml3!!!!\r\n");
 			ParaseUpdateXml3(&xml, g_cur_xml);
 			}
+			debug("after ParaseUpdateXml3!!!!\r\n");
 
 		}
 		printf("msg thread exit\r\n");

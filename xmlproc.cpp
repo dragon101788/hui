@@ -5,6 +5,8 @@
 
 DebugTimer fps;
 pXmlproc g_cur_xml;
+
+sem_t del_sem;//信号量
 map<hustr, pXmlproc> g_xml_proc;
 
 ProcTimer g_exec;

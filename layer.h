@@ -7,7 +7,7 @@
 #include <deque>
 #include <set>
 using namespace std;
-
+extern sem_t del_sem;//信号量
 class schedule_draw;
 class element_manager;
 class xmlproc;
@@ -263,11 +263,16 @@ public:
 	}
 	void Delete()
 	{
+
 		doDelete();
+		//debug(" after doDelete() element %s!!!!!\r\n", name.c_str());
 		revocation();
+		//debug(" after revocation() element %s!!!!!\r\n", name.c_str());
 		hide = 1;
 		Render();
+		//debug(" after Render() element %s!!!!!\r\n", name.c_str());
 		ResetEB();
+
 	}
 	void onSchedule()
 	{
@@ -386,10 +391,10 @@ public:
 		{
 			list<element *>::iterator it;
 			element * ele;
-			int s_ofx ; //源x
-			int d_ofx ; //目标x
-			int s_ofy ; //源x
-			int d_ofy ; //目标x
+			int s_ofx ; //源复制偏移x
+			int d_ofx ; //复制到目标偏移x
+			int s_ofy ; ////源复制偏移y
+			int d_ofy ; //复制到目标偏移y
 			for (it = eb.begin(); it != eb.end(); ++it)
 			{
 				ele = *it;
@@ -399,7 +404,7 @@ public:
 
 					 s_ofx = 0; //源x
 					 d_ofx = 0; //目标x
-					if (ele->x < x)
+					if (ele->x < x)   //此元素开始x在本元素x左侧，源复制偏移位置为x - ele->x;
 					{
 						s_ofx = x - ele->x;
 						d_ofx = 0;
@@ -566,8 +571,14 @@ public:
 		}
 		else
 		{
+			sem_wait(&del_sem);  //在删除元素的时候，xmlproc线程阻塞
+			//debug(" del layer element %s!!!!\r\n", name);
 			ele->Delete();
+			//debug(" after ele->Delete() element %s!!!!!\r\n", name);
 			elem.erase(name);
+			//debug(" after del layer element %s1111111\r\n", name);
+			sem_post(&del_sem);
+
 		}
 	}
 	element * GetElementByName(const char * name)

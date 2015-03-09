@@ -7,6 +7,7 @@
 #include "Framebuffer.h"
 
 class xmlproc;
+extern sem_t del_sem;//信号量
 typedef SmartPtr<xmlproc> pXmlproc;
 extern pXmlproc g_cur_xml;
 extern map<hustr, pXmlproc> g_xml_proc;
@@ -173,14 +174,22 @@ public:
 	}
 	int run()
 	{
+		int res = sem_init(&del_sem, 0, 1);
+		    if(res == -1)
+		    {
+		        perror("semaphore intitialization failed\n");
+		        exit(EXIT_FAILURE);
+		    }
 		while (go && m_exit)
 		{
 			//以FPSWaitFPS()限定的帧率循环刷新屏幕
+			sem_wait(&del_sem);
 			int ret = ScheduleProc();
 
 			ProcDraw();
 
 			FPSWaitFPS(30);
+			sem_post(&del_sem);
 		}
 	}
 	void ProcDraw()

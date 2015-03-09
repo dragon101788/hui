@@ -14,6 +14,8 @@ void Render_img_to_img(image * dst, image * src, int src_x, int src_y, int cp_wi
 
 	int x;
 	int y;
+	dst->lock();
+	src->lock();
 	for (y = 0; y < cp_height; y++)
 	{
 		for (x = 0; x < cp_width; x++)
@@ -28,4 +30,6 @@ void Render_img_to_img(image * dst, image * src, int src_x, int src_y, int cp_wi
 			//((S_DRVBLT_ARGB8 *) dst->pSrcBuffer + (dst->y + dst_y) * dst->u32Width + dst->x + dst_x)->u8Alpha = 255;
 		}
 	}
+	dst->unlock();
+	src->unlock();
 }
