@@ -665,14 +665,26 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 	//printf("$$$HU$$$ AreaCopy1 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	//printf("$$$HU$$$ AreaCopy2 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
+	int line_byte=cp_width * 4;
+	unsigned int dst_step= dst_img->u32Width;
+	unsigned int src_step= src_img->u32Width;
+	unsigned int * dst_start=(unsigned int *)dst_img->pSrcBuffer +  dst_y * dst_step + dst_x;
+	unsigned int * src_start=(unsigned int *)src_img->pSrcBuffer +  src_y * src_step + src_x;
+	unsigned int dst_offset=0;
+	unsigned int src_offset=0;
 	for (y = 0; y < cp_height; y++)
 	{
 //			for(x=0;x<cp_width;x++)
 //			{
 //				*(((unsigned int *)pSrcBuffer)+dst_x+dst_y*u32Width+x+y*cp_width)=*(((unsigned int *)img->pSrcBuffer)+src_x+src_y*img->u32Width+x+y*cp_width);
 //			}
-		memcpy((unsigned int *) dst_img->pSrcBuffer + (y + dst_y) * dst_img->u32Width + dst_x,
-				(unsigned int *) src_img->pSrcBuffer + (y + src_y) * src_img->u32Width + src_x, cp_width * 4);
+//		memcpy((unsigned int *) dst_img->pSrcBuffer + (y + dst_y) * dst_img->u32Width + dst_x,
+//				(unsigned int *) src_img->pSrcBuffer + (y + src_y) * src_img->u32Width + src_x, line_byte);
+
+		memcpy( dst_start+dst_offset,
+				 src_start+src_offset, line_byte);
+		dst_offset+=dst_step;
+		src_offset+=src_step;
 	}
 
 	dst_img->unlock();
