@@ -131,7 +131,11 @@ void element::Render()
 	{
 		printf("Render %s hide\r\n", name.c_str());
 	}
-
+   //要实现元素嵌套，此处需要修改，控件应该输出到父控件
+//	if(parent!=NULL){
+//		parent->image::Render(this, 0, 0, width, height, x, y);//控件输出到父控件
+//
+//	}else
 	xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
 	RenderET();
 	unlock();
