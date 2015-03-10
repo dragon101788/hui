@@ -110,6 +110,9 @@ void element::Render()
 	if (hide == 0)
 	{
 		doRender();
+		if(!elem.empty()){
+			image::Render(&out, 0, 0, width, height, 0, 0);
+		}
 	}
 	else
 	{
@@ -117,7 +120,8 @@ void element::Render()
 	}
    //要实现元素嵌套，此处需要修改，控件应该输出到父控件
 	if(parent!=NULL){
-
+		if(parent->out.isNULL())
+		parent->out.SetBuffer(parent->width,parent->height);
 		parent->out.Render(this, 0, 0, width, height, x, y);//控件输出到父控件
 
 	}else
