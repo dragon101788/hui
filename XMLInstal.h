@@ -16,6 +16,7 @@ void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 	debug("parent name=%s !!!!\n",parentName.c_str());
 	const char * name = xmlmp["name"]->getvalue();
 	element * ele;
+
 	element_manager::iterator it;
 	for (it = xml->begin(); it != xml->end(); ++it)
 	{
@@ -29,8 +30,14 @@ void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 	te->m_mp.fetch(xmlmp);
 	te->xml_mgr = xml;
 	te->mgr = xml;
-	if(parentName!=NULL)
-	te->parent=xml->GetElementByName(parentName.c_str());
+	if(parentName!=NULL){
+		element * parent;
+		parent=xml->GetElementByName(parentName.c_str());
+		if(parent!=NULL){
+			te->parent=parent;
+			parent->AddElement(name, te);  //父元素添加子元素
+		}
+	}
 	te->FlushConfig();
 	//xml->mtx.unlock();
 

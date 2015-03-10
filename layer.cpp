@@ -62,25 +62,9 @@ int crossAlgorithm(element * r1, element * r2)
 
 void element::initstack()
 {
-//	for (int i = 0; i < m_mp["eb"].BrotherCount(); i++)
-//	{
-//		const char * name = m_mp["eb"][i]["name"]->getvalue();
-//		element * ele = g_ele_mgr.GetElementByName(name);
-//		if (ele != NULL)
-//		{
-//			addeb(ele);
-//		}
-//	}
-//	for (int i = 0; i < m_mp["et"].BrotherCount(); i++)
-//	{
-//		const char * name = m_mp["et"][i]["name"]->getvalue();
-//		element * ele = g_ele_mgr.GetElementByName(name);
-//		if (ele != NULL)
-//		{
-//			addet(ele);
-//		}
-//	}
+
 	element_manager::iterator it;
+
 	for (it = xml_mgr->begin(); it != xml_mgr->end(); ++it)
 	{
 		element * ele = it->second;
@@ -132,10 +116,11 @@ void element::Render()
 		printf("Render %s hide\r\n", name.c_str());
 	}
    //要实现元素嵌套，此处需要修改，控件应该输出到父控件
-//	if(parent!=NULL){
-//		parent->image::Render(this, 0, 0, width, height, x, y);//控件输出到父控件
-//
-//	}else
+	if(parent!=NULL){
+
+		parent->out.Render(this, 0, 0, width, height, x, y);//控件输出到父控件
+
+	}else
 	xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
 	RenderET();
 	unlock();
@@ -257,6 +242,21 @@ void element::ParseModifRes()
 
 	}
 	m_mp.erase("res");
+}
+
+
+ void element_manager::DelElement(const char * name)
+{
+	element * ele = GetElementByName(name);
+	if (ele == NULL)
+	{
+		printf("can't del layer element %s\r\n", name);
+	}
+	else
+	{
+		ele->Delete();
+		elem.erase(name);
+	}
 }
 //image * RollBack::dst = NULL;
 //image * RollBack::src = NULL;
