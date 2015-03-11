@@ -53,7 +53,10 @@ public:
 		PraseElement();
 		exec.parse(m_mp);
 		TouchParaseXml(m_mp);
-		touch_init_area(x, y, width, height);
+		if(hasParent())
+			touch_init_area(x+parent->x, y+parent->y, width, height);
+		else
+			touch_init_area(abs_x, abs_y, width, height);
 
 		SetRes(0, m_mp["up"]->getvalue());
 		SetRes(1, m_mp["dn"]->getvalue());

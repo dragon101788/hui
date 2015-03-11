@@ -206,6 +206,14 @@ public:
 			x = tmpX;
 			y = tmpY;
 		}
+		if(hasParent()){
+		abs_x=x+parent->abs_x;
+		abs_y=y+parent->abs_y;
+		}else{
+			abs_x=x;
+			abs_y=y;
+		}
+
 		debug(
 				"$$$HU$$$ ElementPrase %s x=%d y=%d width=%d height=%d hide=%d\r\n",
 				name.c_str(), x, y, width, height, hide);
@@ -424,8 +432,10 @@ public:
 
 	hustr name;
 	int hide;
-	int x;
+	int x;       //元素的位置是相当父元素的
 	int y;
+	int abs_x;//触摸的位置是相对屏幕绝对的
+	int abs_y;
 	int width;
 	int height;
 	int lay;
