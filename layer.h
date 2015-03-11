@@ -165,7 +165,7 @@ public:
 		width = 0;
 		lay = 0;
 		mgr = NULL;
-		is_father=false;
+		is_parent=false;
 
 		//RegistdoFlushConfig(element);
 	}
@@ -408,17 +408,17 @@ public:
 			res[id].SetResource(path);
 		}
 	}
-	void tobeFather(const char * name,element * son){ //调此函数会添加一个儿子
-		if(!is_father){  //还不是父亲
+	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
+		if(!is_parent){  //还不是父亲
 			out.SetBuffer(width,height);//成为父亲你得想有一个家
-			is_father=true;
+			is_parent=true;
 		}
 		AddElement( name, son);
 	}
-	bool isFather(){
-		return is_father;
+	bool isParent(){
+		return is_parent;
 	}
-	bool hasFather(){
+	bool hasParent(){
 		return parent!=NULL;
 	}
 
@@ -440,7 +440,7 @@ public:
 	list<element *> eb;					//�ײ�ؼ�
 
 	protected:
-	bool is_father;
+	bool is_parent;
 
 };
 

@@ -65,7 +65,7 @@ void element::initstack()
 
 	element_manager::iterator it;
 	element_manager *ele_mgr;
-	if(hasFather()){
+	if(hasParent()){
 		ele_mgr=parent;
 
 	}
@@ -117,7 +117,7 @@ void element::Render()
 	if (hide == 0)
 	{
 		doRender();
-		if(isFather()){
+		if(isParent()){
 			image::Render(&out, 0, 0, width, height, 0, 0);
 		}
 	}
@@ -127,8 +127,8 @@ void element::Render()
 	}
    //要实现元素嵌套，此处需要修改，控件应该输出到父控件
 	if(parent!=NULL){
-		if(!parent->isFather()){
-			parent->tobeFather(name,this);
+		if(!parent->isParent()){
+			parent->tobeParent(name,this);
 		}
 		parent->out.AreaCopy(this, 0, 0, width, height, x, y);//控件输出到父控件
 		parent->Flush();
@@ -144,8 +144,8 @@ void element::Back()
 	lock();
 	RenderEB();
 	if(parent!=NULL){
-		if(!parent->isFather()){
-			parent->tobeFather(name,this);
+		if(!parent->isParent()){
+			parent->tobeParent(name,this);
 		}
 		parent->out.AreaCopy(this, 0, 0, width, height, x, y);//控件输出到父控件
 		parent->Flush();
