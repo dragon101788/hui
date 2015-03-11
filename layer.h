@@ -103,8 +103,8 @@ public:
 class element: public schedule_ele, public image,public element_manager, virtual public Mutex //元素本身也是元素管理者
 {
 public:
-	HUMap m_mp;
-	element * parent;
+
+
 	virtual void doFlushConfig()=0;
 	virtual void doFlushConfigReduced(){};
 	virtual void doRender() = 0;
@@ -165,6 +165,7 @@ public:
 		width = 0;
 		lay = 0;
 		mgr = NULL;
+		is_father=false;
 
 		//RegistdoFlushConfig(element);
 	}
@@ -224,14 +225,7 @@ public:
 			SetBuffer(width, height);
 			path.format("ele-%s %dx%d", name.c_str(), width, height);
 		}
-		if(!elem.empty()){ //有子元素
-			if (out.isNULL())
-			{
-				//printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
-				out.SetBuffer(width, height);
-				//out.path.format("ele-%s %dx%d", name.c_str(), width, height);
-			}
-		}
+
 
 		initstack();
 
@@ -414,6 +408,19 @@ public:
 			res[id].SetResource(path);
 		}
 	}
+	void tobeFather(const char * name,element * son){ //调此函数会添加一个儿子
+		if(!is_father){  //还不是父亲
+			out.SetBuffer(width,height);//成为父亲你得想有一个家
+			is_father=true;
+		}
+		AddElement( name, son);
+	}
+	bool isFather(){
+		return is_father;
+	}
+	bool hasFather(){
+		return parent!=NULL;
+	}
 
 	hustr name;
 	int hide;
@@ -422,12 +429,18 @@ public:
 	int width;
 	int height;
 	int lay;
+	HUMap m_mp;
+	element * parent;
+
 	xmlproc * xml_mgr;
 	map<int, image> res;
 	image  out;  //用于子元素将自己绘制到此处
 	schedule_draw * mgr;
 	list<element *> et;					//�ϲ�ؼ�
 	list<element *> eb;					//�ײ�ؼ�
+
+	protected:
+	bool is_father;
 
 };
 

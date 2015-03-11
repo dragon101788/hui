@@ -64,28 +64,35 @@ void element::initstack()
 {
 
 	element_manager::iterator it;
+	element_manager *ele_mgr;
+	if(hasFather()){
+		ele_mgr=parent;
 
-	for (it = xml_mgr->begin(); it != xml_mgr->end(); ++it)
+	}
+	else
+		ele_mgr=xml_mgr;//有一个问题：非子元素会将子元素考虑进来
+	for (it = ele_mgr->begin(); it != ele_mgr->end(); ++it)
 	{
 		element * ele = it->second;
-		//if(x>ele->x&&y>ele->y&&x+width<ele->x+ele->width&&y+height<ele->y+ele->height)
-		if (crossAlgorithm(ele, this))
-		{
+		if(ele->parent==parent){  //只有当在同一父亲下，或父亲都为0，才相互作用
+			if (crossAlgorithm(ele, this))
+			{
 
-			if (ele->lay < lay && lay != 0)
-			{
-				addeb(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
-				ele->addet(this); //将自己加入顶队列
+				if (ele->lay < lay && lay != 0)
+				{
+					addeb(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
+					ele->addet(this); //将自己加入顶队列
 
-			}
-			else if (ele->lay > lay) //否则相反
-			{
-				addet(ele);
-				ele->addeb(this);
-			}
-			else
-			{
-				//printf("$$$HU$$$ warning %s with %s same layer cross\r\n",name.c_str(),ele->name.c_str());
+				}
+				else if (ele->lay > lay) //否则相反
+				{
+					addet(ele);
+					ele->addeb(this);
+				}
+				else
+				{
+					//printf("$$$HU$$$ warning %s with %s same layer cross\r\n",name.c_str(),ele->name.c_str());
+				}
 			}
 		}
 	}
@@ -110,7 +117,7 @@ void element::Render()
 	if (hide == 0)
 	{
 		doRender();
-		if(!elem.empty()){
+		if(isFather()){
 			image::Render(&out, 0, 0, width, height, 0, 0);
 		}
 	}
@@ -120,9 +127,11 @@ void element::Render()
 	}
    //要实现元素嵌套，此处需要修改，控件应该输出到父控件
 	if(parent!=NULL){
-		if(parent->out.isNULL())
-		parent->out.SetBuffer(parent->width,parent->height);
-		parent->out.Render(this, 0, 0, width, height, x, y);//控件输出到父控件
+		if(!parent->isFather()){
+			parent->tobeFather(name,this);
+		}
+		parent->out.AreaCopy(this, 0, 0, width, height, x, y);//控件输出到父控件
+		parent->Flush();
 
 	}else
 	xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
@@ -134,7 +143,15 @@ void element::Back()
 {
 	lock();
 	RenderEB();
-	xml_mgr->Draw(this, 0, 0, width, height, x, y);
+	if(parent!=NULL){
+		if(!parent->isFather()){
+			parent->tobeFather(name,this);
+		}
+		parent->out.AreaCopy(this, 0, 0, width, height, x, y);//控件输出到父控件
+		parent->Flush();
+
+	}else
+	xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
 	RenderET();
 	unlock();
 

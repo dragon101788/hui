@@ -35,7 +35,8 @@ void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 		parent=xml->GetElementByName(parentName.c_str());
 		if(parent!=NULL){
 			te->parent=parent;
-			parent->AddElement(name, te);  //父元素添加子元素
+			parent->tobeFather(name,te);
+			//parent->AddElement(name, te);  //父元素添加子元素
 		}
 	}
 	te->FlushConfig();
