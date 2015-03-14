@@ -331,6 +331,45 @@ public:
 		initstack();
 
 	}
+/*********************************
+ * for sdcfg
+ * called by FlushConfigReduced()
+ */
+	void rePraseElement()
+	{
+		int tmpX = m_mp["x"]->getvalue_int();
+		int tmpY = m_mp["y"]->getvalue_int();
+		hide = m_mp["hide"]->getvalue_int();
+		if (m_mp.exist("x_page_num"))
+		{
+			x_page_num = m_mp["x_page_num"]->getvalue_int();
+		}
+		if (m_mp.exist("y_page_num"))
+		{
+			y_page_num = m_mp["y_page_num"]->getvalue_int();
+		}
+		//控件被移动
+		if (tmpX != x || tmpY != y)
+		{
+			Back();
+			x = tmpX;
+			y = tmpY;
+		}
+		if(hasParent()){
+		abs_x=x+parent->abs_x-parent->scroll_x;
+		abs_y=y+parent->abs_y-parent->scroll_y;
+		}else{
+			abs_x=x;
+			abs_y=y;
+		}
+		if (m_mp.exist("lay"))
+		{
+			lay = m_mp["lay"]->getvalue_int();
+		}
+		initstack();
+	}
+
+
 	void ModifXmlMap(HUMap &mp)
 	{
 		lock();
