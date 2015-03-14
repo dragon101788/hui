@@ -176,6 +176,9 @@ void element::FlushConfigReduced()
 void element::Delete()
 {
 	doDelete();
+	if(isParent()){
+		delChildren();
+	}
 	revocation();
 	hide = 1;
 	Render();
@@ -302,7 +305,7 @@ void element::ParseModifRes()
 		}
 
  }
- void ele_nest_extend::delChild(){
+ void ele_nest_extend::delChildren(){
 	iterator it;
 	for (it = elem.begin(); it != elem.end(); ++it)
 	{

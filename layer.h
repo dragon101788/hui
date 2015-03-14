@@ -134,7 +134,7 @@ public:
 	 virtual void onAbsPosChanged(){  //用于刷新触摸
 
 	 }
-	 void delChild();
+	 void delChildren();
 
 
 
@@ -179,9 +179,7 @@ public:
 	virtual void doDelete()
 	{
 		printf("warning element bash OnDelete\r\n");
-		if(isParent()){
-			delChild();
-		}
+
 	}
 
 	void GetElementInfo(info & info)
