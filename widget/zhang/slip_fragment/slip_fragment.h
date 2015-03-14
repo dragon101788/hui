@@ -15,7 +15,6 @@ public:
 
 	int doTimer(int tm)
 	{
-
 		for (int i = 0; i < rcn && cx > dx; i++)
 			if (cx > dx) //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)
 				cx--;
@@ -31,6 +30,8 @@ public:
 		Flush();
 		if (dx == cx&&dy == cy)
 		{
+			if(child_lock)
+				children_touch_lock=0;
 			configChildAbsPos();
 			TimerStop();
 		}
@@ -38,7 +39,6 @@ public:
 		{
 			TimerSet(tm + rsp);
 		}
-
 	}
 	void doTouchDown()
 	{
@@ -48,8 +48,8 @@ public:
 //		{
 //			return;
 //		}
-		dx=cx;
-		dy=cy;
+//		dx=cx;
+//		dy=cy;
 		if (cx - move_x() < sum_w)
 		{
 			mx = move_x();
@@ -60,11 +60,22 @@ public:
 			my = move_y();
 
 		}
-		 if (hu_abs(move_x()) < remin&&hu_abs(move_y()) < remin)//在去抖范围内，响应为点击事件
-		{					//确定
+		 if ((hu_abs(move_x()) < remin)&&(hu_abs(move_y()) < remin))//在去抖范围内，响应为点击事件
+		{
+				if(child_lock){
+					children_touch_lock=0;
+
+				}
 		}
-		else
-		Flush();
+		else{ //步子大一点才刷新
+
+			if(child_lock){
+				children_touch_lock=1;
+				configChildAbsPos();
+			}
+			Flush();
+		}
+
 
 	}
 
@@ -98,16 +109,18 @@ public:
 			}
             TimerSet(0);
 			xml_mgr->PostCS(hustr("x_page%d", x_page + 1));
-			Flush();
+			//Flush();
 		}
 		else if (hu_abs(move_x()) < remax && hu_abs(move_x()) > remin)
 		{					//还原页面
 			dx=width*x_page;
 			TimerSet(0);
-			Flush();
+			//Flush();
 		}
 		else if (hu_abs(move_x()) < remin)//在去抖范围内，响应为点击事件
-		{					//确定
+		{
+			cx=dx;
+			Flush();
 		}
 
 /***********************************
@@ -138,16 +151,18 @@ public:
 			}
             TimerSet(0);
 			xml_mgr->PostCS(hustr("y_page%d", y_page + 1));
-			Flush();
+			//Flush();
 		}
 		else if (hu_abs(move_y()) < remax && hu_abs(move_y()) > remin)
 		{					//还原页面
 			dy=height*y_page;
 			TimerSet(0);
-			Flush();
+			//Flush();
 		}
 		else if (hu_abs(move_y()) < remin)//在去抖范围内，响应为点击事件
-		{					//确定
+		{
+			cy=dy;
+			Flush();
 		}
 
 	}
@@ -174,6 +189,7 @@ public:
 		remin = m_mp["remin"]->getvalue_int();
 		x_page=m_mp["x_page"]->getvalue_int();
 		y_page=m_mp["y_page"]->getvalue_int();
+		child_lock=m_mp["child_lock"]->getvalue_int();
 		sum_w=width*x_page_num;
 		sum_h=height*y_page_num;
 
@@ -207,7 +223,7 @@ public:
 		y_page = 0;
 		rsp=0;//返回定时器频率
 		rcn=0;///返回速度
-
+		child_lock=0;
 		remax = 0;
 		remin = 0;
 
@@ -237,7 +253,7 @@ public:
 	int remin;
 	int rsp;//返回定时器频率
 	int rcn;///返回速度
-
+	int child_lock;
 
 };
 

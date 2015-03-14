@@ -8,6 +8,22 @@ void element::Flush()
 	if (mgr != NULL)
 	{
 		lock();
+		resetRenderOffset();//父控件主动绘制时恢复整个控件输出
+		mgr->que.addele(this);
+		unlock();
+	}
+	else
+	{
+		errexitf("$$$$HU$$$$ Flush element %s manager is NULL\r\n",
+				name.c_str());
+	}
+}
+
+void element::Flush_for_Child()
+{
+	if (mgr != NULL)
+	{
+		lock();
 		mgr->que.addele(this);
 		unlock();
 	}
@@ -111,7 +127,7 @@ void element::initstack()
 
 void element::Render()
 {
-	lock();
+	//lock();
 	RenderEB();
 
 	if (hide == 0)
@@ -119,8 +135,8 @@ void element::Render()
 		doRender();
 		if(isParent()){
 			//scroll_x:从内容显示起始位置开始区域叠加
-			image::Render(&out, scroll_x, scroll_y, width, height, 0, 0);
 			//image::Render(&out, scroll_x, scroll_y, width, height, 0, 0);
+			image::Render(&out, scroll_x+render_offset_x, scroll_y+render_offset_y, render_width, render_height, render_offset_x, render_offset_y);
 		}
 	}
 	else
@@ -132,13 +148,17 @@ void element::Render()
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
-		parent->out.AreaCopy(this, 0, 0, width, height, x, y);//控件输出到父控件
-		parent->Flush();
+		//parent->Draw(this, 0, 0, width, height, x, y);//控件输出到父控件
+		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
+		parent->Flush_for_Child();
 
-	}else
-	xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
+
+	}else{
+	//xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
+	xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+	}
 	RenderET();
-	unlock();
+	//unlock();
 }
 
 void element::Back()
@@ -158,7 +178,24 @@ void element::Back()
 	unlock();
 
 }
-
+//void element::Back()
+//{
+//	lock();
+//	RenderEB();
+//	if(parent!=NULL){
+//		if(!parent->isParent()){
+//			parent->tobeParent(name,this);
+//		}
+//		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
+//		parent->Flush_for_Child();
+//
+//	}else
+//	xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+//
+//	RenderET();
+//	unlock();
+//
+//}
 void element::FlushConfig()
 {
 	lock();

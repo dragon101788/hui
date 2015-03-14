@@ -114,7 +114,7 @@ public:
  * ele_nest_extend 此类为了扩展元素嵌套功能独立出来的。如果需要实现控件嵌套，元素必须继承它
  *
  */
-class ele_nest_extend:public element_manager,virtual public window{
+class ele_nest_extend:virtual public window,public element_manager, virtual public Mutex{
 public:
 
 	ele_nest_extend(){
@@ -124,12 +124,15 @@ public:
 		y_page_num=1;
 		scroll_x=0; //卷轴x，窗口处在当前内容的位置 ，用于内容比窗口大的元素
 	    scroll_y=0;
-		render_x=0;//以下四个参数实现元素部分输出到绘图容器，实现控件的部分刷新
-	    render_y=0;
+	    render_offset_x=0;//以下四个参数实现元素部分输出到绘图容器，实现控件的部分刷新
+	    render_offset_y=0;
 		render_width=0;
 		render_height=0;
 		parent=NULL;
 		is_parent=false;
+		children_x_lock = 0;
+		children_y_lock = 0;
+		children_touch_lock=0;
 	}
 	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
 		if(!is_parent){  //还不是父亲
@@ -151,8 +154,21 @@ public:
 	 }
 	 void delChildren();
 
-
-
+	void Draw(image *src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y){
+		lock();
+		render_offset_x=dst_x%width;//偏移位置不能超过页面宽度
+		render_offset_y=dst_y%height;
+		render_width=cp_width;
+		render_height=cp_height;
+		out.AreaCopy(src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);//控件输出到父控件
+		unlock();
+	}
+	void resetRenderOffset(){
+		render_offset_x=0;
+		render_offset_y=0;
+		render_width=width;
+		render_height=height;
+	}
 
 	int abs_x;//触摸的位置是相对屏幕绝对的
 	int abs_y;
@@ -160,12 +176,19 @@ public:
 	int y_page_num;
 	int scroll_x; //卷轴x，窗口处在当前内容的位置 ，用于内容比窗口大的元素
 	int scroll_y;
-	int render_x;//以下四个参数实现元素部分输出到绘图容器，实现控件的部分刷新
-	int render_y;
+	int render_offset_x;//以下四个参数实现元素部分输出到绘图容器，实现控件的部分刷新
+	int render_offset_y;
 	int render_width;
 	int render_height;
+	int children_x_lock;
+	int children_y_lock;
+	int children_touch_lock;
 	element * parent;
-	image  out;  //用于子元素将自己绘制到此处
+
+	image out;
+
+
+
 
 
 protected:
@@ -175,7 +198,7 @@ protected:
 
 
 
-class element:virtual public window, public schedule_ele, public image,public ele_nest_extend, virtual public Mutex //元素本身也是元素管理者
+class element:virtual public window, public schedule_ele, public image,virtual public ele_nest_extend, virtual public Mutex //元素本身也是元素管理者
 {
 public:
 
@@ -248,6 +271,7 @@ public:
 		}
 	}
 	void Flush();
+	void Flush_for_Child();
 	void revocation();
 
 	void Render();
@@ -264,6 +288,8 @@ public:
 		int tmpY = m_mp["y"]->getvalue_int();
 		width = m_mp["width"]->getvalue_int();
 		height = m_mp["height"]->getvalue_int();
+		render_width=width;
+		render_height=height;
 		hide = m_mp["hide"]->getvalue_int();
 		if (m_mp.exist("x_page_num"))
 		{
@@ -341,6 +367,62 @@ public:
 			}
 		}
 	}
+//	void RenderEB()
+//	{
+//		if (!eb.empty())
+//		{
+//			list<element *>::iterator it;
+//			element * ele;
+//			int s_ofx ; //源x
+//			int d_ofx ; //目标x
+//			int s_ofy ; //源x
+//			int d_ofy ; //目标x
+//			for (it = eb.begin(); it != eb.end(); ++it)
+//			{
+//				ele = *it;
+//				if (ele->hide == 0)
+//				{
+//					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
+//
+//					 s_ofx = 0; //源偏移x
+//					 d_ofx = 0; //目标偏移x
+//					if (ele->x < x)
+//					{
+//						s_ofx = x - ele->x;
+//						d_ofx = 0;
+//					}
+//					else if (ele->x > x)
+//					{
+//						s_ofx = 0;
+//						//d_ofx = width - (x + width - ele->x);
+//						d_ofx = ele->x - x;
+//					}
+//
+//					 s_ofy = 0; //源x
+//					 d_ofy = 0; //目标x
+//					if (ele->y < y)
+//					{
+//						s_ofy = y - ele->y;
+//						d_ofy = 0;
+//					}
+//					else if (ele->y > y)
+//					{
+//						s_ofy = 0;
+//						//d_ofy = height - (y + height - ele->y);
+//						d_ofy = ele->y - y;
+//					}
+//
+//					AreaCopy(ele, s_ofx, s_ofy, width, height, d_ofx, d_ofy);
+//				}
+//				//RollBack::RollBackBlock(*it, x, y, width, height);
+//				//(*it)->Render();
+//			}
+//		}
+//		else{ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
+//			cleanBuf();
+//		}
+//	}
+
 	void RenderEB()
 	{
 		if (!eb.empty())
@@ -358,35 +440,33 @@ public:
 				{
 					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
 
-					 s_ofx = 0; //源x
-					 d_ofx = 0; //目标x
-					if (ele->x < x)
+					 s_ofx = 0; //源偏移x
+					 d_ofx = render_offset_x; //目标偏移x
+					if (ele->x < x+render_offset_x)
 					{
-						s_ofx = x - ele->x;
-						d_ofx = 0;
+						s_ofx = x+render_offset_x - ele->x;
+						//d_ofx = render_offset_x;
 					}
-					else if (ele->x > x)
+					else if (ele->x > x+render_offset_x)
 					{
 						s_ofx = 0;
-						//d_ofx = width - (x + width - ele->x);
 						d_ofx = ele->x - x;
 					}
 
 					 s_ofy = 0; //源x
-					 d_ofy = 0; //目标x
-					if (ele->y < y)
+					 d_ofy = render_offset_y; //目标x
+					if (ele->y < y+render_offset_y)
 					{
-						s_ofy = y - ele->y;
-						d_ofy = 0;
+						s_ofy = y +render_offset_y- ele->y;
+						//d_ofy = 0;
 					}
 					else if (ele->y > y)
 					{
 						s_ofy = 0;
-						//d_ofy = height - (y + height - ele->y);
 						d_ofy = ele->y - y;
 					}
 
-					AreaCopy(ele, s_ofx, s_ofy, width, height, d_ofx, d_ofy);
+					AreaCopy(ele, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
 				}
 				//RollBack::RollBackBlock(*it, x, y, width, height);
 				//(*it)->Render();

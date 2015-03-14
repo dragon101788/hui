@@ -12,7 +12,7 @@
 using namespace std;
 #include "ParaseXML.h"
 #include "hulib.h"
-
+#include "layer.h"
 class touch_manager;
 
 
@@ -51,7 +51,7 @@ class touch_manager;
 //	int mx, my;
 //
 //};
-class touch_element :virtual public Mutex
+class touch_element :virtual public ele_nest_extend,virtual public Mutex
 {
 public:
 //	virtual void doFlushConfig()
@@ -69,6 +69,7 @@ public:
 		touch_mgr = NULL;
 		x_lock = 0;
 		y_lock = 0;
+
 		ox = 0;
 		oy = 0;
 		//RegistdoFlushConfig (touch_ele);
@@ -114,7 +115,11 @@ public:
 	}
 	int move_x()
 	{
-		if (x_lock)
+		int lock=0;
+		if(hasParent()){
+			lock=x_lock|parent->children_x_lock;
+		}
+		if (lock)
 			return 0;
 		if (isdn == 0)
 			return 0;
@@ -123,7 +128,11 @@ public:
 	}
 	int move_y()
 	{
-		if (y_lock)
+		int lock=0;
+		if(hasParent()){
+			lock=y_lock|parent->children_y_lock;
+		}
+		if (lock)
 			return 0;
 		if (isdn == 0)
 			return 0;
@@ -249,7 +258,12 @@ public:
 		for (it = mp.begin(); it != mp.end(); ++it)
 		{
 			touch_element * toe = (*it);
-			if (toe->touch_lock == 0)
+			int lock=0;
+			if(toe->hasParent()){
+				lock=toe->touch_lock |toe->parent->children_touch_lock;
+			}
+			if (lock==0)
+			//if (toe->touch_lock == 0)
 			{
 				if (toe->isArea(cur_samp.x, cur_samp.y)
 						&& cur_samp.pressure != 0)
@@ -270,7 +284,13 @@ public:
 			}
 			else
 			{
-				//printf("touch lock\r\n");
+				//如果锁住了，并且处于按下状态，那么弹起按钮
+				if (toe->isdn == 1)
+				{
+					toe->free_area();
+					toe->isdn = 0;
+				}
+
 			}
 		}
 		unlock();
