@@ -42,8 +42,34 @@ config TOUCH_EKTF2K
 endchoice
 
 config DEBUG
-	bool "enable debug"
+	bool "enable debug(old)"
 
+choice 
+        prompt "debug  log level"
+        default LOG_I
+        help
+		select log msg level
+config LOG_I
+        bool "log_i"
+        help
+		enable log_i,log_w,log_s,log_e
+config LOG_W
+        bool "log_w"
+        help
+		enable log_w,log_s,log_e
+config LOG_S
+        bool "log_s"
+        help
+		enable log_s,log_e
+config LOG_E
+        bool "log_e"
+        help
+		enable log_e
+config LOG_NONE
+        bool "none "
+        help
+		none log msg print
+endchoice
 
 comment "------------Dragon Auto Configuretion---------"
 source Kconfig.auto
