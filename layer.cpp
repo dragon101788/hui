@@ -221,11 +221,11 @@ void element::Delete()
 	hide = 1;
 	Render();
 	ResetEB();
-	xml_mgr->elem.erase(name);
 	if(hasParent()){
 		parent->elem.erase(name);
-
 	}
+	xml_mgr->elem.erase(name);
+
 }
 /*
  * 在加载图片及文字，显示在同一层
@@ -351,9 +351,12 @@ void element::ParseModifRes()
  }
  void ele_nest_extend::delChildren(){
 	iterator it;
+
 	for (it = elem.begin(); it != elem.end(); ++it)
 	{
-		it->second->Delete();
+		element *ele=it->second;
+		if(ele!=NULL)
+		ele->Delete();
 	}
  }
 //image * RollBack::dst = NULL;
