@@ -120,7 +120,7 @@ public:
 		else if (hu_abs(move_x()) < remin)//在去抖范围内，响应为点击事件
 		{
 			cx=dx;
-			Flush();
+			//Flush();
 		}
 
 /***********************************
@@ -162,7 +162,7 @@ public:
 		else if (hu_abs(move_y()) < remin)//在去抖范围内，响应为点击事件
 		{
 			cy=dy;
-			Flush();
+		//	Flush();
 		}
 
 	}

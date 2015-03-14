@@ -133,6 +133,7 @@ public:
 		children_x_lock = 0;
 		children_y_lock = 0;
 		children_touch_lock=0;
+		isDraw=0;
 	}
 	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
 		if(!is_parent){  //还不是父亲
@@ -161,6 +162,7 @@ public:
 		render_width=cp_width;
 		render_height=cp_height;
 		out.AreaCopy(src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);//控件输出到父控件
+		isDraw++;
 		unlock();
 	}
 	void resetRenderOffset(){
@@ -183,6 +185,7 @@ public:
 	int children_x_lock;
 	int children_y_lock;
 	int children_touch_lock;
+	int isDraw;
 	element * parent;
 
 	image out;
@@ -255,7 +258,7 @@ public:
 		width = 0;
 		lay = 0;
 		mgr = NULL;
-		is_parent=false;
+
 
 		//RegistdoFlushConfig(element);
 	}
@@ -271,7 +274,7 @@ public:
 		}
 	}
 	void Flush();
-	void Flush_for_Child();
+	//void Flush_for_Child();
 	void revocation();
 
 	void Render();
@@ -464,6 +467,7 @@ public:
 
 	void RenderEB()
 	{
+		int cnt=0;
 		if (!eb.empty())
 		{
 			list<element *>::iterator it;
@@ -472,13 +476,14 @@ public:
 			int d_ofx ; //目标x
 			int s_ofy ; //源x
 			int d_ofy ; //目标x
+
 			for (it = eb.begin(); it != eb.end(); ++it)
 			{
 				ele = *it;
 				if (ele->hide == 0)
 				{
 					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
-
+					 cnt++;
 					 s_ofx = 0; //源偏移x
 					 d_ofx = render_offset_x; //目标偏移x
 					if (ele->x < x+render_offset_x)
@@ -511,7 +516,7 @@ public:
 				//(*it)->Render();
 			}
 		}
-		else{ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
+		if(!cnt){ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
 			cleanBuf();
 		}
 	}

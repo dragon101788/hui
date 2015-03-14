@@ -8,7 +8,7 @@ void element::Flush()
 	if (mgr != NULL)
 	{
 		lock();
-		resetRenderOffset();//父控件主动绘制时恢复整个控件输出
+		//resetRenderOffset();//父控件主动绘制时恢复整个控件输出
 		mgr->que.addele(this);
 		unlock();
 	}
@@ -18,21 +18,21 @@ void element::Flush()
 				name.c_str());
 	}
 }
-
-void element::Flush_for_Child()
-{
-	if (mgr != NULL)
-	{
-		lock();
-		mgr->que.addele(this);
-		unlock();
-	}
-	else
-	{
-		errexitf("$$$$HU$$$$ Flush element %s manager is NULL\r\n",
-				name.c_str());
-	}
-}
+//
+//void element::Flush_for_Child()
+//{
+//	if (mgr != NULL)
+//	{
+//		lock();
+//		mgr->que.addele(this);
+//		unlock();
+//	}
+//	else
+//	{
+//		errexitf("$$$$HU$$$$ Flush element %s manager is NULL\r\n",
+//				name.c_str());
+//	}
+//}
 void element::revocation()
 {
 	if (mgr != NULL)
@@ -128,6 +128,13 @@ void element::initstack()
 void element::Render()
 {
 	//lock();
+	if(isDraw!=1){
+		render_offset_x=0;
+		render_offset_y=0;
+		render_width=width;
+		render_height=height;
+	}
+	isDraw=0;
 	RenderEB();
 
 	if (hide == 0)
@@ -145,17 +152,20 @@ void element::Render()
 	}
    //要实现元素嵌套，此处需要修改，控件应该输出到父控件
 	if(parent!=NULL){
+		debug("%s draw to parent!!!!!!!111\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
 		//parent->Draw(this, 0, 0, width, height, x, y);//控件输出到父控件
 		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
-		parent->Flush_for_Child();
+		//parent->Flush_for_Child();
+		parent->Flush();
 
 
 	}else{
 	//xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
-	xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+
 	}
 	RenderET();
 	//unlock();

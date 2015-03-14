@@ -200,10 +200,10 @@ public:
 
 	void RenderImageToFrameBuffer(image * img){
 		//printf("RenderImageToFrameBuffer in!!!\n");
-    	lock();
+		img->lock();
     	from_img=img;
     //	pthread_resume();
-    	unlock();
+    	img->unlock();
     	sem_post(&sem);
     //	printf("RenderImageToFrameBuffer out!!!!\n");
     }
