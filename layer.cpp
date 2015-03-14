@@ -118,7 +118,8 @@ void element::Render()
 	{
 		doRender();
 		if(isParent()){
-			image::Render(&out, 0, 0, width, height, 0, 0);
+			//scroll_x:从内容显示起始位置开始区域叠加
+			image::Render(&out, scroll_x, scroll_y, width, height, 0, 0);
 		}
 	}
 	else

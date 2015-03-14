@@ -429,13 +429,27 @@ public:
 	bool hasParent(){
 		return parent!=NULL;
 	}
+	 void configChildAbsPos(){  //当父控件的scroll_x改变时，子控件的绝对位置就会改变，父控件需要调用此函数
+			iterator it;
+			for (it = elem.begin(); it != elem.end(); ++it)
+			{
+				it->second->onAbsPosChanged();
+			}
 
+	 }
+	 virtual void onAbsPosChanged(){  //用于刷新触摸
+
+	 }
 	hustr name;
 	int hide;
 	int x;       //元素的位置是相当父元素的
 	int y;
 	int abs_x;//触摸的位置是相对屏幕绝对的
 	int abs_y;
+	int x_page_num; //方向页数
+	int y_page_num;
+	int scroll_x; //卷轴x，窗口处在当前内容的位置 ，用于内容比窗口大的元素
+	int scroll_y;
 	int width;
 	int height;
 	int lay;
