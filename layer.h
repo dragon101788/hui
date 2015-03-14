@@ -116,6 +116,21 @@ public:
  */
 class ele_nest_extend:public element_manager,virtual public window{
 public:
+
+	ele_nest_extend(){
+		abs_x=0;//触摸的位置是相对屏幕绝对的
+		abs_y=0;
+		x_page_num=1; //方向页数
+		y_page_num=1;
+		scroll_x=0; //卷轴x，窗口处在当前内容的位置 ，用于内容比窗口大的元素
+	    scroll_y=0;
+		render_x=0;//以下四个参数实现元素部分输出到绘图容器，实现控件的部分刷新
+	    render_y=0;
+		render_width=0;
+		render_height=0;
+		parent=NULL;
+		is_parent=false;
+	}
 	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
 		if(!is_parent){  //还不是父亲
 			out.SetBuffer(width*x_page_num,height*y_page_num);//成为父亲你得想有一个家
@@ -250,7 +265,14 @@ public:
 		width = m_mp["width"]->getvalue_int();
 		height = m_mp["height"]->getvalue_int();
 		hide = m_mp["hide"]->getvalue_int();
-
+		if (m_mp.exist("x_page_num"))
+		{
+			x_page_num = m_mp["x_page_num"]->getvalue_int();
+		}
+		if (m_mp.exist("y_page_num"))
+		{
+			y_page_num = m_mp["y_page_num"]->getvalue_int();
+		}
 		//控件被移动
 		if (tmpX != x || tmpY != y)
 		{
@@ -259,17 +281,12 @@ public:
 			y = tmpY;
 		}
 		if(hasParent()){
-		abs_x=x+parent->abs_x;
-		abs_y=y+parent->abs_y;
+		abs_x=x+parent->abs_x-parent->scroll_x;
+		abs_y=y+parent->abs_y-parent->scroll_y;
 		}else{
 			abs_x=x;
 			abs_y=y;
 		}
-
-		debug(
-				"$$$HU$$$ ElementPrase %s x=%d y=%d width=%d height=%d hide=%d\r\n",
-				name.c_str(), x, y, width, height, hide);
-
 		if (m_mp.exist("lay"))
 		{
 			lay = m_mp["lay"]->getvalue_int();
@@ -285,8 +302,6 @@ public:
 			SetBuffer(width, height);
 			path.format("ele-%s %dx%d", name.c_str(), width, height);
 		}
-
-
 		initstack();
 
 	}

@@ -254,8 +254,6 @@ public:
 		width/=const_page+1;//触摸及可视宽度等于图片宽度除以页数
 		page_w=width;
 
-		//node_name="pic_node";
-		name = m_mp["name"]->getvalue();
 		if (m_mp.exist("small_pic"))
 		{
 			use_small=m_mp["small_pic"]->getvalue_int();
@@ -419,7 +417,6 @@ public:
 	map<int, node *> nodemp;
 	image img[2];
         int node_num;
-	image output;
 
 };
 

@@ -1,0 +1,4 @@
+config  CONTROL_SLIP_FRAGMENT 
+        bool "slip_fragment Control" 
+        help 
+			path=$AUTOPATH

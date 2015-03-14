@@ -58,7 +58,9 @@ public:
 	{
 		image::Render(&res[isdn], 0, 0);
 	}
-
+	void onAbsPosChanged(){
+		touch_init_area(abs_x, abs_y, width, height);
+	}
 	button()
 	{
 	}

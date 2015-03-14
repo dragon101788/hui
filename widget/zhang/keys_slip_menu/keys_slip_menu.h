@@ -314,7 +314,6 @@ int hu_abs(int number)
 		page_w=width;
 */
 		//node_name="pic_node";
-		name = m_mp["name"]->getvalue();
 		if (m_mp.exist("small_pic"))
 		{
 			use_small=m_mp["small_pic"]->getvalue_int();
@@ -503,7 +502,7 @@ int hu_abs(int number)
 	map<int, node *> nodemp;
 	image img[2];
         int node_num;
-	image output;
+
 
 };
 

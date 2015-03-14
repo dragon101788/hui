@@ -120,6 +120,7 @@ void element::Render()
 		if(isParent()){
 			//scroll_x:从内容显示起始位置开始区域叠加
 			image::Render(&out, scroll_x, scroll_y, width, height, 0, 0);
+			//image::Render(&out, scroll_x, scroll_y, width, height, 0, 0);
 		}
 	}
 	else
@@ -189,7 +190,9 @@ void element::Delete()
 
 	}
 }
-
+/*
+ * 在加载图片及文字，显示在同一层
+ */
 void element::ParseModifRes()
 {
 	for (int i = 0; i < m_mp.count("res"); ++i)
@@ -298,10 +301,14 @@ void element::ParseModifRes()
 }
 
  void ele_nest_extend::configChildAbsPos(){  //当父控件的scroll_x改变时，子控件的绝对位置就会改变，父控件需要调用此函数
-		iterator it;
+	 iterator it;
+	 element * ele;
 		for (it = elem.begin(); it != elem.end(); ++it)
 		{
-			it->second->onAbsPosChanged();
+			ele=it->second;
+			ele->abs_x=ele->x+abs_x-scroll_x;
+			ele->abs_y=ele->y+abs_y-scroll_y;
+			ele->onAbsPosChanged();
 		}
 
  }
