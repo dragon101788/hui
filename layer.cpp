@@ -173,6 +173,19 @@ void element::FlushConfigReduced()
 	xml_mgr->AddElement(name, this);
 	unlock();
 }
+void element::Delete()
+{
+	doDelete();
+	revocation();
+	hide = 1;
+	Render();
+	ResetEB();
+	xml_mgr->elem.erase(name);
+	if(hasParent()){
+		parent->elem.erase(name);
+
+	}
+}
 
 void element::ParseModifRes()
 {
@@ -277,9 +290,25 @@ void element::ParseModifRes()
 	else
 	{
 		ele->Delete();
-		elem.erase(name);
+	//	elem.erase(name);
 	}
 }
+
+ void ele_nest_extend::configChildAbsPos(){  //当父控件的scroll_x改变时，子控件的绝对位置就会改变，父控件需要调用此函数
+		iterator it;
+		for (it = elem.begin(); it != elem.end(); ++it)
+		{
+			it->second->onAbsPosChanged();
+		}
+
+ }
+ void ele_nest_extend::delChild(){
+	iterator it;
+	for (it = elem.begin(); it != elem.end(); ++it)
+	{
+		it->second->Delete();
+	}
+ }
 //image * RollBack::dst = NULL;
 //image * RollBack::src = NULL;
 //map<hustr, SmartPtr<element> > layer::elem; //ʹ������ָ��

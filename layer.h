@@ -98,9 +98,69 @@ public:
 	map<hustr, SmartPtr<element> > elem; //ʹ������ָ��
 
 };
+/******************************
+ * 最元素的最基本类
+ * 仅提供显示区域的x,y及高度，宽度
+ *
+ */
+class window{
+public:
+	int x;       //元素的位置是相当父元素的
+	int y;
+	int width;
+	int height;
+};
+/*****************************
+ * ele_nest_extend 此类为了扩展元素嵌套功能独立出来的。如果需要实现控件嵌套，元素必须继承它
+ *
+ */
+class ele_nest_extend:public element_manager,virtual public window{
+public:
+	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
+		if(!is_parent){  //还不是父亲
+			out.SetBuffer(width*x_page_num,height*y_page_num);//成为父亲你得想有一个家
+			is_parent=true;
+		}
+		AddElement( name, son);
+	}
+	bool isParent(){
+		return is_parent;
+	}
+	bool hasParent(){
+		return parent!=NULL;
+	}
+	void configChildAbsPos();
+
+	 virtual void onAbsPosChanged(){  //用于刷新触摸
+
+	 }
+	 void delChild();
 
 
-class element: public schedule_ele, public image,public element_manager, virtual public Mutex //元素本身也是元素管理者
+
+
+	int abs_x;//触摸的位置是相对屏幕绝对的
+	int abs_y;
+	int x_page_num; //方向页数
+	int y_page_num;
+	int scroll_x; //卷轴x，窗口处在当前内容的位置 ，用于内容比窗口大的元素
+	int scroll_y;
+	int render_x;//以下四个参数实现元素部分输出到绘图容器，实现控件的部分刷新
+	int render_y;
+	int render_width;
+	int render_height;
+	element * parent;
+	image  out;  //用于子元素将自己绘制到此处
+
+
+protected:
+	bool is_parent;
+};
+
+
+
+
+class element:virtual public window, public schedule_ele, public image,public ele_nest_extend, virtual public Mutex //元素本身也是元素管理者
 {
 public:
 
@@ -119,8 +179,8 @@ public:
 	virtual void doDelete()
 	{
 		printf("warning element bash OnDelete\r\n");
-		if(parent!=NULL){
-			parent->DelElement(name.c_str());  //从父元素的子元素列表里面删除自己
+		if(isParent()){
+			delChild();
 		}
 	}
 
@@ -140,14 +200,8 @@ public:
 		doGetInfo(info);
 		unlock();
 	}
-	void Delete()
-	{
-		doDelete();
-		revocation();
-		hide = 1;
-		Render();
-		ResetEB();
-	}
+	void Delete();
+
 	void onSchedule()
 	{
 		debug("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
@@ -416,55 +470,19 @@ public:
 			res[id].SetResource(path);
 		}
 	}
-	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
-		if(!is_parent){  //还不是父亲
-			out.SetBuffer(width,height);//成为父亲你得想有一个家
-			is_parent=true;
-		}
-		AddElement( name, son);
-	}
-	bool isParent(){
-		return is_parent;
-	}
-	bool hasParent(){
-		return parent!=NULL;
-	}
-	 void configChildAbsPos(){  //当父控件的scroll_x改变时，子控件的绝对位置就会改变，父控件需要调用此函数
-			iterator it;
-			for (it = elem.begin(); it != elem.end(); ++it)
-			{
-				it->second->onAbsPosChanged();
-			}
 
-	 }
-	 virtual void onAbsPosChanged(){  //用于刷新触摸
-
-	 }
 	hustr name;
 	int hide;
-	int x;       //元素的位置是相当父元素的
-	int y;
-	int abs_x;//触摸的位置是相对屏幕绝对的
-	int abs_y;
-	int x_page_num; //方向页数
-	int y_page_num;
-	int scroll_x; //卷轴x，窗口处在当前内容的位置 ，用于内容比窗口大的元素
-	int scroll_y;
-	int width;
-	int height;
 	int lay;
-	HUMap m_mp;
-	element * parent;
 
+	HUMap m_mp;
 	xmlproc * xml_mgr;
 	map<int, image> res;
-	image  out;  //用于子元素将自己绘制到此处
 	schedule_draw * mgr;
 	list<element *> et;					//�ϲ�ؼ�
 	list<element *> eb;					//�ײ�ؼ�
 
-	protected:
-	bool is_parent;
+
 
 };
 
