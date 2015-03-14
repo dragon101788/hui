@@ -392,6 +392,9 @@ public:
 				//(*it)->Render();
 			}
 		}
+		else{ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
+			cleanBuf();
+		}
 	}
 	void RenderET()
 	{
