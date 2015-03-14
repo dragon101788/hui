@@ -37,7 +37,7 @@ public:
 
 		for (int i = 0; i < m_mp.count("node"); i++)
 		{
-			debug("doFlushConfig %d %s\r\n",i, m_mp["node"][i]->getvalue());
+			log_i("doFlushConfig %d %s\r\n",i, m_mp["node"][i]->getvalue());
 			SetRes(i, m_mp["node"][i]->getvalue());
 		}
 		ParseModifRes();

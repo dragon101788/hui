@@ -48,7 +48,7 @@ public:
 
 		key = ftok(path, 1);
 
-		debug("\r\n init_message path[%s] key[%#x]\r\n", path, key);
+		log_i("\r\n init_message path[%s] key[%#x]\r\n", path, key);
 
 		/* Open the queue - create if necessary */
 		if ((msgqueue_id = msgget(key, IPC_CREAT | 0660)) == -1)
@@ -76,7 +76,7 @@ public:
 	void open_message(int k)
 	{
 		key = k;
-		debug("open_message key = %#x\r\n", key);
+		log_i("open_message key = %#x\r\n", key);
 
 		/* Open the queue - create if necessary */
 		if ((msgqueue_id = msgget(key, 0660)) == -1)

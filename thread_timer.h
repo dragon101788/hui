@@ -23,7 +23,7 @@ public:
 
 			usleep(1000);
 		}
-		printf("timer thread exit\r\n");
+		log_i("timer thread exit\r\n");
 
 	}
 	void SwitchProc(xmlproc * xml)

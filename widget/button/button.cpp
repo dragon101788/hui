@@ -7,5 +7,5 @@ static InstallXMLinstan install("button",Install_Element<button>);
 
 hucall int init(HUMap & mp,void * data)
 {
-	debug("module init\r\n");
+	log_i("module init\r\n");
 }

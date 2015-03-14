@@ -49,7 +49,7 @@ public:
 		ft_error = FT_Init_FreeType(&ft_Lib);
 		if (ft_error)
 		{
-			debug("Error at init ft_Lib!\n");
+			log_e("Error at init ft_Lib!\n");
 			FT_Done_FreeType(ft_Lib);
 			return -1;
 		}
@@ -57,7 +57,7 @@ public:
 		ft_error = FT_New_Face(ft_Lib, path, 0, &face);
 		if (ft_error)
 		{
-			debug("New face error!\n");
+			log_e("New face error!\n");
 			FT_Done_FreeType(ft_Lib);
 			return -1;
 		}
@@ -68,7 +68,7 @@ public:
 		matrix.xy = 0x5800;
 		matrix.yx = 0;
 		matrix.yy = 1 << 16;
-		debug("TTF_Init succssed!!!!!!!!!!!!!!!!!\n");
+		log_i("TTF_Init succssed!!!!!!!!!!!!!!!!!\n");
 		// logMsg("init ok.\n");
 
 		return 0;
@@ -136,7 +136,7 @@ public:
 		color = 0;
 		style = 0;
 		m_font = NULL;
-		debug("truetype\n");
+		log_i("truetype\n");
 	}
 	~text()
 	{
@@ -144,7 +144,7 @@ public:
 	}
 	void destroy()
 	{
-		//debug("destroy ttf\n");
+		//log_i("destroy ttf\n");
 
 	}
 	void LCD_PutPixel(unsigned int x, unsigned int y, unsigned int color,
@@ -167,12 +167,12 @@ public:
 
 		if (dst_x + bitmap->width > u32Width)
 		{
-			debug("warning ft_draw_bitmap u32Width[%d] to low\r\n",u32Width);
+			log_w("warning ft_draw_bitmap u32Width[%d] to low\r\n",u32Width);
 			return;
 		}
 		if (dst_y + bitmap->rows > u32Height)
 		{
-			debug("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
+			log_w("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
 			return;
 		}
 		for (y = 0; y < bitmap->rows; y++)
@@ -205,12 +205,12 @@ public:
 			float alpha,fadeStep;
 			if (dst_x + bitmap->width > u32Width)
 			{
-				debug("warning ft_draw_bitmap u32Width[%d] to low\r\n",u32Width);
+				log_w("warning ft_draw_bitmap u32Width[%d] to low\r\n",u32Width);
 				return;
 			}
 			if (dst_y + bitmap->rows > u32Height)
 			{
-				debug("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
+				log_w("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
 				return;
 			}
 			alpha=startAlpha;

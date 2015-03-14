@@ -130,10 +130,14 @@ void element::Render()
 	}
 	else
 	{
-		printf("Render %s hide\r\n", name.c_str());
+		log_i("Render %s hide\r\n", name.c_str());
 	}
+	if(xml_mgr->directDraw){
+		xml_mgr->drawDirect(this,x, y);
 
-	xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
+	}
+	else
+		xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
 
 	//debug("before RenderET %s hide\r\n", name.c_str());
 	RenderET();  //，下层有变动，通知上层控件更新//删除元素容易导致这里锁死
@@ -193,7 +197,7 @@ void element::ParseModifRes()
 			file.SetResource(xmlmp["file"]->getvalue());
 			file.LoadResource();
 
-			printf(
+			log_i(
 					"$$$HU$$$ XML Draw Render %s to %s res=%d %d %d %d %d %d %d\r\n",
 					file.path.c_str(), name.c_str(), id, src_x, src_y, cp_width,
 					cp_height, dst_x, dst_y);
@@ -231,7 +235,7 @@ void element::ParseModifRes()
 
 			text tmpttf;
 			tmpttf.m_font = &font_mp[font];
-			printf("get font_mp %s %x %x\r\n",font.nstr() ,tmpttf.m_font->face,
+			log_i("get font_mp %s %x %x\r\n",font.nstr() ,tmpttf.m_font->face,
 					tmpttf.m_font->ft_Lib);
 			tmpttf.fontHeight = size;
 			tmpttf.color = color;
@@ -239,7 +243,7 @@ void element::ParseModifRes()
 			tmpttf.SetBuffer(cp_width, cp_height);
 			tmpttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
 
-			printf("ParseModifRes text=%s\r\n",txt.c_str());
+			log_i("ParseModifRes text=%s\r\n",txt.c_str());
 			if (!res[id].isNULL())
 			{
 

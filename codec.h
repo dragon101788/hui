@@ -96,6 +96,71 @@ public:
 #endif
 		unlock();
 	}
+
+	void dump_to_buf_part(void * buf, int dst_w,int dst_h,int dst_x, int dst_y)
+	{
+		int x;
+		int y;
+		int src_x=0;
+		int src_y=0;
+		int cp_w=u32Width;
+		int cp_h=u32Height;
+		unsigned int * dst_start;
+		lock();
+
+		if (dst_x < 0)
+		{
+			src_x -=dst_x;
+			dst_x = 0;
+		}
+		if (dst_y < 0)
+		{
+			src_y -= dst_y;
+			dst_y = 0;
+		}
+		if(dst_x+u32Width>dst_w){
+			cp_w=dst_w-dst_x;
+		}
+		if(dst_y+u32Height>dst_h){
+			cp_h=dst_h-dst_y;
+		}
+
+		int line_byte=cp_w * 4;
+		unsigned int dst_step= dst_w;
+		unsigned int src_step= u32Width;
+		unsigned int * src_start=(unsigned int *)pSrcBuffer ;
+		unsigned int dst_offset=0;
+		unsigned int src_offset=0;
+
+
+#ifdef CONFIG_REVERSE_SCREEN
+		dst_x=dst_w-dst_x-1;
+		dst_y=dst_h-dst_y-1;
+		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
+
+		for (y = 0; y<cp_h; y++)
+		{
+			//memcpy( dst_start+dst_offset,src_start+src_offset, line_byte);
+			for(x=0;x<cp_w;x++){
+				*(dst_start+dst_offset-x)=*(src_start+src_offset+x);
+			}
+			dst_offset-=dst_step;
+			src_offset+=src_step;
+		}
+#else
+		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
+		for (y = 0; y < cp_h; y++)
+		{
+			memcpy( dst_start+dst_offset, src_start+src_offset, line_byte);
+			dst_offset+=dst_step;
+			src_offset+=src_step;
+		}
+#endif
+		unlock();
+	}
+
+
+
 	int isNULL()
 	{
 		return (pSrcBuffer == NULL);
@@ -152,7 +217,7 @@ public:
 
 	void SetResource(const char * filepath)
 	{
-		//printf("SetResource %s\r\n",filepath);
+		//debug("SetResource %s\r\n",filepath);
 
 		if (path != filepath)
 		{
@@ -168,7 +233,7 @@ public:
 		}
 		if (path.empty())
 		{
-			debug("warning LoadResource empty path\r\n");
+			log_w("warning LoadResource empty path\r\n");
 			return -1;
 		}
 		return codec_to_Image(this, path.nstr());//装载图片
@@ -228,7 +293,7 @@ public:
 //		{
 //			errexit("AreaCopy cp_windth or cp_height <0\r\n");
 //		}
-//		//printf("$$$HU$$$ src_x=%d\r\n", src_x);
+//		//debug("$$$HU$$$ src_x=%d\r\n", src_x);
 //
 //		if (src_x < 0)
 //		{
@@ -250,7 +315,7 @@ public:
 ////		}
 //		if (src_y + cp_height > rsc_img->u32Height)
 //		{
-//			//printf("AreaCopy src_y=%d cp_height=%d rsc_img->u32Height=%d\r\n", src_y, cp_height, rsc_img->u32Height);
+//			//debug("AreaCopy src_y=%d cp_height=%d rsc_img->u32Height=%d\r\n", src_y, cp_height, rsc_img->u32Height);
 //			cp_height = rsc_img->u32Height - src_y;
 //			if (cp_height <= 0)
 //			{
@@ -259,7 +324,7 @@ public:
 //		}
 //		if (src_x + cp_width > rsc_img->u32Width)
 //		{
-//			//printf("AreaCopy src_x=%d cp_width=%d rsc_img->u32Width=%d\r\n", src_x, cp_width, rsc_img->u32Width);
+//			//debug("AreaCopy src_x=%d cp_width=%d rsc_img->u32Width=%d\r\n", src_x, cp_width, rsc_img->u32Width);
 //			cp_width = rsc_img->u32Width - src_x;
 //			if (cp_width <= 0)
 //			{
@@ -358,17 +423,17 @@ public:
 
 	void debug_info()
 	{
-		printf("u32Width=%d\r\n", u32Width);
-		printf("u32Height=%d\r\n", u32Height);
-		printf("u32Stride=%d\r\n", u32Stride);
-		printf("SrcGPUAddr=0x%x\r\n", SrcGPUAddr());
+		log_i("u32Width=%d\r\n", u32Width);
+		log_i("u32Height=%d\r\n", u32Height);
+		log_i("u32Stride=%d\r\n", u32Stride);
+		log_i("SrcGPUAddr=0x%x\r\n", SrcGPUAddr());
 
 	}
 
 	void Render(image * img, int x, int y)
 	{
 		//AreaCopy(img, 0, 0, img->u32Width, img->u32Height, x, y);
-		//printf("$$$HU$$$ Render %s to %s\r\n",this->path.c_str(),img->path.c_str());
+		//debug("$$$HU$$$ Render %s to %s\r\n",this->path.c_str(),img->path.c_str());
 
 		img->LoadResource();
 		Render_img_to_img(this, img, 0, 0, img->u32Width, img->u32Height, x, y);
@@ -418,7 +483,7 @@ public:
 	{
 		if (pSrcBuffer != NULL)
 		{
-			debug("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
+			log_i("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
 			free(pSrcBuffer);
 			pSrcBuffer = NULL;
 		}
@@ -428,7 +493,7 @@ public:
 
 		if (pSrcBuffer != NULL)
 		{
-			debug("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
+			log_i("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
 			free(pSrcBuffer);
 			pSrcBuffer = NULL;
 			SrcSize = 0;

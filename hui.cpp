@@ -28,18 +28,18 @@ using namespace std;
 
 void huErrExit(const char * str)
 {
-	printf("**************error exit*****************\r\n");
+	log_e("**************error exit*****************\r\n");
 	puts(str);
-	printf("*****************************************\r\n");
+	log_e("*****************************************\r\n");
 
 	dumpstack();
 	go = 0;
 	g_th_timer.cancel();
-	printf("wait g_th_timer OK\r\n");
+	log_i("wait g_th_timer OK\r\n");
 	g_th_touch.cancel();
-	printf("wait g_th_touch OK\r\n");
+	log_i("wait g_th_touch OK\r\n");
 	g_th_msg.cancel();
-	printf("wait g_th_msg OK\r\n");
+	log_i("wait g_th_msg OK\r\n");
 	map<hustr, pXmlproc>::iterator it;
 	for (it = g_xml_proc.begin(); it != g_xml_proc.end(); ++it)
 	{
@@ -70,7 +70,7 @@ void JumpToFile(const char * jump, const char * snap)
 	{
 		//	if (g_xml_proc.find(jump) != g_xml_proc.end())
 		//	{
-		//		printf("$$$HU$$$ JumpToFile %s find cus\r\n", jump);
+		//		debug("$$$HU$$$ JumpToFile %s find cus\r\n", jump);
 		//		if (g_xml_proc[jump]->done == 1)
 		//		{
 		//			fb.DumpToXml(g_xml_proc[jump]->out);
@@ -90,7 +90,7 @@ void JumpToFile(const char * jump, const char * snap)
 			{
 				snapfile = snap;
 			}
-			printf("snapfile = %s snap=%s\r\n", snap, snapfile.c_str());
+			log_i("snapfile = %s snap=%s\r\n", snap, snapfile.c_str());
 			if (access_Image(snapfile))
 			{
 				fb.DumpToSnap(snapfile);
@@ -109,10 +109,10 @@ int go = 1;
 
 static void my_sighdlr(int sig)
 {
-	printf("SIG = %d\r\n", sig);
+	log_i("SIG = %d\r\n", sig);
 	if (sig == SIGPIPE)
 	{ // Ignore SIGPIPE.
-		printf("SIG = %d SIGPIPE\r\n", sig);
+		log_i("SIG = %d SIGPIPE\r\n", sig);
 		return;
 	}
 	if (sig == SIGSEGV)
@@ -154,7 +154,7 @@ void ParseCUS(HUMap & xmlmp, xmlproc * xml)
 {
 	hustr cus = xmlmp["xmlfile"]->getvalue();
 	//g_cur_xml = &g_xml_proc[cus];
-	printf("$$$HU$$$ CUS xmlfile %s\r\n", cus.c_str());
+	log_i("$$$HU$$$ CUS xmlfile %s\r\n", cus.c_str());
 	g_xml_proc[cus] = new xmlproc(cus);
 	g_xml_proc[cus]->doLoader();
 }
@@ -182,7 +182,7 @@ void ParseWidget(HUMap & xmlmp, xmlproc * xml)
 
 void ParseSAVECUS(HUMap & xmlmp, xmlproc * xml)
 {
-	printf("ParseSAVECUS %s\r\n", xml->filename.c_str());
+	log_i("ParseSAVECUS %s\r\n", xml->filename.c_str());
 	g_xml_proc[xml->filename] = g_cur_xml;
 }
 void ParseEnv(HUMap & xmlmp, xmlproc * xml)
@@ -191,7 +191,7 @@ void ParseEnv(HUMap & xmlmp, xmlproc * xml)
 	for (it = xmlmp.begin(); it != xmlmp.end(); ++it)
 	{
 		setenv(it.key().c_str(), it.value().getvalue(), 1);
-		printf("%s=%s\r\n", it.key().c_str(), getenv(it.value().c_str()));
+		log_i("%s=%s\r\n", it.key().c_str(), getenv(it.value().c_str()));
 		//debug[it->second.getkey()] = it->second->getvalue_int();
 	}
 }
@@ -223,7 +223,7 @@ void ParseControl(HUMap & xmlmp, xmlproc * xml)
 		int msec = xmlmp["msec"]->getvalue_int();
 		int sec = xmlmp["sec"]->getvalue_int();
 		int time = (sec * 1000 + msec) * 1000;
-		printf("$$HU$$ usleep %d\r\n", time);
+		log_i("$$HU$$ usleep %d\r\n", time);
 		usleep(time);
 	}
 	else if (event == "xmlproc")
@@ -252,22 +252,22 @@ void ParseControl(HUMap & xmlmp, xmlproc * xml)
 				xml->UnForeProc();
 			}
 		}
-//		printf("%s done=%d fore=%d\r\n", xml->filename.c_str(), xml->done,
+//		debug("%s done=%d fore=%d\r\n", xml->filename.c_str(), xml->done,
 //				xml->fore);
 	}
 	else if (event == "snap")
 	{
-		printf("event = snap\r\n");
+		log_i("event = snap\r\n");
 		hustr file = xmlmp["file"]->getvalue();
 		int force = xmlmp["force"]->getvalue_int();
 		if (file.empty())
 		{
 			file.format("%s.png", xml->filename.c_str());
-			printf("save default snap\r\n");
+			log_i("save default snap\r\n");
 		}
 		else
 		{
-			printf("save snap to file %s\r\n", file.c_str());
+			log_i("save snap to file %s\r\n", file.c_str());
 		}
 		if (force)
 		{
@@ -280,17 +280,17 @@ void ParseControl(HUMap & xmlmp, xmlproc * xml)
 		hustr cont = xmlmp["cont"]->getvalue();
 		if (cont == "stop")
 		{
-			printf("stop\r\n");
+			log_i("stop\r\n");
 			g_cur_xml->CS_manager::Stop();
 		}
 		else if (cont == "start")
 		{
-			printf("start\r\n");
+			log_i("start\r\n");
 			g_cur_xml->CS_manager::Start();
 		}
 		else if (cont == "clear")
 		{
-			printf("clear\r\n");
+			log_i("clear\r\n");
 			//g_th_timer.create();
 			g_cur_xml->m_cs.clear();
 		}
@@ -344,13 +344,13 @@ void ParseInclude(HUMap & xmlmp, xmlproc * xml)
 	if (xmlmp.exist("cus"))
 	{
 		hustr cus = xmlmp["cus"]->getvalue();
-		printf("include xmlfile=[%s] to %s\r\n",  xmlmp["xmlfile"]->getvalue(), cus.c_str());
+		log_i("include xmlfile=[%s] to %s\r\n",  xmlmp["xmlfile"]->getvalue(), cus.c_str());
 		g_xml_proc[cus]->ParseXMLElementFile(filename);
 
 	}
 	else
 	{
-		printf("include xmlfile=[%s] to %s\r\n", xmlmp["xmlfile"]->getvalue(), xml->filename.c_str());
+		log_i("include xmlfile=[%s] to %s\r\n", xmlmp["xmlfile"]->getvalue(), xml->filename.c_str());
 		xml->ParseXMLElementFile(filename);
 	}
 
@@ -370,7 +370,7 @@ void Parse_gcfg(HUMap & xmlmp, xmlproc * xml)
 	{
 		ele->GetInfo(info);
 	}
-	//printf("snd msg:\r\n %s\r\n", info.nstr());
+	//debug("snd msg:\r\n %s\r\n", info.nstr());
 	g_th_msg.msg.send_message(101, info);
 }
 
@@ -423,6 +423,11 @@ void post_scfg(HUMap & xmlmp, xmlproc * xml)
 	{
 		xml->PostScfg(xmlmp);
 	}
+}
+
+void parseDirectDraw(HUMap & xmlmp, xmlproc * xml)
+{
+	xml->directDraw = xmlmp["direct"]->getvalue_int();
 }
 //用于改变动态的参数
 void sendDynamicConfig(HUMap & xmlmp, xmlproc * xml)
@@ -548,11 +553,12 @@ void init_xml_instan()
 	XMLinstan["set"] = ParseSet;
 	XMLinstan["reDrawPage"] = ParseRefreshPage;
 	XMLinstan["reDrawElement"] = ParseRefreshElement;
+	XMLinstan["directDraw"] = parseDirectDraw;//元素直接绘制到fb
 
 }
 int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)
 {
-	debug("$$$HU$$$ Parse [%s]\r\n", name.c_str());
+	log_i("$$$HU$$$ Parse [%s]\r\n", name.c_str());
 	//xmlmp.display();
 	XMLinstan_tf fun = XMLinstan[name];
 	if (fun != NULL)
@@ -563,7 +569,7 @@ int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)
 	}
 	else
 	{
-		printf("$$$$$HU$$$$$$$warning :: Parse %s err\r\n", name.c_str());
+		log_w("$$$$$HU$$$$$$$warning :: Parse %s err\r\n", name.c_str());
 	}
 }
 
@@ -574,13 +580,13 @@ void hui_exit(const char * cmd)
 	go = 0;
 
 	g_th_timer.wait();
-	printf("wait g_th_timer OK\r\n");
+	log_i("wait g_th_timer OK\r\n");
 	g_th_touch.wait();
-	printf("wait g_th_touch OK\r\n");
+	log_i("wait g_th_touch OK\r\n");
 	g_th_msg.cancel();
-	printf("wait g_th_msg OK\r\n");
+	log_i("wait g_th_msg OK\r\n");
 
-	printf("cmd=%s\r\n", cmd);
+	log_i("cmd=%s\r\n", cmd);
 	system(cmd);
 }
 
@@ -598,7 +604,7 @@ void Dir(hustr dir, int l)
 	DIR *dp;
 	struct dirent *entry;
 	struct stat statbuf;
-	printf("open %s\r\n", dir.c_str());
+	log_i("open %s\r\n", dir.c_str());
 	if ((dp = opendir(dir)) == NULL)
 	{
 		fprintf(stderr, "cannot open directory: %s\n", dir.c_str());
@@ -610,7 +616,7 @@ void Dir(hustr dir, int l)
 		if (strcmp(".", entry->d_name) == 0 || strcmp("..", entry->d_name) == 0)
 			continue;
 
-		//printf("%*s%s/\n", depth, "", entry->d_name);
+		//debug("%*s%s/\n", depth, "", entry->d_name);
 
 		hustr subfile = dir;
 		subfile += "/";
@@ -632,14 +638,14 @@ void Dir(hustr dir, int l)
 					hustr file("%s/%s", dir.c_str(), entry->d_name);
 					tmp.SetResource(file);
 					tmp.LoadResource();
-					printf("image_write_to_snap %s\r\n", entry->d_name);
+					log_i("image_write_to_snap %s\r\n", entry->d_name);
 					image_write_to_snap(&tmp, file);
 				}
 			}
 
 		}
 
-		//printf("%*s%s\n", depth, "", entry->d_name);
+		//log_i("%*s%s\n", depth, "", entry->d_name);
 
 	}
 	closedir(dp);
@@ -647,13 +653,13 @@ void Dir(hustr dir, int l)
 
 int main(int argc, char *argv[])
 {
-	printf("%s\r\n", __TIME__);
+	log_i("%s\r\n", __TIME__);
 
 	char * huipid = getenv("CURHUI");
 	if (huipid != NULL)
 	{
 		int pid = strtoul(huipid, NULL, 10);
-		printf("kill %d\r\n", pid);
+		log_i("kill %d\r\n", pid);
 		kill(pid, 9);
 	}
 	int pid = getpid();
@@ -697,16 +703,16 @@ int main(int argc, char *argv[])
 //	g_cur_xml->fore = 1;
 	JumpToFile(xmlfile, hustr("%s.png", xmlfile));
 
-	printf("Press Ctrl-C to exit ...\n");
+	log_i("Press Ctrl-C to exit ...\n");
 	g_th_timer.wait();
-	printf("wait g_th_timer OK\r\n");
+	log_i("wait g_th_timer OK\r\n");
 	g_th_touch.wait();
-	printf("wait g_th_touch OK\r\n");
+	log_i("wait g_th_touch OK\r\n");
 	g_th_msg.cancel();
 	fb.wait();
-	printf("wait g_th_msg OK\r\n");
+	log_i("wait g_th_msg OK\r\n");
 
-	printf("demo exit %d\r\n", go);
+	log_i("demo exit %d\r\n", go);
 
 	return 0;
 }

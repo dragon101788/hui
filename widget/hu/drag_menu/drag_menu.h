@@ -80,31 +80,31 @@ public:
 		mx = 0;
 		if (hu_abs(move_x()) > remax)
 		{ //移动页面
-			debug("move\r\n");
+			log_i("move\r\n");
 			if (move_x() > 0)
 			{
-				debug("--\r\n");
+				log_i("--\r\n");
 				if (page - 1 >= 0)
 					page--;
 
 			}
 			else
 			{
-				debug("++%d\r\n", page);
-				debug("sum_w=%d page_w=%d ind_w=%d\r\n", sum_w, page_w, ind_w);
+				log_i("++%d\r\n", page);
+				log_i("sum_w=%d page_w=%d ind_w=%d\r\n", sum_w, page_w, ind_w);
 				if (page + 1 < (sum_w + page_w - 1) / page_w)
 					page++;
-				debug("++OK\r\n", page);
+				log_i("++OK\r\n", page);
 			}
 
-			debug("page = %d\r\n", page);
+			log_i("page = %d\r\n", page);
 			for (int i = 0; i < imgs.size(); i++)
 			{
 
 				dm_image * obj = &imgs[i];
 				if (i >= page * row)
 				{
-					//debug("page=%d i=%d\r\n",page,i);
+					//log_i("page=%d i=%d\r\n",page,i);
 					//if (cx - ori.move_x() > 0 && cx - ori.move_x() < sum_w)
 					dx = obj->dx;
 					TimerSet(0);
@@ -172,7 +172,7 @@ public:
 	{
 		if (isdn && hu_abs(move_x()) < remin && cx + (GetTouchX() - x) < sum_w)
 		{
-			debug("%d %d %d %d\r\n", cx, GetTouchX(), x, sum_w);
+			log_i("%d %d %d %d\r\n", cx, GetTouchX(), x, sum_w);
 			image::Render(&active,
 					move_x() + active_x + ((GetTouchX() - x) / ind_w) * ind_w,
 					move_y() + active_y);

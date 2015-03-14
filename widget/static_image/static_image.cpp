@@ -5,5 +5,5 @@ static InstallXMLinstan install("static_image",Install_Element<static_image>);
 
 hucall int init(HUMap & mp,void * data)
 {
-	debug("module init\r\n");
+	log_i("module init\r\n");
 }

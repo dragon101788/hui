@@ -50,7 +50,7 @@ int hu_abs(int number)
 			if(m_mp.exist("name"))
                 name = m_mp["name"]->getvalue();
         		else{
-        		//	debug("need add a default name!!!!!!!\n");
+        		//	log_i("need add a default name!!!!!!!\n");
         			name=hustr("%s-%d",parent->name.c_str(),id);
         		}
 
@@ -73,7 +73,7 @@ int hu_abs(int number)
 
                 if (isNULL())
                 {
-                        //debug("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+                        //log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
                         SetBuffer(width, height);
                         path.format("ele-%s %dx%d", name.c_str(), width, height);
                 }
@@ -93,7 +93,7 @@ int hu_abs(int number)
 		}
 		void doFlushConfigReduced()
 		{
-		//	debug("%s,doFlushConfigReduced node\n",name.c_str());
+		//	log_i("%s,doFlushConfigReduced node\n",name.c_str());
 			hide=parent->hide;
 			x = m_mp["x"]->getvalue_int();
 			y = m_mp["y"]->getvalue_int();
@@ -103,9 +103,9 @@ int hu_abs(int number)
 		}
 		void doRender()
 		{
-              //  debug("this->x=%d,this->cx=%d\n",x,cx);
+              //  log_i("this->x=%d,this->cx=%d\n",x,cx);
                //
-			debug("%s,doRender node\n",name.c_str());
+			log_i("%s,doRender node\n",name.c_str());
 			 if(x-parent->x<parent->width&&y-parent->y<parent->height&&x>=0&&y>=0)
 		      image::Render(&parent->img[1], x+parent->cx-parent->x,
 		    		  	  	  	  	  	  	  	   y+parent->cy-parent->y,width,height,0,0);
@@ -118,7 +118,7 @@ int hu_abs(int number)
 
 	int doTimer(int tm)
 	{
-	//	debug("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
+	//	log_i("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
 		if(vertical_mode){
 			for (int i = 0; i < rcn && cy > dy; i++)
 				if (cy > dy){ //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)page-
@@ -170,8 +170,8 @@ int hu_abs(int number)
 
 
 	void changePage(){
-		//debug("page_node_num=%d\r\n", page_node_num);
-		//debug("page=%d\r\n", page);
+		//log_i("page_node_num=%d\r\n", page_node_num);
+		//log_i("page=%d\r\n", page);
 		if (select_id>=page_node_num*(page+1))//右移，页面+1
 		{
 			int cnt =select_id/(page_node_num*(page+1));
@@ -193,7 +193,7 @@ int hu_abs(int number)
 										  nodemp[i]->cx-=page_w*cnt;
 										 }
 									}
-								debug("++OK\r\n", page);
+								log_i("++OK\r\n", page);
 								if(noAnimation){//首次载入直接进入当前位置，跳过动画
 									//noAnimation=false;
 									isFlip=false;//isFlip最好理解为是否需要动画
@@ -218,7 +218,7 @@ int hu_abs(int number)
 			 int cnt = (page_node_num*(page+1)-(select_id+1))/page_node_num;
 			if(page-cnt>=0){
 			    isFlip=true;
-				debug("--\r\n");
+				log_i("--\r\n");
 
 				page-=cnt;
 				if(vertical_mode){
@@ -265,14 +265,14 @@ int hu_abs(int number)
 			GetElementInfo(info);
 
 			info.AddInfo("select", select_id);
-			debug("in doGetInfo() select_id=%d\r\n", select_id);
+			log_i("in doGetInfo() select_id=%d\r\n", select_id);
 		//	changePage();
 
 		}
 
 	void doRender()
 	{
-	//	debug("%s,doRender\n",name.c_str());
+	//	log_i("%s,doRender\n",name.c_str());
 		image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
 		if(!isFlip)
 		nodemp[select_id]->Flush();//都使用第一页的节点显示
@@ -341,7 +341,7 @@ int hu_abs(int number)
 		   }
 	       	  else //使用小图片
 	      	   {
-			debug("use small pic!!!!!!!!!!!!!!!!!!!\n");
+			log_i("use small pic!!!!!!!!!!!!!!!!!!!\n");
 			hustr filename("%s_%d.png", name.c_str(),j);
 			if (access_Image(filename))
 			{
@@ -414,7 +414,7 @@ int hu_abs(int number)
 	}
 	void doFlushConfigReduced()
 	{
-	//	debug("%s,doFlushConfigReduced\n",name.c_str());
+	//	log_i("%s,doFlushConfigReduced\n",name.c_str());
 		hide = m_mp["hide"]->getvalue_int();
 		select_id=m_mp["select"]->getvalue_int();
 		//noAnimation=m_mp["noAnim"]->getvalue_int();
@@ -503,7 +503,7 @@ int hu_abs(int number)
 	map<int, node *> nodemp;
 	image img[2];
         int node_num;
-	image output;
+//	image output;
 
 };
 

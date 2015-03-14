@@ -24,7 +24,7 @@ public:
 	}
 	~wheel_text(){
 
-//		debug("~wheel_text()!!!!!!!!!!!!!!!!!!!\n");
+//		log_i("~wheel_text()!!!!!!!!!!!!!!!!!!!\n");
 
 		nodemp.clear();
 	}
@@ -50,7 +50,7 @@ public:
 		~node()
 		{
 
-			//debug("~node()!!!!!!!!!!!!!!!!!!!\n");
+			//log_i("~node()!!!!!!!!!!!!!!!!!!!\n");
 			//xml_mgr->DelElement(name);
 		}
 
@@ -97,7 +97,7 @@ public:
 
 			if (pSrcBuffer == NULL)
 			{
-				//debug("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+				//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
 				SetBuffer(width, height);
 				path.format("ele-%s %dx%d", name.c_str(), width, height);
 			}
@@ -107,12 +107,12 @@ public:
 			size = m_mp["size"]->getvalue_int();
 
 			ttf.m_font = &font_mp[font];
-			debug("get font_mp %x %x\r\n", font_mp[font].face,
+			log_i("get font_mp %x %x\r\n", font_mp[font].face,
 					font_mp[font].ft_Lib);
 			ttf.fontHeight = size;
 			ttf.color = color;
 			ttf.style = style;
-			//debug("width=%d, height= %d\r\n", width,height);
+			//log_i("width=%d, height= %d\r\n", width,height);
 
 			doFlushConfigCom();
 			if(!m_mp["cached"]->getvalue_int()){
@@ -156,7 +156,7 @@ public:
 
 		void doRender()
 		{
-			//debug("in mode doRender()!!!!!\n");
+			//log_i("in mode doRender()!!!!!\n");
 			image::Render(&ttf, 0, 0);
 			//	image::Render(&img, 0, 0, width, height, 0, 0);
 		}
@@ -194,7 +194,38 @@ public:
 	}
 	void doFlushConfig()
 		{
-			PraseElement();
+		name = m_mp["name"]->getvalue();
+		int tmpX = m_mp["x"]->getvalue_int();
+		int tmpY = m_mp["y"]->getvalue_int();
+		width = 1;
+		height =1;
+		hide = m_mp["hide"]->getvalue_int();
+		//控件被移动
+		if (tmpX != x || tmpY != y)
+		{
+			Back();
+			x = tmpX;
+			y = tmpY;
+		}
+		log_i(
+				"$$$HU$$$ ElementPrase %s x=%d y=%d width=%d height=%d hide=%d\r\n",
+				name.c_str(), x, y, width, height, hide);
+		if (m_mp.exist("lay"))
+		{
+			lay = m_mp["lay"]->getvalue_int();
+		}
+		else
+		{
+			lay = 5;
+		}
+		if (pSrcBuffer == NULL)
+		{
+			//debug("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+			SetBuffer(width, height);
+			path.format("ele-%s %dx%d", name.c_str(), width, height);
+		}
+		initstack();
+
 			num_max = m_mp["max"]->getvalue_int();
 			num_min = m_mp["min"]->getvalue_int();
 			step = m_mp["step"]->getvalue_int();
@@ -240,7 +271,7 @@ public:
 	void FlushConfigCom()
 				{
 
-					debug("doFlushConfigCom()!!!!!!!  \n");
+					//log_i("doFlushConfigCom()!!!!!!!  \n");
 					set_num= m_mp["set_num"]->getvalue_int();
 					if(node_num==3){
 

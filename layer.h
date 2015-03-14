@@ -39,11 +39,11 @@ class xmlproc;
 //	{
 //		if (dst == NULL || src == NULL)
 //		{
-//			printf("Undefined InitRollBack src or dst ,You can not use RollBack\r\n");
+//			debug("Undefined InitRollBack src or dst ,You can not use RollBack\r\n");
 //			return;
 //		}
 //
-//		//printf("RollBack init %d %d %d %d\r\n", cx, cy, cwidth, cheight);
+//		//debug("RollBack init %d %d %d %d\r\n", cx, cy, cwidth, cheight);
 //		width = cwidth;
 //		height = cheight;
 //		x = cx;
@@ -70,7 +70,7 @@ class xmlproc;
 //			}
 //			else if (RollBack == "block")
 //			{
-//				//printf("init RollBack = block\r\n");
+//				//debug("init RollBack = block\r\n");
 //				math = 2;
 //			}
 //			else
@@ -93,7 +93,7 @@ class xmlproc;
 //			}
 //			else if (RollBack == "block")
 //			{
-//				//printf("init RollBack = block\r\n");
+//				//debug("init RollBack = block\r\n");
 //				math = 2;
 //			}
 //			else
@@ -117,7 +117,7 @@ class xmlproc;
 //		}
 //		else if (math == 2)
 //		{
-//			//printf("math=2\r\n");
+//			//debug("math=2\r\n");
 //			RollBackBlock();
 //		}
 //	}
@@ -142,7 +142,7 @@ class xmlproc;
 //		{
 //			return 0;
 //		}
-//		//printf("RollBackBlock x=%d y=%d width=%d height=%d\r\n",x, y, width, height);
+//		//debug("RollBackBlock x=%d y=%d width=%d height=%d\r\n",x, y, width, height);
 //		dst->AreaCopy(src, x, y, width, height, x, y);
 //	}
 //	int SaveRoback(image * img, int dx, int dy)
@@ -238,11 +238,11 @@ public:
 	virtual void doRender() = 0;
 	virtual void doGetInfo(info & info)
 	{
-		printf("warning element bash doGetInfo\r\n");
+		log_i(" element bash doGetInfo\r\n");
 	}
 	virtual void doDelete()
 	{
-		printf("warning element bash OnDelete\r\n");
+		log_i(" element bash OnDelete\r\n");
 	}
 
 	void GetElementInfo(info & info)
@@ -276,7 +276,7 @@ public:
 	}
 	void onSchedule()
 	{
-		debug("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
+		log_i("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
 		Render();
 		//debug("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
 	}
@@ -294,7 +294,7 @@ public:
 
 	virtual ~element()
 	{
-		debug("###HU### distroy element %s\r\n", name.c_str());
+		log_i("###HU### distroy element %s\r\n", name.c_str());
 		backstack();
 		map<int, image>::iterator it;
 		for (it = res.begin(); it != res.end(); ++it)
@@ -328,7 +328,7 @@ public:
 			x = tmpX;
 			y = tmpY;
 		}
-		debug(
+		log_i(
 				"$$$HU$$$ ElementPrase %s x=%d y=%d width=%d height=%d hide=%d\r\n",
 				name.c_str(), x, y, width, height, hide);
 
@@ -343,7 +343,7 @@ public:
 
 		if (pSrcBuffer == NULL)
 		{
-			//printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+			//debug("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
 			SetBuffer(width, height);
 			path.format("ele-%s %dx%d", name.c_str(), width, height);
 		}
@@ -400,7 +400,7 @@ public:
 				ele = *it;
 				if (ele->hide == 0)
 				{
-					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
+					//debug("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
 
 					 s_ofx = 0; //源x
 					 d_ofx = 0; //目标x
@@ -448,7 +448,7 @@ public:
 				 ele = *it;
 				if (ele->hide == 0)
 				{
-					//printf("$$$HU$$$ RenderET %s <-- %s\r\n", name.c_str(), ele->name.c_str());
+					//debug("$$$HU$$$ RenderET %s <-- %s\r\n", name.c_str(), ele->name.c_str());
 					ele->Render();
 				}
 			}
@@ -476,7 +476,7 @@ public:
 		}
 		if (it == et.end())
 		{
-			//printf("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
+			//debug("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
 			et.push_back(ele);
 			et.sort(Cmpare());
 		}
@@ -493,7 +493,7 @@ public:
 		}
 		if (it == eb.end())
 		{
-			//printf("$$$HU$$$ [%s] add [%s] EB\r\n",name.c_str(),ele->name.c_str());
+			//debug("$$$HU$$$ [%s] add [%s] EB\r\n",name.c_str(),ele->name.c_str());
 			eb.push_back(ele);
 			eb.sort(Cmpare());
 		}
@@ -523,7 +523,7 @@ public:
 	{
 		if (res[id].path != path || res[id].isNULL())
 		{
-			//printf("SetRes %d %s\r\n",id,path);
+			//debug("SetRes %d %s\r\n",id,path);
 			res[id].SetResource(path);
 		}
 	}
@@ -554,7 +554,7 @@ public:
 		}
 		else
 		{
-			printf("Repeat to add element %s\r\n", name);
+			log_w("Repeat to add element %s\r\n", name);
 		}
 
 	}
@@ -567,7 +567,7 @@ public:
 		element * ele = GetElementByName(name);
 		if (ele == NULL)
 		{
-			printf("can't del layer element %s\r\n", name);
+			log_w("can't del layer element %s\r\n", name);
 		}
 		else
 		{

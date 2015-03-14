@@ -29,7 +29,7 @@ public:
 		error = dlerror(); /* 检测错误 */
 		if (error) /* 若出错则退出 */
 		{
-			printf("dlerror::%s\r\n", error);
+			log_e("dlerror::%s\r\n", error);
 			exit(1);
 		}
 
@@ -39,9 +39,9 @@ public:
 	}
 	~dlproc()
 	{
-		printf("dlproc exit\r\n");
+		log_i("dlproc exit\r\n");
 		dlclose(dp); /* 关闭共享库 */
-		printf("dlproc exit OK\r\n");
+		log_i("dlproc exit OK\r\n");
 	}
 };
 //

@@ -21,7 +21,7 @@ void Install_Element(HUMap &xmlmp, xmlproc * xml)
 	{
 		 ele = it->second;
 		if(ele->name==name){
-			printf("element %s has already added!!!\n",name);
+			log_w("element %s has already added!!!\n",name);
 			return ;
 		}
 	}

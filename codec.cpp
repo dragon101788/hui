@@ -57,17 +57,17 @@ int codec_to_Image(image * enode, const char * filename)
 
 	if (image_read_from_snap(enode, filename) == 0)
 	{
-		debug("codec_to_Image %s load snap\r\n", filename);
+		log_i("codec_to_Image %s load snap\r\n", filename);
 	}
 	else
 	{
-		debug("codec_to_Image %s load file\r\n", filename);
+		log_i("codec_to_Image %s load file\r\n", filename);
 
 		const char * type = strrchr(filename, '.') + 1;
 		if (strcasecmp(type, "png") == 0)
 		{
 			//debug_timer();
-			//printf("$$$HU$$$ JPG\r\n");
+			//debug("$$$HU$$$ JPG\r\n");
 
 			if (pngCodec_to_image(enode, filename))
 			{
@@ -77,7 +77,7 @@ int codec_to_Image(image * enode, const char * filename)
 		}
 		//	else if (strcasecmp(type, "bmp") == 0)
 		//	{
-		//		//printf("$$$HU$$$ BMP\r\n");
+		//		//debug("$$$HU$$$ BMP\r\n");
 		//		if (bmpCodec_to_image(enode, filename))
 		//		{
 		//			errexitf("bmpCodec_to_image %s", filename);
@@ -85,7 +85,7 @@ int codec_to_Image(image * enode, const char * filename)
 		//	}
 		//	else if(strcasecmp(strrchr(filename,'.')+1,"jpg")==0)
 		//	{
-		//		//printf("$$$HU$$$ JPG\r\n");
+		//		//debug("$$$HU$$$ JPG\r\n");
 		//		if (jpegCodec_to_image(enode,filename))
 		//		{
 		//			exit(1);
@@ -153,7 +153,7 @@ int pngCodec_to_image(image * sobj, const char *filepath)
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr); /* ��ȡλ�� */
 	color_type = png_get_color_type(png_ptr, info_ptr); /*��ɫ����*/
 
-	//printf("channels=%d bit_depth=%d color_type=%d\r\n",channels,bit_depth,color_type);
+	//debug("channels=%d bit_depth=%d color_type=%d\r\n",channels,bit_depth,color_type);
 	int i, j;
 	int pos = 0;
 	/* row_pointers��߾���rgba��� */
@@ -222,7 +222,7 @@ int pngCodec_to_image(image * sobj, const char *filepath)
 /* 将puc_data结构中的数据写入至png文件 */
 int pngEndec_to_image(const char *file_name, image * graph)
 {
-	printf("write_png_file save to %s\r\n", file_name);
+	log_i("write_png_file save to %s\r\n", file_name);
 	int j, i, temp, pos;
 	png_byte color_type;
 
@@ -400,24 +400,24 @@ int image_read_from_snap(image * img, const char * rawpath)
 //	}
 //	if (jpg_codec_fd < 0)
 //	{
-//		printf("JPEG Engine is busy\n");
+//		debug("JPEG Engine is busy\n");
 //		exit(-1);
 //	}
 //	/* allocate memory for JPEG engine */
 //	ioctl(jpg_codec_fd, JPEG_GET_JPEG_BUFFER, (__u32)&jpeg_buffer_size);
 //
-//	//printf("\tjpeg engine memory buffer: 0x%X\n",jpeg_buffer_size);
+//	//debug("\tjpeg engine memory buffer: 0x%X\n",jpeg_buffer_size);
 //
 //	pJpegBuffer = (unsigned char *)mmap(NULL, jpeg_buffer_size, PROT_READ|PROT_WRITE, MAP_SHARED, jpg_codec_fd, 0);
 //
 //	if(pJpegBuffer == MAP_FAILED)
 //	{
-//		printf("JPEG Map Failed!\n");
+//		debug("JPEG Map Failed!\n");
 //		exit(-1);
 //	}
 //	else
 //	{
-//	//	printf("\tGet memory from jpeg engine: 0x%X\n",jpeg_buffer_size);
+//	//	debug("\tGet memory from jpeg engine: 0x%X\n",jpeg_buffer_size);
 //	}
 //
 //	memset((void*)&jpeg_param, 0, sizeof(jpeg_param_t));
@@ -443,7 +443,7 @@ int image_read_from_snap(image * img, const char * rawpath)
 //
 //	if(BufferSize > jpeg_buffer_size)
 //	{
-//		printf("JPEG Engine Buffer isn't enough\n");
+//		debug("JPEG Engine Buffer isn't enough\n");
 //		exit(-1);
 //	}
 //
@@ -455,14 +455,14 @@ int image_read_from_snap(image * img, const char * rawpath)
 //	fp = fopen(filename, "r");
 //	if(fp == NULL)
 //	{
-//	    printf("open %s error : %s\n", filename,strerror(errno));
+//	    debug("open %s error : %s\n", filename,strerror(errno));
 //	    exit(-1);
 //	}
 //
 //	pSRCbuffer = pJpegBuffer;
 //	bufferCount = 0;
 //	parser = 0;
-//	//printf("JPEG Header Parser:\n");
+//	//debug("JPEG Header Parser:\n");
 //	/* Read Bitstream to JPEG engine src buffer */
 //	while(!feof(fp))
 //	{
@@ -488,26 +488,26 @@ int image_read_from_snap(image * img, const char * rawpath)
 //			result = ParsingJPEG(pJpegBuffer, bufferCount, &width, &height);
 //			if(!result)
 //			{
-//				//printf("\t->Width %d, Height %d\n", width,height);
+//				//debug("\t->Width %d, Height %d\n", width,height);
 //				parser = 1;
 //			}
 //			else{}
-//				//printf("\t->Can't get image siz in %5d byte bistream\n", bufferCount);
+//				//debug("\t->Can't get image siz in %5d byte bistream\n", bufferCount);
 //		}
 //
 //		if( bufferCount > jpeg_param.src_bufsize)
 //		{
-//			printf("Bitstream size is larger than src buffer, %d!!\n",bufferCount);
+//			debug("Bitstream size is larger than src buffer, %d!!\n",bufferCount);
 //			return 0;
 //		}
 //	}
-//	printf("Bitstream is %d Bytes\n",bufferCount);
+//	debug("Bitstream is %d Bytes\n",bufferCount);
 //
 //	if(bufferCount % 4)
 //		bufferCount = (bufferCount & ~0x3) + 4;
 //
 //
-//	printf("Set Src Buffer is %d Bytes\n",bufferCount);
+//	debug("Set Src Buffer is %d Bytes\n",bufferCount);
 //
 //	jpeg_param.src_bufsize = bufferCount;	/* Src buffer size (Bitstream buffer size for JPEG engine) */
 //	jpeg_param.dst_bufsize = BufferSize - bufferCount;	/* Dst buffer size (Decoded Raw data buffer size for JPEG engine) */
@@ -525,7 +525,7 @@ int image_read_from_snap(image * img, const char * rawpath)
 //	/* Set operation property to JPEG engine */
 //	if((ioctl(jpg_codec_fd, JPEG_S_PARAM, &jpeg_param)) < 0)
 //	{
-//		fprintf(stderr,"set jpeg param failed:%d\n",errno);
+//		fdebug(stderr,"set jpeg param failed:%d\n",errno);
 //		ret = -1;
 //		goto out;
 //	}
@@ -534,7 +534,7 @@ int image_read_from_snap(image * img, const char * rawpath)
 //	/* Trigger JPEG engine */
 //	if((ioctl(jpg_codec_fd, JPEG_TRIGGER, NULL)) < 0)
 //	{
-//		fprintf(stderr,"trigger jpeg failed:%d\n",errno);
+//		fdebug(stderr,"trigger jpeg failed:%d\n",errno);
 //		ret = -1;
 //		goto out;
 //	}
@@ -543,11 +543,11 @@ int image_read_from_snap(image * img, const char * rawpath)
 //	len = read(jpg_codec_fd, jpeginfo, jpeginfo_size);
 //
 //	if(len<0) {
-//		fprintf(stderr, "read data error errno=%d\n", errno);
+//		fdebug(stderr, "read data error errno=%d\n", errno);
 //		ret = -1;
 //		goto out;
 //	}
-//	//printf("JPEG: Width %d, Height %d\n",jpeginfo->width, jpeginfo->height);
+//	//debug("JPEG: Width %d, Height %d\n",jpeginfo->width, jpeginfo->height);
 //
 //	if(jpeginfo->state == JPEG_DECODED_IMAGE)
 //	{
@@ -569,15 +569,15 @@ int image_read_from_snap(image * img, const char * rawpath)
 //		sobj->get_width()=jpeginfo->width;
 //		sobj->get_height()=jpeginfo->height;
 //
-//		printf("jpeg codec filename=%s %d %d\r\n",filename,sobj->get_width(),sobj->get_height());
+//		debug("jpeg codec filename=%s %d %d\r\n",filename,sobj->get_width(),sobj->get_height());
 //
 //	}
 //	else if(jpeginfo->state == JPEG_DECODE_ERROR)
-//		printf("Decode Error\n");
+//		debug("Decode Error\n");
 //	else if(jpeginfo->state == JPEG_MEM_SHORTAGE)
-//		printf("Memory Shortage\n");
+//		debug("Memory Shortage\n");
 //	else if(jpeginfo->state == JPEG_DECODE_PARAM_ERROR)
-//		printf("Decode Parameter Error\n");
+//		debug("Decode Parameter Error\n");
 //
 //
 //out:
@@ -601,7 +601,7 @@ void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	{
 		huErrExit("AreaCopy cp_windth or cp_height <0\r\n");
 	}
-	//printf("$$$HU$$$ src_x=%d\r\n", src_x);
+	//debug("$$$HU$$$ src_x=%d\r\n", src_x);
 
 	if (src_x < 0)
 	{
@@ -623,7 +623,7 @@ void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 //		}
 	if (src_y + cp_height > rsc_img->GetHeight())
 	{
-		//printf("AreaCopy src_y=%d cp_height=%d rsc_img->get_height()=%d\r\n", src_y, cp_height, rsc_img->get_height());
+		//debug("AreaCopy src_y=%d cp_height=%d rsc_img->get_height()=%d\r\n", src_y, cp_height, rsc_img->get_height());
 		cp_height = rsc_img->GetHeight() - src_y;
 		if (cp_height <= 0)
 		{
@@ -632,7 +632,7 @@ void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	}
 	if (src_x + cp_width > rsc_img->GetWidth())
 	{
-		//printf("AreaCopy src_x=%d cp_width=%d rsc_img->get_width()=%d\r\n", src_x, cp_width, rsc_img->get_width());
+		//debug("AreaCopy src_x=%d cp_width=%d rsc_img->get_width()=%d\r\n", src_x, cp_width, rsc_img->get_width());
 		cp_width = rsc_img->GetWidth() - src_x;
 		if (cp_width <= 0)
 		{
@@ -656,15 +656,15 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 
 	if (dst_img->SrcGPUAddr() == 0 || src_img->SrcGPUAddr() == 0)
 		{
-			printf("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
+			log_w("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
 			return;
 		}
 	dst_img->lock();
 	src_img->lock();
 
-	//printf("$$$HU$$$ AreaCopy1 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
+	//debug("$$$HU$$$ AreaCopy1 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
-	//printf("$$$HU$$$ AreaCopy2 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
+	//debug("$$$HU$$$ AreaCopy2 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	int line_byte=cp_width * 4;
 	unsigned int dst_step= dst_img->u32Width;
 	unsigned int src_step= src_img->u32Width;

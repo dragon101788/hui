@@ -276,7 +276,7 @@ private:
 		if (--*pUse == 0)
 		{
 			if (ptr != NULL)
-				debug("$$$HU$$$ Auto Ptr DestroyUse Release content\n");
+				log_i("$$$HU$$$ Auto Ptr DestroyUse Release content\n");
 
 			delete ptr;
 			delete pUse;
@@ -377,17 +377,17 @@ class thread
 public:
 	virtual int run()
 	{
-		printf("call base thread run\r\n");
+		log_i("call base thread run\r\n");
 	}
 
 	virtual int destroy()
 	{
-		printf("call base thread destroy\r\n");
+		log_i("call base thread destroy\r\n");
 	}
 	static void cleanup(void * arg)
 	{
 		thread * is = (thread *) arg;
-		printf("[%s] thread asynchronous interrupt\r\n", is->name.c_str());
+		log_i("[%s] thread asynchronous interrupt\r\n", is->name.c_str());
 		is->destroy();
 	}
 	static void * create_thread(void *arg)
@@ -432,13 +432,13 @@ public:
 		{
 			if (!pthread_cancel(tid))
 			{
-				printf("pthread_cancel %s OK\n ", name.c_str());
+				log_i("pthread_cancel %s OK\n ", name.c_str());
 				wait();
 				tid = -1;
 			}
 			else
 			{
-				printf("pthread_cancel %s faild: %s\n ", name.c_str(), strerror(errno));
+				log_i("pthread_cancel %s faild: %s\n ", name.c_str(), strerror(errno));
 			}
 		}
 	}
@@ -471,7 +471,7 @@ public:
 		{
 			if (GetTickCount() > timer + m_max)
 			{
-				printf("%s thread Timer Out\r\n", m_name.nstr());
+				log_i("%s thread Timer Out\r\n", m_name.nstr());
 				m_thd->kill(11);
 				return -1;
 			}
@@ -726,7 +726,7 @@ public:
 	{
 		int usetime = GetTickCount() - oldtime;
 		if (str != NULL)
-			debug("debug_timer [%s] %dfps/S fps/%dms\r\n", str,
+			log_s("debug_timer [%s] %dfps/S fps/%dms\r\n", str,
 					usetime ? 1000 / usetime : 1000, usetime);
 		oldtime = GetTickCount();
 	}

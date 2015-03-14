@@ -5,5 +5,5 @@ static InstallXMLinstan install("drag_menu",Install_Element<drag_menu>);
 
 hucall int init(HUMap & mp,void * data)
 {
-	debug("module init\r\n");
+	log_i("module init\r\n");
 }

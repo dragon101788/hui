@@ -76,15 +76,15 @@ public:
 	{
 
 		while(go){
-			//printf("run  IN!!!\n");
+			//debug("run  IN!!!\n");
 			sem_wait(&sem);
 			lock();
 			if(from_img!=NULL){
-		//	printf("run  RenderImageToFrameBuffer_self!!!\n");
+		//	debug("run  RenderImageToFrameBuffer_self!!!\n");
 			RenderImageToFrameBuffer_self(from_img);
 			}
 			unlock();
-		//	printf("run  out!!!\n");
+		//	debug("run  out!!!\n");
 
 		}
 		/*
@@ -93,14 +93,14 @@ public:
 		//memcpy(put.pSrcBuffer, pSrcBuffer, SrcSize);
 		if (!snap.empty())
 		{
-			printf("fbf snap = %s\r\n", snap.c_str());
+			debug("fbf snap = %s\r\n", snap.c_str());
 			out_img.ReSetResource(snap);
 			snap.clear();
 		}
 		//put.cleanBuf();
 		for (int i = 1; i <= 5; i++)
 		{
-			printf("fbflush run %d\r\n", i);
+			debug("fbflush run %d\r\n", i);
 //			in_img.stransformation.colorMultiplier.i16Alpha = 255 - 32 * i;
 //			put.Render(&in_img, 0, 0);
 			out_img.setTransp(20 * i);
@@ -121,7 +121,7 @@ public:
 	void DumpToSnap(const char * path)
 	{
 		//cancel();
-		printf("DumpToSnap %s\r\n", path);
+		log_i("DumpToSnap %s\r\n", path);
 		wait();
 		snap = path;
 		create();
@@ -170,9 +170,9 @@ public:
 		u32Height = var.yres;
 
 		lcm_dpp = var.bits_per_pixel;
-		printf("FrameBuffer Accept %d %d %d %d %d %d %d\r\n",u32Width,u32Height,lcm_dpp,var.xres_virtual,var.yres_virtual,var.xoffset,var.yoffset);
+		log_i("FrameBuffer Accept %d %d %d %d %d %d %d\r\n",u32Width,u32Height,lcm_dpp,var.xres_virtual,var.yres_virtual,var.xoffset,var.yoffset);
 		SrcSize = u32Width * u32Height * (lcm_dpp / 8);
-		//printf("$$$luo$$$ SrcSize is %d \r\n",SrcSize);
+		//debug("$$$luo$$$ SrcSize is %d \r\n",SrcSize);
 
 		pSrcBuffer = mmap(NULL, SrcSize, PROT_READ | PROT_WRITE, MAP_SHARED, lcm_fd, 0);
 		if (pSrcBuffer == MAP_FAILED)
@@ -185,7 +185,7 @@ public:
 
 	void Destroy()
 	{
-		printf("$$$HU$$$ framebuffer Destroy\r\n");
+		log_i("$$$HU$$$ framebuffer Destroy\r\n");
 		if (pSrcBuffer != NULL && pSrcBuffer != MAP_FAILED)
 		{
 			munmap(pSrcBuffer, SrcSize);
@@ -197,13 +197,13 @@ public:
 	}
 
 	void RenderImageToFrameBuffer(image * img){
-		//printf("RenderImageToFrameBuffer in!!!\n");
+		//debug("RenderImageToFrameBuffer in!!!\n");
     	lock();
     	from_img=img;
     //	pthread_resume();
     	unlock();
     	sem_post(&sem);
-    //	printf("RenderImageToFrameBuffer out!!!!\n");
+    //	debug("RenderImageToFrameBuffer out!!!!\n");
     }
 	void RenderImageToFrameBuffer_self(image * img)
 	{
@@ -217,7 +217,7 @@ public:
 
 		if (lcm_dpp == 16)
 		{
-			//printf("$$$luo$$$ bpp=16\r\n");
+			//debug("$$$luo$$$ bpp=16\r\n");
 			for(int y=0;y<u32Height;y++)
 			{
 				for(int x=0;x<u32Width;x++)
@@ -229,14 +229,34 @@ public:
 		}
 		else if (lcm_dpp == 32)
 		{
-			//printf("$$$luo$$$ bpp=32\r\n");
+			//debug("$$$luo$$$ bpp=32\r\n");
 			img->dump_to_buf(pSrcBuffer);
+		}
+
+		ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
+
+	}
+
+	void RenderImageToFrameBuffer_part(image * img,int x,int y)
+	{
+		if (img == NULL ||img->isNULL())
+		{
+			huErrExit("RenderFromBuffer Image invalid\r\n");
+		}
+
+		ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
+
+		 if (lcm_dpp == 32)
+		{
+			img-> dump_to_buf_part(pSrcBuffer,u32Width,u32Height,x, y);
 		}
 		//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);
 
 		ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
 
 	}
+
+
 	void RenderImageToFrameBuffer_old(image * img)
 	{
 		wait();
@@ -250,7 +270,7 @@ public:
 
 		if (lcm_dpp == 16)
 		{
-			//printf("$$$luo$$$ bpp=16\r\n");
+			//debug("$$$luo$$$ bpp=16\r\n");
 			for(int y=0;y<u32Height;y++)
 			{
 				for(int x=0;x<u32Width;x++)
@@ -262,7 +282,7 @@ public:
 		}
 		else if (lcm_dpp == 32)
 		{
-			//printf("$$$luo$$$ bpp=32\r\n");
+			//debug("$$$luo$$$ bpp=32\r\n");
 			img->dump_to_buf(pSrcBuffer);
 		}
 		//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);

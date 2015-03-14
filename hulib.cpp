@@ -69,7 +69,7 @@ void debug_timer(const char * str)
 	static int oldtime = GetTickCount();
 	int usetime = GetTickCount() - oldtime;
 	if (str != NULL)
-		printf("debug_timer [%s] %dfps/S fps/%dms\r\n", str, usetime ? 1000 / usetime : 1000, usetime);
+		log_w("debug_timer [%s] %dfps/S fps/%dms\r\n", str, usetime ? 1000 / usetime : 1000, usetime);
 	oldtime = GetTickCount();
 }
 
@@ -116,10 +116,10 @@ static int backtrace_xy(void **BUFFER, int SIZE)
 
 void errexit(const char * str)
 {
-	printf("**************error exit*****************\r\n");
-	printf(str);
-	printf("\r\n");
-	printf("*****************************************\r\n");
+	log_e("**************error exit*****************\r\n");
+	log_e(str);
+	log_e("\r\n");
+	log_e("*****************************************\r\n");
 	dumpstack();
 	exit(-1);
 }
@@ -133,7 +133,7 @@ void debug_usage()
 	//printf("ERR=%d\r\n", err);
 	//printf("userCPU:%ld.%ld\t", buf.ru_utime.tv_sec, buf.ru_utime.tv_usec);
 	//printf("kernelCPU:%ld.%ld\t", buf.ru_stime.tv_sec, buf.ru_stime.tv_usec);
-	printf("RUSAGE_SELF MEM:%ld\r\n", buf.ru_maxrss);
+	log_i("RUSAGE_SELF MEM:%ld\r\n", buf.ru_maxrss);
 
 }
 
@@ -185,12 +185,12 @@ void dumpstack()
 		status = dladdr(pcur, &info);
 		if (status && info.dli_fname && info.dli_fname[0] != '\0')
 		{
-			printf("0x%08x 0x%08x %-20s <  %s+%p  >\r\n", pcur, info.dli_saddr, info.dli_fname, info.dli_sname,
+			log_i("0x%08x 0x%08x %-20s <  %s+%p  >\r\n", pcur, info.dli_saddr, info.dli_fname, info.dli_sname,
 					(unsigned long) ((unsigned int) pcur - (unsigned int) info.dli_saddr));
 		}
 		else
 		{
-			printf("[%p]", (void *) *(next_fp - 1));
+			log_i("[%p]", (void *) *(next_fp - 1));
 		}
 
 		//array[cnt++] = (void *)*(next_fp - 1);
@@ -198,7 +198,7 @@ void dumpstack()
 		cnt++;
 	}
 
-	printf("Backstrace (%d deep)\n", cnt);
+	log_i("Backstrace (%d deep)\n", cnt);
 
 }
 
