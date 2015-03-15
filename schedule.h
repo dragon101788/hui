@@ -137,6 +137,7 @@ public:
 		width = 0;
 		height = 0;
 		stop = 0;
+
 	}
 
 	void clean()
