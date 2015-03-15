@@ -82,7 +82,7 @@ public:
 			if(from_img!=NULL){
 		//	from_img->lock();
 		//	printf("run  RenderImageToFrameBuffer_self!!!\n");
-			RenderImageToFrameBuffer_self(from_img);
+			RenderImageToFrameBuffer(from_img);
 		//	from_img->unlock();
 			}
 			unlock();
@@ -198,16 +198,15 @@ public:
 		lcm_fd = -1;
 	}
 
-	void RenderImageToFrameBuffer(image * img){
+	void NotifyRenderFrameBuffer(image * img){
 		//printf("RenderImageToFrameBuffer in!!!\n");
 		img->lock();
     	from_img=img;
-    //	pthread_resume();
     	img->unlock();
     	sem_post(&sem);
     //	printf("RenderImageToFrameBuffer out!!!!\n");
     }
-	void RenderImageToFrameBuffer_self(image * img)
+	void RenderImageToFrameBuffer(image * img)
 	{
 		if (img == NULL ||img->isNULL())
 		{
@@ -219,6 +218,7 @@ public:
 
 		if (lcm_dpp == 16)
 		{
+			img->lock();
 			//printf("$$$luo$$$ bpp=16\r\n");
 			for(int y=0;y<u32Height;y++)
 			{
@@ -228,6 +228,7 @@ public:
 					*(((unsigned short*)pSrcBuffer)+(y*u32Width+x)) = RGB565(pix->u8Red,pix->u8Green,pix->u8Blue);
 				}
 			}
+			img->lock();
 		}
 		else if (lcm_dpp == 32)
 		{

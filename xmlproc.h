@@ -80,7 +80,7 @@ private:
 		{
 			//lock();
 		//	printf("before fb->RenderImageToFrameBuffer(this);!!!!!!!!\r\n");
-			fb->RenderImageToFrameBuffer(this);
+			fb->NotifyRenderFrameBuffer(this);
 		//	unlock();
 		}
 	};
@@ -194,7 +194,7 @@ public:
 		if (isDraw != 0 && fore == 1 && done == 1)
 		{
 			printf("%s RenderFromBuffer\r\n",filename.c_str());
-			out.RenderToFramebuffer(&fb);//此函会造成锁死
+			out.RenderToFramebuffer(&fb);
 			fps.debug_timer("<fps>");
 			isDraw = 0;
 		}
