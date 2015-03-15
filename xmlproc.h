@@ -134,9 +134,9 @@ private:
 	int fore; //前台
 	int done; //完成解析
 	int m_exit; //线程退出
-
 	int isDraw; //有改变图像
 public:
+	int directDraw;
 	void Draw(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 	{
 		//lock();
@@ -177,7 +177,9 @@ public:
 		{
 			//以FPSWaitFPS()限定的帧率循环刷新屏幕
 			int ret = ScheduleProc();
-
+			if(directDraw)
+				printFps();
+			else
 			ProcDraw();
 
 			FPSWaitFPS(30);
@@ -198,6 +200,15 @@ public:
 		}
 	//	unlock();
 	}
+	void printFps()
+	{
+		if (isDraw != 0 && fore == 1 && done == 1)
+		{
+			fps.debug_timer("<fps>");
+			isDraw = 0;
+		}
+	}
+
 	void ProcTouch(touch_sample * samp)
 	{
 		if (fore == 0)
@@ -265,6 +276,7 @@ public:
 	xmlproc()
 	{
 		init();
+		directDraw=0;
 	}
 	xmlproc(const char * file)
 	{
@@ -273,6 +285,14 @@ public:
 		filename = file;
 
 	}
+	void drawDirect(image* src_img,int src_x,int src_y,int src_w,int src_h,int dst_x, int dst_y)
+	{
+		//lock();
+		fb.RenderImageToFrameBuffer_part(src_img,src_x,src_y,src_w,src_h,dst_x,dst_y);
+		isDraw++;
+		//unlock();
+	}
+
 
 	void Destroy()
 	{

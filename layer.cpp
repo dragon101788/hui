@@ -164,8 +164,8 @@ void element::Render()
 
 	}else{
 	//xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
-		if(isParent()){ //一级父容器直接输出到fb
-			fb.RenderImageToFrameBuffer_part(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
+		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
+			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
 		}else
 		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
 

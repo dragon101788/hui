@@ -113,7 +113,7 @@ public:
 	}
 
 
-		void dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h, int dst_w,int dst_h,int dst_x, int dst_y)
+	inline void dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h, int dst_w,int dst_h,int dst_x, int dst_y)
 	{
 		int x;
 		int y;

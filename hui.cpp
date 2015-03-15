@@ -529,6 +529,12 @@ void ParseSet(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 	}
 	xml->DoneProc();
 }
+
+
+void parseDirectDraw(hustr parentName,HUMap & xmlmp, xmlproc * xml)
+{
+	xml->directDraw = xmlmp["direct"]->getvalue_int();
+}
 //HUTMap<XMLinstan_tf> XMLinstan;
 void init_xml_instan()
 {
@@ -548,6 +554,7 @@ void init_xml_instan()
 	XMLinstan["set"] = ParseSet;
 	XMLinstan["reDrawPage"] = ParseRefreshPage;
 	XMLinstan["reDrawElement"] = ParseRefreshElement;
+	XMLinstan["directDraw"] = parseDirectDraw;
 
 }
 //int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)

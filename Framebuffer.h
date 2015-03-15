@@ -240,7 +240,7 @@ public:
 
 	}
 
-	void RenderImageToFrameBuffer_part(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y)
+	inline void RenderImageToFrameBuffer_part(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y)
 {
 	if (img == NULL ||img->isNULL())
 	{
