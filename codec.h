@@ -112,6 +112,70 @@ public:
 		path = img.path;
 	}
 
+
+		void dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h, int dst_w,int dst_h,int dst_x, int dst_y)
+	{
+		int x;
+		int y;
+		//int s_x=src_x;
+		//int s_y=src_y;
+		int cp_w=src_w;
+		int cp_h=src_h;
+		unsigned int * dst_start;
+		lock();
+
+		if (dst_x < 0)
+		{
+			src_x -=dst_x;
+			dst_x = 0;
+		}
+		if (dst_y < 0)
+		{
+			src_y -= dst_y;
+			dst_y = 0;
+		}
+		if(dst_x+cp_w>dst_w){
+			cp_w=dst_w-dst_x;
+		}
+		if(dst_y+cp_h>dst_h){
+			cp_h=dst_h-dst_y;
+		}
+
+		int line_byte=cp_w * 4;
+		unsigned int dst_step= dst_w;
+		unsigned int src_step= u32Width;
+		unsigned int * src_start=(unsigned int *)pSrcBuffer +src_y * src_step + src_x;
+		unsigned int dst_offset=0;
+		unsigned int src_offset=0;
+
+
+	#ifdef CONFIG_REVERSE_SCREEN
+		dst_x=dst_w-dst_x-1;
+		dst_y=dst_h-dst_y-1;
+		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
+
+		for (y = 0; y<cp_h; y++)
+		{
+			//memcpy( dst_start+dst_offset,src_start+src_offset, line_byte);
+			for(x=0;x<cp_w;x++){
+				*(dst_start+dst_offset-x)=*(src_start+src_offset+x);
+			}
+			dst_offset-=dst_step;
+			src_offset+=src_step;
+		}
+	#else
+		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
+		for (y = 0; y < cp_h; y++)
+		{
+			memcpy( dst_start+dst_offset, src_start+src_offset, line_byte);
+			dst_offset+=dst_step;
+			src_offset+=src_step;
+		}
+	#endif
+		unlock();
+	}
+
+
 //	inline void SetPix(int pos, int r, int g, int b, int a)
 //	{
 //		IMG_PIX * tmp = GetPix(pos);
