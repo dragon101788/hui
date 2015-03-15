@@ -681,7 +681,7 @@ int main(int argc, char *argv[])
 	const char * xmlfile = g_var.getvar("xmlfile");
 	if (xmlfile == NULL)
 	{
-		xmlfile = "home.xml";
+		xmlfile = "start.xml";
 	}
 //	hustr snapfile("%s.png", xmlfile);
 //	if (access(snapfile, F_OK) == 0)
