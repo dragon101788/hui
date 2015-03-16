@@ -137,7 +137,7 @@ public:
 	}
 	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
 		if(!is_parent){  //还不是父亲
-			out.SetBuffer(width*x_page_num,height*y_page_num);//成为父亲你得想有一个家
+			top_image.SetBuffer(width*x_page_num,height*y_page_num);//成为父亲你得想有一个家
 			is_parent=true;
 		}
 		AddElement( name, son);
@@ -161,7 +161,7 @@ public:
 		render_offset_y=dst_y%height;
 		render_width=cp_width;
 		render_height=cp_height;
-		out.AreaCopy(src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);//控件输出到父控件
+		top_image.AreaCopy(src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);//控件输出到父控件
 		isDraw++;
 		unlock();
 	}
@@ -188,7 +188,7 @@ public:
 	int isDraw;
 	element * parent;
 
-	image out;
+	image top_image;//元素的最高一层，专门用来绘制子空间
 
 
 
@@ -201,7 +201,7 @@ protected:
 
 
 
-class element:virtual public window, public schedule_ele, public image,virtual public ele_nest_extend, virtual public Mutex //元素本身也是元素管理者
+class element:virtual public window,public image,public schedule_ele, virtual public ele_nest_extend, virtual public Mutex //元素本身也是元素管理者
 {
 public:
 
@@ -246,38 +246,15 @@ public:
 		debug("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
 		if(parent!=NULL)
 		debug(" parent is %s !!!!!!!!!!1\n",parent->name.c_str());
-		Render();
+		RenderOut();
 		//debug("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
 	}
-	 element()
-	{
-		hide = 0;
-		x = 0;
-		y = 0;
-		height = 0;
-		width = 0;
-		lay = 0;
-		mgr = NULL;
 
-
-		//RegistdoFlushConfig(element);
-	}
-
-	virtual ~element()
-	{
-		debug("###HU### distroy element %s\r\n", name.c_str());
-		backstack();
-		map<int, image>::iterator it;
-		for (it = res.begin(); it != res.end(); ++it)
-		{
-			it->second.destroy();
-		}
-	}
 	void Flush();
 	//void Flush_for_Child();
 	void revocation();
 
-	void Render();
+	void RenderOut();
 	void cleanLastPos();
 
 	void FlushConfig();
@@ -396,21 +373,24 @@ public:
 		FlushConfigReduced();
 		unlock();
 	}
-	void ResetEB()
+	void ResetBottomTop()
 	{
-		if (!eb.empty())
+		if (!bottomTop.empty())
 		{
 			list<element *>::iterator it;
 			element * ele ;
-			for (it = eb.begin(); it != eb.end(); ++it)
+			for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
 			{
 				ele = *it;
-				ele->et.remove(this);
+				ele->bottomTop.remove(this);
 			}
 		}
 	}
+
+
 //	void RenderEB()
 //	{
+//		int cnt=0;
 //		if (!eb.empty())
 //		{
 //			list<element *>::iterator it;
@@ -419,56 +399,54 @@ public:
 //			int d_ofx ; //目标x
 //			int s_ofy ; //源x
 //			int d_ofy ; //目标x
+//
 //			for (it = eb.begin(); it != eb.end(); ++it)
 //			{
 //				ele = *it;
 //				if (ele->hide == 0)
 //				{
 //					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
-//
+//					 cnt++;
 //					 s_ofx = 0; //源偏移x
-//					 d_ofx = 0; //目标偏移x
-//					if (ele->x < x)
+//					 d_ofx = render_offset_x; //目标偏移x
+//					if (ele->x < x+render_offset_x)
 //					{
-//						s_ofx = x - ele->x;
-//						d_ofx = 0;
+//						s_ofx = x+render_offset_x - ele->x;
+//						//d_ofx = render_offset_x;
 //					}
-//					else if (ele->x > x)
+//					else if (ele->x > x+render_offset_x)
 //					{
 //						s_ofx = 0;
-//						//d_ofx = width - (x + width - ele->x);
 //						d_ofx = ele->x - x;
 //					}
 //
 //					 s_ofy = 0; //源x
-//					 d_ofy = 0; //目标x
-//					if (ele->y < y)
+//					 d_ofy = render_offset_y; //目标x
+//					if (ele->y < y+render_offset_y)
 //					{
-//						s_ofy = y - ele->y;
-//						d_ofy = 0;
+//						s_ofy = y +render_offset_y- ele->y;
+//						//d_ofy = 0;
 //					}
 //					else if (ele->y > y)
 //					{
 //						s_ofy = 0;
-//						//d_ofy = height - (y + height - ele->y);
 //						d_ofy = ele->y - y;
 //					}
 //
-//					AreaCopy(ele, s_ofx, s_ofy, width, height, d_ofx, d_ofy);
+//					AreaCopy(ele, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
 //				}
 //				//RollBack::RollBackBlock(*it, x, y, width, height);
 //				//(*it)->Render();
 //			}
 //		}
-//		else{ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
+//		if(!cnt){ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
 //			cleanBuf();
 //		}
 //	}
-
-	void RenderEB()
+	void renderBottomTop()
 	{
 		int cnt=0;
-		if (!eb.empty())
+		if (!bottomTop.empty())
 		{
 			list<element *>::iterator it;
 			element * ele;
@@ -477,13 +455,13 @@ public:
 			int s_ofy ; //源x
 			int d_ofy ; //目标x
 
-			for (it = eb.begin(); it != eb.end(); ++it)
+			for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
 			{
 				ele = *it;
 				if (ele->hide == 0)
 				{
 					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
-					 cnt++;
+
 					 s_ofx = 0; //源偏移x
 					 d_ofx = render_offset_x; //目标偏移x
 					if (ele->x < x+render_offset_x)
@@ -509,35 +487,32 @@ public:
 						s_ofy = 0;
 						d_ofy = ele->y - y;
 					}
-
-					AreaCopy(ele, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
+					if(cnt==0){//最底的元素直接复制
+						if(ele->cur_res!=NULL) //当前有资源
+							AreaCopy(ele->cur_res, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
+							if(isParent()){
+								Render(&ele->top_image, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
+							}
+					}
+					else{
+							if(ele->cur_res!=NULL) //当前有资源
+								Render(ele->cur_res, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
+							if(isParent()){
+								Render(&ele->top_image, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
+							}
+					}
 				}
-				//RollBack::RollBackBlock(*it, x, y, width, height);
-				//(*it)->Render();
+				cnt++;
 			}
 		}
 		if(!cnt){ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
 			cleanBuf();
 		}
 	}
-	void RenderET()
-	{
-		if (!et.empty())
-		{
-			list<element *>::iterator it;
-			element * ele;
-			for (it = et.begin(); it != et.end(); ++it)
-			{
-				 ele = *it;
-				if (ele->hide == 0)
-				{
-					//printf("$$$HU$$$ RenderET %s <-- %s\r\n", name.c_str(), ele->name.c_str());
-					ele->Render();
-				}
-			}
-		}
 
-	}
+
+
+
 	class Cmpare
 	{
 	public:
@@ -547,60 +522,96 @@ public:
 		}
 	};
 	void initstack();
-	void addet(element * ele)
+
+
+//	void addet(element * ele)
+//	{
+//		list<element *>::iterator it;
+//		for (it = et.begin(); it != et.end(); ++it)
+//		{
+//			if (*it == ele)
+//			{
+//				break;
+//			}
+//		}
+//		if (it == et.end())
+//		{
+//			//printf("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
+//			et.push_back(ele);
+//			et.sort(Cmpare());
+//		}
+//	}
+//	void addeb(element * ele)
+//	{
+//		list<element *>::iterator it;
+//		for (it = eb.begin(); it != eb.end(); ++it)
+//		{
+//			if (*it == ele)
+//			{
+//				break;
+//			}
+//		}
+//		if (it == eb.end())
+//		{
+//			//printf("$$$HU$$$ [%s] add [%s] EB\r\n",name.c_str(),ele->name.c_str());
+//			eb.push_back(ele);
+//			eb.sort(Cmpare());
+//		}
+//	}
+//	void delet(element * ele)
+//	{
+//		et.remove(ele);
+//	}
+//	void deleb(element * ele)
+//	{
+//		eb.remove(ele);
+//	}
+//	void backstack()
+//	{
+//		list<element *>::iterator it;
+//		for (it = eb.begin(); it != eb.end(); ++it)
+//		{
+//			(*it)->delet(this);
+//		}
+//
+//		for (it = et.begin(); it != et.end(); ++it)
+//		{
+//			(*it)->deleb(this);
+//		}
+//	}
+
+
+	void addBottomTop(element * ele)
 	{
 		list<element *>::iterator it;
-		for (it = et.begin(); it != et.end(); ++it)
+		for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
 		{
 			if (*it == ele)
 			{
 				break;
 			}
 		}
-		if (it == et.end())
+		if (it == bottomTop.end())
 		{
 			//printf("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
-			et.push_back(ele);
-			et.sort(Cmpare());
+			bottomTop.push_back(ele);
+			bottomTop.sort(Cmpare());
 		}
 	}
-	void addeb(element * ele)
+
+	void delBottomTop(element * ele)
+	{
+		bottomTop.remove(ele);
+	}
+
+	void backstack()  //此元素从队列中每个元素的队列中消失掉
 	{
 		list<element *>::iterator it;
-		for (it = eb.begin(); it != eb.end(); ++it)
+		for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
 		{
-			if (*it == ele)
-			{
-				break;
-			}
-		}
-		if (it == eb.end())
-		{
-			//printf("$$$HU$$$ [%s] add [%s] EB\r\n",name.c_str(),ele->name.c_str());
-			eb.push_back(ele);
-			eb.sort(Cmpare());
-		}
-	}
-	void delet(element * ele)
-	{
-		et.remove(ele);
-	}
-	void deleb(element * ele)
-	{
-		eb.remove(ele);
-	}
-	void backstack()
-	{
-		list<element *>::iterator it;
-		for (it = eb.begin(); it != eb.end(); ++it)
-		{
-			(*it)->delet(this);
+			(*it)->delBottomTop(this);
 		}
 
-		for (it = et.begin(); it != et.end(); ++it)
-		{
-			(*it)->deleb(this);
-		}
 	}
 	void SetRes(int id, const char * path)
 	{
@@ -611,6 +622,30 @@ public:
 		}
 	}
 
+	 element()
+	{
+		hide = 0;
+		x = 0;
+		y = 0;
+		height = 0;
+		width = 0;
+		lay = 0;
+		mgr = NULL;
+		cur_res=NULL;//默认没有资源需要绘制
+
+	}
+
+	virtual ~element()
+	{
+		debug("###HU### distroy element %s\r\n", name.c_str());
+		backstack();
+		map<int, image>::iterator it;
+		for (it = res.begin(); it != res.end(); ++it)
+		{
+			it->second.destroy();
+		}
+	}
+
 	hustr name;
 	int hide;
 	int lay;
@@ -618,10 +653,12 @@ public:
 	HUMap m_mp;
 	xmlproc * xml_mgr;
 	map<int, image> res;
+	image * cur_res;
 	schedule_draw * mgr;
-	list<element *> et;					//�ϲ�ؼ�
-	list<element *> eb;					//�ײ�ؼ�
-
+//	list<element *> et;					//�ϲ�ؼ�
+//	list<element *> eb;					//�ײ�ؼ�
+	//image output;
+	list<element *> bottomTop;     //底顶合一队列
 
 
 };

@@ -76,6 +76,43 @@ int crossAlgorithm(element * r1, element * r2)
 	}
 }
 
+//void element::initstack()
+//{
+//
+//	element_manager::iterator it;
+//	element_manager *ele_mgr;
+//	if(hasParent()){
+//		ele_mgr=parent;
+//
+//	}
+//	else
+//		ele_mgr=xml_mgr;//有一个问题：非子元素会将子元素考虑进来
+//	for (it = ele_mgr->begin(); it != ele_mgr->end(); ++it)
+//	{
+//		element * ele = it->second;
+//		if(ele->parent==parent){  //只有当在同一父亲下，或父亲都为0，才相互作用
+//			if (crossAlgorithm(ele, this))
+//			{
+//
+//				if (ele->lay < lay && lay != 0)
+//				{
+//					addeb(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
+//					ele->addet(this); //将自己加入顶队列
+//
+//				}
+//				else if (ele->lay > lay) //否则相反
+//				{
+//					addet(ele);
+//					ele->addeb(this);
+//				}
+//				else
+//				{
+//					//printf("$$$HU$$$ warning %s with %s same layer cross\r\n",name.c_str(),ele->name.c_str());
+//				}
+//			}
+//		}
+//	}
+//}
 void element::initstack()
 {
 
@@ -93,41 +130,68 @@ void element::initstack()
 		if(ele->parent==parent){  //只有当在同一父亲下，或父亲都为0，才相互作用
 			if (crossAlgorithm(ele, this))
 			{
-
-				if (ele->lay < lay && lay != 0)
-				{
-					addeb(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
-					ele->addet(this); //将自己加入顶队列
-
-				}
-				else if (ele->lay > lay) //否则相反
-				{
-					addet(ele);
-					ele->addeb(this);
-				}
-				else
-				{
-					//printf("$$$HU$$$ warning %s with %s same layer cross\r\n",name.c_str(),ele->name.c_str());
+				if(ele->lay != lay){
+					addBottomTop(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
+					ele->addBottomTop(this); //将自己加入顶队列
 				}
 			}
 		}
 	}
+	addBottomTop(this);  //自己也要加在自己的队列中
+
 }
 
-//void element_RoolBack::Draw(image * img, int x, int y)
+
+//void element::Render()
 //{
-//	rob.RollBackBegin(img, x, y);
+//	//lock();
+//	if(isDraw!=1){
+//		render_offset_x=0;
+//		render_offset_y=0;
+//		render_width=width;
+//		render_height=height;
+//	}
+//	isDraw=0;
+//	RenderEB();
+//
 //	if (hide == 0)
 //	{
-//		mgr->DrawIn(img, x, y);
-//		rob.RollBackEnd(img, x, y);
+//		doRender();
+//		if(isParent()){
+//			//scroll_x:从内容显示起始位置开始区域叠加
+//			//image::Render(&out, scroll_x, scroll_y, width, height, 0, 0);
+//			image::Render(&out, scroll_x+render_offset_x, scroll_y+render_offset_y, render_width, render_height, render_offset_x, render_offset_y);
+//		}
 //	}
+//	else
+//	{
+//		printf("Render %s hide\r\n", name.c_str());
+//	}
+//   //要实现元素嵌套，此处需要修改，控件应该输出到父控件
+//	if(parent!=NULL){
+//		debug("%s draw to parent!!!!!!!\n",name.c_str());
+//		if(!parent->isParent()){
+//			parent->tobeParent(name,this);
+//		}
+//		//parent->Draw(this, 0, 0, width, height, x, y);//控件输出到父控件
+//		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
+//		parent->Render();
 //
+//
+//	}else{
+//	//xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
+//		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
+//			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
+//		}else
+//		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+//
+//	}
+//	RenderET();
+//	//unlock();
 //}
 
-void element::Render()
+void element::RenderOut()
 {
-	//lock();
 	if(isDraw!=1){
 		render_offset_x=0;
 		render_offset_y=0;
@@ -135,62 +199,56 @@ void element::Render()
 		render_height=height;
 	}
 	isDraw=0;
-	RenderEB();
+
 
 	if (hide == 0)
 	{
 		doRender();
-		if(isParent()){
-			//scroll_x:从内容显示起始位置开始区域叠加
-			//image::Render(&out, scroll_x, scroll_y, width, height, 0, 0);
-			image::Render(&out, scroll_x+render_offset_x, scroll_y+render_offset_y, render_width, render_height, render_offset_x, render_offset_y);
-		}
 	}
 	else
 	{
-		printf("Render %s hide\r\n", name.c_str());
+		debug("Render %s hide\r\n", name.c_str());
 	}
-   //要实现元素嵌套，此处需要修改，控件应该输出到父控件
+	renderBottomTop();  //如果自己隐藏的话，此函数是不会绘制自己的。
+
 	if(parent!=NULL){
 		debug("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
-		//parent->Draw(this, 0, 0, width, height, x, y);//控件输出到父控件
 		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
-		parent->Render();
-
+		parent->RenderOut();
 
 	}else{
-	//xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
 		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
 			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
 		}else
 		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
-
 	}
-	RenderET();
-	//unlock();
+
 }
+
+
 
 void element::cleanLastPos()
 {
 	lock();
-	RenderEB();
+
+	renderBottomTop();  //如果自己隐藏的话，此函数是不会绘制自己的。
 	if(parent!=NULL){
+		debug("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
-		parent->out.AreaCopy(this, 0, 0, width, height, x, y);//控件输出到父控件
-		parent->Flush();
+		parent->Draw(this,  0, 0, width, height, x, y);//控件输出到父控件
+		parent->RenderOut();
 
 	}else{
-//		if(isParent()){ //一级父容器直接输出到fb
-//					fb.RenderImageToFrameBuffer_part(this, 0, 0, width, height, x, y);
-//	 }else
-		 xml_mgr->Draw(this, 0, 0, width, height, x, y);//控件输出到容器
+		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
+			xml_mgr->drawDirect(this,  0, 0, width, height, x, y);
+		}else
+		xml_mgr->Draw(this,  0, 0, width, height, x, y);//控件局部输出到容器
 	}
-	RenderET();
 	unlock();
 
 }
@@ -235,8 +293,8 @@ void element::Delete()
 	}
 	revocation();
 	hide = 1;
-	Render();
-	ResetEB();
+	RenderOut();
+	ResetBottomTop();
 	if(hasParent()){
 		parent->elem.erase(name);
 	}

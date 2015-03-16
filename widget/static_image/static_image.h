@@ -58,7 +58,8 @@ public:
 
 	void doRender()
 	{
-		image::Render(&res[id], xpos, ypos, width, height, 0, 0);
+		//image::Render(&res[id], xpos, ypos, width, height, 0, 0);
+		cur_res=&res[id];
 	}
 	int xpos;
 	int ypos;

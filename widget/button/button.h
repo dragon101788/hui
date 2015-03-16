@@ -56,7 +56,8 @@ public:
 	}
 	void doRender()
 	{
-		image::Render(&res[isdn], 0, 0);
+		//image::Render(&res[isdn], 0, 0);
+		cur_res=&res[isdn];
 	}
 	void onAbsPosChanged(){
 
