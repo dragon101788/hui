@@ -158,8 +158,7 @@ void element::Render()
 		}
 		//parent->Draw(this, 0, 0, width, height, x, y);//控件输出到父控件
 		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
-		//parent->Flush_for_Child();
-		parent->Flush();
+		parent->Render();
 
 
 	}else{

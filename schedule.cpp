@@ -22,38 +22,18 @@ int schedule_draw::ScheduleProc()
 
 	int ret = 0;
 	schedule_ele * ele;
-      list<schedule_ele * >  que_delet_dupli;
       list<schedule_ele *>::iterator it;
-	while (1)
+
+      for (it = que.m_list.begin();; ++it)
 		{
-
-			 ele = que.getele();
-
+			 ele = *it;
 			if (ele == NULL)
 			{
+				que.clean();  //队列在最后清除，是防止绘制一个删掉后又会被重复添加
 				break;
 			}
-			/*******************
-			 * 添加这段是为了排除重复的元素在重复render
-			 */
-			for (it = que_delet_dupli.begin(); it != que_delet_dupli.end(); ++it)
-			{
-				if (*it == ele)
-				{
-					break;
-				}
-			}
-			if (it != que_delet_dupli.end())
-			{
-				continue;
-			}
-	/*********************************/
-			{
-				ele->onSchedule();
-				ret++;
-			}
-			que_delet_dupli.push_back(ele);
-
+			ele->onSchedule();
+			ret++;
 		}
 
 	return ret;

@@ -28,6 +28,7 @@ public:
 			m_list.clear();
 			unlock();
 		}
+
 		void addele(schedule_ele * ele)
 		{
 			lock();
