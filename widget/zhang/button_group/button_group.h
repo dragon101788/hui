@@ -104,10 +104,18 @@ public:
 		}
 		void doRender()
 		{
-			if(this->parent->mode=="def")
-		        image::Render(&this->parent->img[isdn], x-this->parent->x, y-this->parent->y,width,height,0,0);
-			else
-           	        image::Render(&this->parent->img[select], x-this->parent->x, y-this->parent->y,width,height,0,0);
+			if(this->parent->mode=="def"){
+		       // image::Render(&this->parent->img[isdn], x-this->parent->x, y-this->parent->y,width,height,0,0);
+		        cur_res=&this->parent->img[isdn];
+		        scroll_x=x-this->parent->x;
+		        scroll_y=y-this->parent->y;
+			}
+			else{
+           	       // image::Render(&this->parent->img[select], x-this->parent->x, y-this->parent->y,width,height,0,0);
+				cur_res=&this->parent->img[select];
+				scroll_x=x-this->parent->x;
+				scroll_y=y-this->parent->y;
+			}
 		}
 
 		int select;
@@ -249,8 +257,8 @@ public:
 	void doRender()
 	{
 		//	img[select].LoadResource();
-			image::Render(&img[0], 0, 0);//显示按下前大图
-
+		//	image::Render(&img[0], 0, 0);//显示按下前大图
+		cur_res=&img[0];
 
 	}
 

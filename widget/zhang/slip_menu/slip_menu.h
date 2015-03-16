@@ -102,9 +102,11 @@ public:
 
 		void doRender()
 		{
-//			printf("node render name=%s ,x=%d!!!!!!!\n small_pic_x=%d y-this->parent->y=%d\n",name.c_str(),x, x+this->parent->cx-this->parent->mx-this->parent->x,y-this->parent->y);
-//			printf("\n");
-		        image::Render(&this->parent->img[isdn], x+this->parent->cx-this->parent->mx-this->parent->x, y-this->parent->y,width,height,0,0);
+
+		       // image::Render(&this->parent->img[isdn], x+this->parent->cx-this->parent->mx-this->parent->x, y-this->parent->y,width,height,0,0);
+		        cur_res=&parent->img[isdn];
+		        scroll_x=x+parent->cx-parent->mx-parent->x;
+		        scroll_y= y-parent->y;
 		}
                 HuExec exec;
 		slip_menu * parent;

@@ -159,7 +159,8 @@ public:
 		void doRender()
 		{
 			//printf("in mode doRender()!!!!!\n");
-			image::Render(&ttf, 0, 0);
+			//image::Render(&ttf, 0, 0);
+			cur_res=&ttf;
 			//	image::Render(&img, 0, 0, width, height, 0, 0);
 		}
 

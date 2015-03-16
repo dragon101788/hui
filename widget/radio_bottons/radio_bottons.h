@@ -65,7 +65,8 @@ public:
 		void doRender()
 		{
 			img[on].LoadResource();
-			image::Render(&img[on], 0, 0);
+			cur_res=&img[on];
+			//image::Render(&img[on], 0, 0);
 
 		}
 		int on;

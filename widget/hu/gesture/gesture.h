@@ -102,7 +102,9 @@ public:
 
 		if (isdn)
 		{
-			image::Render(&res[0], 0, 0, width, height, 0, 0);
+			//image::Render(&res[0], 0, 0, width, height, 0, 0);
+
+			cur_res=&res[0];
 		}
 
 //		else

@@ -137,11 +137,12 @@ public:
 		if (images[id].LoadResource() == 0)
 		{
 			//Draw(&images[id], x, y);
-			image::Render(&images[id], 0, 0);
-
+			//image::Render(&images[id], 0, 0);
+			cur_res=&images[id];
 			if (release)
 			{
 				images[id].Free();
+				cur_res=NULL;
 			}
 		}
 

@@ -9,8 +9,8 @@ class static_image: public element
 public:
 	static_image()
 	{
-		xpos = 0;
-		ypos = 0;
+//		xpos = 0;
+//		ypos = 0;
 		id = 0;
 	}
 	~static_image()
@@ -25,15 +25,15 @@ public:
 	{
 		GetElementInfo(info);
 		info.AddInfo("id", id);
-		info.AddInfo("xpos", xpos);
-		info.AddInfo("ypos", ypos);
+		info.AddInfo("scroll_x", scroll_x);
+		info.AddInfo("scroll_y", scroll_y);
 	}
 	void doFlushConfig()
 	{
 		PraseElement();
 		id = m_mp["id"]->getvalue_int();
-		xpos = m_mp["xpos"]->getvalue_int();
-		ypos = m_mp["ypos"]->getvalue_int();
+		scroll_x = m_mp["scroll_x"]->getvalue_int();
+		scroll_y = m_mp["scroll_y"]->getvalue_int();
 
 		for (int i = 0; i < m_mp.count("node"); i++)
 		{
@@ -48,8 +48,8 @@ public:
 	void doFlushConfigReduced()
 	{
 		hide = m_mp["hide"]->getvalue_int();
-		xpos = m_mp["xpos"]->getvalue_int();
-		ypos = m_mp["ypos"]->getvalue_int();
+		scroll_x = m_mp["scroll_x"]->getvalue_int();
+		scroll_y = m_mp["scroll_y"]->getvalue_int();
 		id = m_mp["id"]->getvalue_int();
 
 		Flush();
@@ -62,8 +62,8 @@ public:
 		res[id].LoadResource();
 		cur_res=&res[id];
 	}
-	int xpos;
-	int ypos;
+//	int xpos;
+//	int ypos;
 
 	int id;
 };

@@ -105,12 +105,16 @@ int hu_abs(int number)
 		{
               //  printf("this->x=%d,this->cx=%d\n",x,cx);
                //
-			printf("%s,doRender node\n",name.c_str());
-			 if(x-parent->x<parent->width&&y-parent->y<parent->height&&x>=0&&y>=0)
-		      image::Render(&parent->img[1], x+parent->cx-parent->x,
-		    		  	  	  	  	  	  	  	   y+parent->cy-parent->y,width,height,0,0);
+		//	printf("%s,doRender node\n",name.c_str());
+			 if(x-parent->x<parent->width&&y-parent->y<parent->height&&x>=0&&y>=0){
+		      //image::Render(&parent->img[1], x+parent->cx-parent->x,
+		    	//	  	  	  	  	  	  	  	   y+parent->cy-parent->y,width,height,0,0);
 
-		      //  image::Render(&img[0],               cx ,                                0,    (int)page_w, (int)height, 0,0);
+		      cur_res=&parent->img[1];
+		      scroll_x=x+parent->cx-parent->x;
+		      scroll_y= y+parent->cy-parent->y;
+			 }
+
 		}
 
 		keys_slip_menu * parent;
@@ -273,7 +277,10 @@ int hu_abs(int number)
 	void doRender()
 	{
 	//	printf("%s,doRender\n",name.c_str());
-		image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
+		//image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
+		cur_res=&img[0];
+		scroll_x=cx;
+		scroll_y=cy;
 		if(!isFlip)
 		nodemp[select_id]->Flush();//都使用第一页的节点显示
 
