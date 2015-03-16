@@ -152,7 +152,7 @@ void element::Render()
 	}
    //要实现元素嵌套，此处需要修改，控件应该输出到父控件
 	if(parent!=NULL){
-		debug("%s draw to parent!!!!!!!111\n",name.c_str());
+		debug("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}

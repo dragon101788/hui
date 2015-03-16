@@ -572,7 +572,7 @@ int ParseXMLElement2(hustr parentName,hustr name, HUMap & xmlmp, xmlproc * xml)
 	}
 	else
 	{
-		printf("$$$$$HU$$$$$$$warning :: Parse %s err\r\n", name.c_str());
+		debug("$$$$$HU$$$$$$$warning :: %s is not an element or cmd \r\n", name.c_str());
 	}
 }
 
