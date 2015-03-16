@@ -70,6 +70,8 @@ public:
 		}
 		void doFlushConfig()
 		{
+			PraseElement();
+			/*
 			if(m_mp.exist("name"))
                 name = m_mp["name"]->getvalue();
         		else{
@@ -113,7 +115,7 @@ public:
 			ttf.color = color;
 			ttf.style = style;
 			//printf("width=%d, height= %d\r\n", width,height);
-
+*/
 			doFlushConfigCom();
 			if(!m_mp["cached"]->getvalue_int()){
 				Flush();

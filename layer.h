@@ -278,7 +278,7 @@ public:
 	void revocation();
 
 	void Render();
-	void Back();
+	void cleanLastPos();
 
 	void FlushConfig();
 	void FlushConfigReduced();
@@ -305,7 +305,7 @@ public:
 		//控件被移动
 		if (tmpX != x || tmpY != y)
 		{
-			Back();
+			cleanLastPos();
 			x = tmpX;
 			y = tmpY;
 		}
@@ -354,7 +354,7 @@ public:
 		//控件被移动
 		if (tmpX != x || tmpY != y)
 		{
-			Back();
+			cleanLastPos();
 			x = tmpX;
 			y = tmpY;
 		}

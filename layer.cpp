@@ -173,7 +173,7 @@ void element::Render()
 	//unlock();
 }
 
-void element::Back()
+void element::cleanLastPos()
 {
 	lock();
 	RenderEB();
