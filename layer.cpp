@@ -212,7 +212,7 @@ void element::RenderOut()
 	renderBottomTop();  //如果自己隐藏的话，此函数是不会绘制自己的。
 
 	if(parent!=NULL){
-		debug("%s draw to parent!!!!!!!\n",name.c_str());
+		//debug("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
@@ -220,6 +220,7 @@ void element::RenderOut()
 		parent->RenderOut();
 
 	}else{
+		//debug("%s draw to xmlout!!!!!!!\n",name.c_str());
 		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
 			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
 		}else

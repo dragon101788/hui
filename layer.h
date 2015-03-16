@@ -194,7 +194,7 @@ public:
 
 
 
-protected:
+private:
 	bool is_parent;
 };
 
@@ -488,17 +488,19 @@ public:
 						d_ofy = ele->y - y;
 					}
 					if(cnt==0){//最底的元素直接复制
-						if(ele->cur_res!=NULL) //当前有资源
+						if(ele->cur_res!=NULL){ //当前有资源
 							AreaCopy(ele->cur_res, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
-							if(isParent()){
-								Render(&ele->top_image, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
-							}
+						}
+						if(ele->isParent()){
+							Render(&ele->top_image, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
+						}
 					}
 					else{
-							if(ele->cur_res!=NULL) //当前有资源
+							if(ele->cur_res!=NULL) {//当前有资源
 								Render(ele->cur_res, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
-							if(isParent()){
-								Render(&ele->top_image, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
+							}
+							if(ele->isParent()){
+								Render(&ele->top_image, s_ofx+scroll_x, s_ofy+scroll_y, render_width,render_width, d_ofx, d_ofy);
 							}
 					}
 				}
@@ -509,8 +511,6 @@ public:
 			cleanBuf();
 		}
 	}
-
-
 
 
 	class Cmpare

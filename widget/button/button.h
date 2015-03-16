@@ -57,6 +57,7 @@ public:
 	void doRender()
 	{
 		//image::Render(&res[isdn], 0, 0);
+		res[isdn].LoadResource();
 		cur_res=&res[isdn];
 	}
 	void onAbsPosChanged(){
