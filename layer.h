@@ -388,61 +388,7 @@ public:
 	}
 
 
-//	void RenderEB()
-//	{
-//		int cnt=0;
-//		if (!eb.empty())
-//		{
-//			list<element *>::iterator it;
-//			element * ele;
-//			int s_ofx ; //源x
-//			int d_ofx ; //目标x
-//			int s_ofy ; //源x
-//			int d_ofy ; //目标x
-//
-//			for (it = eb.begin(); it != eb.end(); ++it)
-//			{
-//				ele = *it;
-//				if (ele->hide == 0)
-//				{
-//					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
-//					 cnt++;
-//					 s_ofx = 0; //源偏移x
-//					 d_ofx = render_offset_x; //目标偏移x
-//					if (ele->x < x+render_offset_x)
-//					{
-//						s_ofx = x+render_offset_x - ele->x;
-//						//d_ofx = render_offset_x;
-//					}
-//					else if (ele->x > x+render_offset_x)
-//					{
-//						s_ofx = 0;
-//						d_ofx = ele->x - x;
-//					}
-//
-//					 s_ofy = 0; //源x
-//					 d_ofy = render_offset_y; //目标x
-//					if (ele->y < y+render_offset_y)
-//					{
-//						s_ofy = y +render_offset_y- ele->y;
-//						//d_ofy = 0;
-//					}
-//					else if (ele->y > y)
-//					{
-//						s_ofy = 0;
-//						d_ofy = ele->y - y;
-//					}
-//
-//					AreaCopy(ele, s_ofx, s_ofy, render_width,render_width, d_ofx, d_ofy);
-//				}
-//				//RollBack::RollBackBlock(*it, x, y, width, height);
-//				//(*it)->Render();
-//			}
-//		}
-//		if(!cnt){ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
-//			cleanBuf();
-//		}
-//	}
+
 	void renderBottomTop()
 	{
 		int cnt=0;
@@ -524,61 +470,7 @@ public:
 	void initstack();
 
 
-//	void addet(element * ele)
-//	{
-//		list<element *>::iterator it;
-//		for (it = et.begin(); it != et.end(); ++it)
-//		{
-//			if (*it == ele)
-//			{
-//				break;
-//			}
-//		}
-//		if (it == et.end())
-//		{
-//			//printf("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
-//			et.push_back(ele);
-//			et.sort(Cmpare());
-//		}
-//	}
-//	void addeb(element * ele)
-//	{
-//		list<element *>::iterator it;
-//		for (it = eb.begin(); it != eb.end(); ++it)
-//		{
-//			if (*it == ele)
-//			{
-//				break;
-//			}
-//		}
-//		if (it == eb.end())
-//		{
-//			//printf("$$$HU$$$ [%s] add [%s] EB\r\n",name.c_str(),ele->name.c_str());
-//			eb.push_back(ele);
-//			eb.sort(Cmpare());
-//		}
-//	}
-//	void delet(element * ele)
-//	{
-//		et.remove(ele);
-//	}
-//	void deleb(element * ele)
-//	{
-//		eb.remove(ele);
-//	}
-//	void backstack()
-//	{
-//		list<element *>::iterator it;
-//		for (it = eb.begin(); it != eb.end(); ++it)
-//		{
-//			(*it)->delet(this);
-//		}
-//
-//		for (it = et.begin(); it != et.end(); ++it)
-//		{
-//			(*it)->deleb(this);
-//		}
-//	}
+
 
 
 	void addBottomTop(element * ele)
@@ -655,9 +547,6 @@ public:
 	map<int, image> res;
 	image * cur_res;
 	schedule_draw * mgr;
-//	list<element *> et;					//�ϲ�ؼ�
-//	list<element *> eb;					//�ײ�ؼ�
-	//image output;
 	list<element *> bottomTop;     //底顶合一队列
 
 
