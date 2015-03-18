@@ -4,13 +4,15 @@
 #include "XMLInstal.h"
 #include "layer.h"
 #include "thread_msg.h"
-int hu_abs(int number) 
-{               
-        return (number >= 0 ? number : -number);                     
-}   
+
 
 class slip_fragment: public element, public touch_element, public timer_element
 {
+
+	int hu_abs(int number)
+	{
+	        return (number >= 0 ? number : -number);
+	}
 public:
 
 	int doTimer(int tm)
