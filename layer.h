@@ -373,26 +373,26 @@ public:
 		FlushConfigReduced();
 		unlock();
 	}
-	void ResetBottomTop()
+	void ResetLayers()
 	{
-		if (!bottomTop.empty())
+		if (!layers.empty())
 		{
 			list<element *>::iterator it;
 			element * ele ;
-			for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
+			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
-				ele->bottomTop.remove(this);
+				ele->layers.remove(this);
 			}
 		}
 	}
 
 
 
-	void renderBottomTop()
+	void renderLayers()
 	{
 		int cnt=0;
-		if (!bottomTop.empty())
+		if (!layers.empty())
 		{
 			list<element *>::iterator it;
 			element * ele;
@@ -401,7 +401,7 @@ public:
 			int s_ofy ; //源x
 			int d_ofy ; //目标x
 
-			for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
+			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
 				if (ele->hide == 0)
@@ -473,35 +473,35 @@ public:
 
 
 
-	void addBottomTop(element * ele)
+	void addLayers(element * ele)
 	{
 		list<element *>::iterator it;
-		for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
+		for (it = layers.begin(); it != layers.end(); ++it)
 		{
 			if (*it == ele)
 			{
 				break;
 			}
 		}
-		if (it == bottomTop.end())
+		if (it == layers.end())
 		{
 			//printf("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
-			bottomTop.push_back(ele);
-			bottomTop.sort(Cmpare());
+			layers.push_back(ele);
+			layers.sort(Cmpare());
 		}
 	}
 
-	void delBottomTop(element * ele)
+	void delLayers(element * ele)
 	{
-		bottomTop.remove(ele);
+		layers.remove(ele);
 	}
 
 	void backstack()  //此元素从队列中每个元素的队列中消失掉
 	{
 		list<element *>::iterator it;
-		for (it = bottomTop.begin(); it != bottomTop.end(); ++it)
+		for (it = layers.begin(); it != layers.end(); ++it)
 		{
-			(*it)->delBottomTop(this);
+			(*it)->delLayers(this);
 		}
 
 	}
@@ -547,7 +547,7 @@ public:
 	map<int, image> res;
 	image * cur_res;
 	schedule_draw * mgr;
-	list<element *> bottomTop;     //底顶合一队列
+	list<element *> layers;     //底顶合一队列
 
 
 };

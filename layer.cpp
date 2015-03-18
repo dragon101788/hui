@@ -81,13 +81,13 @@ void element::initstack()
 			if (crossAlgorithm(ele, this))
 			{
 				if(ele->lay != lay){
-					addBottomTop(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
-					ele->addBottomTop(this); //将自己加入顶队列
+					addLayers(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
+					ele->addLayers(this); //将自己加入顶队列
 				}
 			}
 		}
 	}
-	addBottomTop(this);  //自己也要加在自己的队列中
+	addLayers(this);  //自己也要加在自己的队列中
 
 }
 
@@ -110,7 +110,7 @@ void element::RenderOut()
 	{
 		debug("Render %s hide\r\n", name.c_str());
 	}
-	renderBottomTop();  //如果自己隐藏的话，此函数是不会绘制自己的。
+	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 
 	if(parent!=NULL){
 		//debug("%s draw to parent!!!!!!!\n",name.c_str());
@@ -136,7 +136,7 @@ void element::cleanLastPos()
 {
 	lock();
 
-	renderBottomTop();  //如果自己隐藏的话，此函数是不会绘制自己的。
+	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 	if(parent!=NULL){
 		debug("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
@@ -196,7 +196,7 @@ void element::Delete()
 	revocation();
 	hide = 1;
 	RenderOut();
-	ResetBottomTop();
+	ResetLayers();
 	if(hasParent()){
 		parent->elem.erase(name);
 	}
