@@ -1416,7 +1416,8 @@ protected:
 		int ret = sem_init(&m_event, 0, 0);
 		if ( 0 != ret )
 		{
-			debug("sem_init failed!!\n");
+	        perror("semaphore intitialization failed\n");
+	        exit(EXIT_FAILURE);
 		}
 	}
 	semphore(int init_value)
@@ -1425,7 +1426,8 @@ protected:
 		int ret = sem_init(&m_event, 0, init_value);
 		if ( 0 != ret )
 		{
-			debug("sem_init failed!!\n");
+	        perror("semaphore intitialization failed\n");
+	        exit(EXIT_FAILURE);
 		}
 	}
 	semphore(bool manualReset): m_manual(manualReset)
@@ -1434,7 +1436,8 @@ protected:
 		int ret = sem_init(&m_event, 0, nValue);
 		if ( 0 != ret )
 		{
-			debug("sem_init failed!!\n");
+	        perror("semaphore intitialization failed\n");
+	        exit(EXIT_FAILURE);
 		}
 	}
 	/*
@@ -1454,7 +1457,8 @@ protected:
 		int ret = sem_wait(&m_event);
 		if ( 0 != ret )
 		{
-			debug("waitSem failed!!\n");
+	        perror("waitSem failed\n");
+	        exit(EXIT_FAILURE);
 		}
 
 		if ( m_manual )
@@ -1528,7 +1532,8 @@ public:
 		int ret = sem_post(&m_event);
 		if ( 0 != ret )
 		{
-			debug("postSem failed!!\n");
+	        perror("postSem failed\n");
+	        exit(EXIT_FAILURE);
 		}
 	}
 

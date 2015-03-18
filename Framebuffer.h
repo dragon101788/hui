@@ -27,7 +27,7 @@ extern int go;
 //static pthread_mutex_t mutex;
 
 #define RGB565(r,g,b)  ( ((r>>3)&(1<<5)-1)<<11 | ((g>>2)&(1<<6)-1)<<5 | ((b>>3)&(1<<5)-1)<<0 )
-class framebuffer: public Mutex, public thread
+class framebuffer: public Mutex, public thread,public semphore
 {
 
 public:
@@ -43,7 +43,7 @@ public:
 	hustr snap;
 
 	image *from_img;
-	sem_t sem;//信号量
+	//sem_t sem;//信号量
 	/*
     pthread_cond_t cond;
 	int flag;
@@ -77,7 +77,8 @@ public:
 
 		while(go){
 			//printf("run  IN!!!\n");
-			sem_wait(&sem);
+			//sem_wait(&sem);
+			waitSem();
 			lock();
 			if(from_img!=NULL){
 		//	from_img->lock();
@@ -142,12 +143,7 @@ public:
 		*/
 		//flag=0;
 		//pthread_init();
-		int res = sem_init(&sem, 0, 0);
-		    if(res == -1)
-		    {
-		        perror("semaphore intitialization failed\n");
-		        exit(EXIT_FAILURE);
-		    }
+
 
 	}
 	~framebuffer()
@@ -203,7 +199,8 @@ public:
 		img->lock();
     	from_img=img;
     	img->unlock();
-    	sem_post(&sem);
+    	//sem_post(&sem);
+    	postSem();
     //	printf("RenderImageToFrameBuffer out!!!!\n");
     }
 	void RenderImageToFrameBuffer(image * img)
