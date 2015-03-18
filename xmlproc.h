@@ -135,8 +135,10 @@ private:
 	int done; //完成解析
 	int m_exit; //线程退出
 	int isDraw; //有改变图像
+
 public:
 	int directDraw;
+
 	void Draw(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 	{
 		//lock();
@@ -175,14 +177,18 @@ public:
 	{
 		while (go && m_exit)
 		{
-			//以FPSWaitFPS()限定的帧率循环刷新屏幕
+
+			if(!fore){ //如果非前台，直接睡眠等待
+				resetSem();
+				waitSem();
+			}
 			int ret = ScheduleProc();
 			if(directDraw)
 				printFps();
 			else
 			ProcDraw();
-
 			FPSWaitFPS(30);
+
 		}
 	}
 	void ProcDraw()
@@ -302,13 +308,10 @@ public:
 
 		UnForeProc();
 		UnDoneProc();
-
 		m_exit = 0;
-
 		lock();
 		printf("Destroy wait thread \r\n");
 		wait();
-
 		debug("Destroy wait timer_manager::ClearElement \r\n");
 		timer_manager::ClearElement();
 

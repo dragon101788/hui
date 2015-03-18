@@ -1400,4 +1400,152 @@ public:
 	HUTimerContainer * m_Container;
 };
 
+class semphore
+{
+protected:
+
+	/*
+	 创建匿名信号量
+	`bAutoReset  true   人工重置
+				 false  自动重置
+	*/
+
+	semphore()
+	{
+		m_manual=false;
+		int ret = sem_init(&m_event, 0, 0);
+		if ( 0 != ret )
+		{
+			debug("sem_init failed!!\n");
+		}
+	}
+	semphore(int init_value)
+	{
+		m_manual=false;
+		int ret = sem_init(&m_event, 0, init_value);
+		if ( 0 != ret )
+		{
+			debug("sem_init failed!!\n");
+		}
+	}
+	semphore(bool manualReset): m_manual(manualReset)
+	{
+		unsigned int nValue = 0; //初始化为无信号
+		int ret = sem_init(&m_event, 0, nValue);
+		if ( 0 != ret )
+		{
+			debug("sem_init failed!!\n");
+		}
+	}
+	/*
+	 注销信号量
+	*/
+	~semphore(){
+		sem_destroy(&m_event);
+	}
+
+
+
+	/*
+	 以当前事件对象，阻塞线程，将其永远挂起
+	 直到事件对象被设置为有信号状态
+	*/
+	bool waitSem(){
+		int ret = sem_wait(&m_event);
+		if ( 0 != ret )
+		{
+			debug("waitSem failed!!\n");
+		}
+
+		if ( m_manual )
+		{
+			sem_post(&m_event);
+		}
+
+		return true;
+	}
+
+	/*
+	 以当前事件对象，阻塞线程，将其挂起指定时间间隔
+	 之后线程自动恢复可调度
+	*/
+	bool waitSem(long milliseconds){
+		if ( 0 == milliseconds )
+		{
+			int ret = sem_trywait(&m_event);
+			if ( 0 == ret )
+			{
+				if ( m_manual )
+				{
+					sem_post(&m_event);
+				}
+			}
+		}
+		else
+		{
+			int roopMax = milliseconds/10;
+			do
+			{
+				usleep(10*1000);
+				int ret = sem_trywait(&m_event);
+				if ( 0 == ret )
+				{
+					if ( m_manual )
+					{
+						sem_post(&m_event);
+					}
+
+					break;
+				}
+
+				roopMax--;
+			} while( roopMax > 0 );
+		}
+
+		return true;
+	}
+
+	/*
+	 将当前事件对象设置为无信号状态
+	*/
+
+
+	void resetSem(){
+		int sval = 0;
+		do
+		{
+			sem_trywait(&m_event);
+			sem_getvalue(&m_event, &sval);
+		} while(sval > 0);
+	}
+	/*
+	 将当前事件对象设置为有信号状态
+	 若自动重置，则等待该事件对象的所有线程只有一个可被调度
+	 若人工重置，则等待该事件对象的所有线程变为可被调度
+	*/
+public:
+	void postSem(){
+		int ret = sem_post(&m_event);
+		if ( 0 != ret )
+		{
+			debug("postSem failed!!\n");
+		}
+	}
+
+
+
+
+private:
+	bool        m_manual;
+	sem_t		m_event;
+};
+
+
+
+
+
+
+
+
+
 #endif //__HULIB_HU__

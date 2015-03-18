@@ -120,14 +120,14 @@ public:
 //		out_img = out;
 //		create();
 //	}
-	void DumpToSnap(const char * path)
-	{
-		//cancel();
-		printf("DumpToSnap %s\r\n", path);
-		wait();
-		snap = path;
-		create();
-	}
+//	void DumpToSnap(const char * path)
+//	{
+//		//cancel();
+//		printf("DumpToSnap %s\r\n", path);
+//		wait();
+//		snap = path;
+//		create();
+//	}
 	framebuffer()
 	{
 		Accept();

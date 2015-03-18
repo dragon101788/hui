@@ -49,6 +49,7 @@ void xmlproc::ForeProc()
 	g_th_touch.SwitchProc(this);
 	g_th_timer.SwitchProc(this);
 	g_exec.ChangeContainer(this);
+	postSem();
 }
 void xmlproc::UnForeProc()
 {

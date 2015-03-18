@@ -10,6 +10,7 @@ void element::Flush()
 		lock();
 		//resetRenderOffset();//父控件主动绘制时恢复整个控件输出
 		mgr->que.addele(this);
+		mgr->postSem();
 		unlock();
 	}
 	else

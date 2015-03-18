@@ -22,7 +22,7 @@
 using namespace std;
 
 #define DEFAULT_XMLFILE "hu.xml"
-
+void RefreshPage(xmlproc * xml);
 
 
 
@@ -56,7 +56,7 @@ void JumpToFile(const char * jump, const char * snap)
 
 	if (!g_cur_xml.isNULL())
 	{
-		g_cur_xml->UnForeProc();
+		g_cur_xml->UnForeProc();//这个函数应该具有使当前页线程暂停的功能
 
 	}
 
@@ -68,39 +68,47 @@ void JumpToFile(const char * jump, const char * snap)
 	}
 	else if(math==".xml")
 	{
-		//	if (g_xml_proc.find(jump) != g_xml_proc.end())
-		//	{
-		//		printf("$$$HU$$$ JumpToFile %s find cus\r\n", jump);
-		//		if (g_xml_proc[jump]->done == 1)
-		//		{
-		//			fb.DumpToXml(g_xml_proc[jump]->out);
-		//		}
-		//		g_cur_xml = g_xml_proc[jump];
-		//	}
-		//	else
-		//	{
-		//  }
+			if (g_xml_proc.find(jump) != g_xml_proc.end())  //已经缓存好了
+			{
+				printf("$$$HU$$$ JumpToFile %s find cus\r\n", jump);
+//				if (g_xml_proc[jump]->done == 1)
+//				{
+//					//fb.DumpToXml(g_xml_proc[jump]->out);
+//
+//				}
+				g_cur_xml = g_xml_proc[jump];
+				g_cur_xml->ForeProc();
+				RefreshPage(g_cur_xml);
 
-			hustr snapfile;
-			if (snap == NULL)
-			{
-				snapfile.format("%s.png", jump);
 			}
-			else
+			else  //重新打开，这里最好添加一个内存判断，如果内存不够，释放掉缓存中的某个页面
 			{
-				snapfile = snap;
+
+//				hustr snapfile;
+//				if (snap == NULL)
+//				{
+//					snapfile.format("%s.png", jump);
+//				}
+//				else
+//				{
+//					snapfile = snap;
+//				}
+//				printf("snapfile = %s snap=%s\r\n", snap, snapfile.c_str());
+//				if (access_Image(snapfile))
+//				{
+//					fb.DumpToSnap(snapfile);
+//				}
+				g_xml_proc[jump]=new xmlproc(jump);
+				//g_cur_xml = new xmlproc(jump);
+				g_cur_xml=g_xml_proc[jump];
+				g_cur_xml->doLoader();
+				g_cur_xml->ForeProc();
 			}
-			printf("snapfile = %s snap=%s\r\n", snap, snapfile.c_str());
-			if (access_Image(snapfile))
-			{
-				fb.DumpToSnap(snapfile);
-			}
-			g_cur_xml = new xmlproc(jump);
-			g_cur_xml->doLoader();
 	}
 
 
-	g_cur_xml->ForeProc();
+
+
 }
 
 //BLT * g_blt = NULL;
@@ -374,8 +382,8 @@ void Parse_gcfg(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 	g_th_msg.msg.send_message(101, info);
 }
 
-//重新绘制页面所有元素
-void ParseRefreshPage(hustr parentName,HUMap & xmlmp, xmlproc * xml)
+
+inline void RefreshPage( xmlproc * xml)
 {
 
 	element_manager::iterator it;
@@ -392,6 +400,12 @@ void ParseRefreshPage(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 
 
 }
+//重新绘制页面所有元素
+void ParseRefreshPage(hustr parentName,HUMap & xmlmp, xmlproc * xml)
+{
+	RefreshPage( xml);
+}
+
 
 //重新绘制页面所有元素
 void ParseRefreshElement(hustr parentName,HUMap & xmlmp, xmlproc * xml)
