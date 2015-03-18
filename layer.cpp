@@ -196,12 +196,14 @@ void element::Delete()
 	revocation();
 	hide = 1;
 	RenderOut();
+	debug("Delete after RenderOut !!\n");
 	ResetLayers();
+	debug("Delete after ResetLayers !!\n");
 	if(hasParent()){
 		parent->elem.erase(name);
 	}
 	xml_mgr->elem.erase(name);
-
+	debug("Delete out !!\n");
 }
 /*
  * 在加载图片及文字，显示在同一层

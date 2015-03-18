@@ -382,11 +382,11 @@ public:
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
+				if(*it!=this)
 				ele->layers.remove(this);
 			}
 		}
 	}
-
 
 
 	void renderLayers()
@@ -449,8 +449,9 @@ public:
 								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
 							}
 					}
+					cnt++;
 				}
-				cnt++;
+
 			}
 		}
 		if(!cnt){ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
@@ -496,15 +497,16 @@ public:
 		layers.remove(ele);
 	}
 
-	void backstack()  //此元素从队列中每个元素的队列中消失掉
-	{
-		list<element *>::iterator it;
-		for (it = layers.begin(); it != layers.end(); ++it)
-		{
-			(*it)->delLayers(this);
-		}
-
-	}
+//	void backstack()  //此元素从队列中每个元素的队列中消失掉
+//	{
+//		list<element *>::iterator it;
+//		for (it = layers.begin(); it != layers.end(); ++it)
+//		{
+//			if(*it!=this)
+//			(*it)->delLayers(this);
+//		}
+//
+//	}
 	void SetRes(int id, const char * path)
 	{
 		if (res[id].path != path || res[id].isNULL())
@@ -530,12 +532,16 @@ public:
 	virtual ~element()
 	{
 		debug("###HU### distroy element %s\r\n", name.c_str());
-		backstack();
+		//backstack();
+		ResetLayers();
+		debug("###HU### distroy element %s after backstack\r\n", name.c_str());
 		map<int, image>::iterator it;
+
 		for (it = res.begin(); it != res.end(); ++it)
 		{
 			it->second.destroy();
 		}
+		debug("###HU### distroy element %s  out\r\n", name.c_str());
 	}
 
 	hustr name;
