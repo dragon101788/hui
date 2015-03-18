@@ -67,14 +67,14 @@ void element::initstack()
 {
 
 	element_manager::iterator it;
-	element_manager *ele_mgr;
-	if(hasParent()){
-		ele_mgr=parent;
-
-	}
-	else
-		ele_mgr=xml_mgr;//有一个问题：非子元素会将子元素考虑进来
-	for (it = ele_mgr->begin(); it != ele_mgr->end(); ++it)
+//	element_manager *ele_mgr;
+//	if(hasParent()){
+//		ele_mgr=parent;
+//
+//	}
+//	else
+//		ele_mgr=xml_mgr;//有一个问题：非子元素会将子元素考虑进来
+	for (it = xml_mgr->begin(); it != xml_mgr->end(); ++it)
 	{
 		element * ele = it->second;
 		if(ele->parent==parent){  //只有当在同一父亲下，或父亲都为0，才相互作用
@@ -189,6 +189,7 @@ void element::FlushConfigReduced()
 }
 void element::Delete()
 {
+	debug("Delete in !!\n");
 	doDelete();
 	if(isParent()){
 		delChildren();
@@ -314,6 +315,21 @@ void element::ParseModifRes()
 	//	elem.erase(name);
 	}
 }
+ void element_manager_for_ele::DelElement(const char * name)
+{
+	element * ele = GetElementByName(name);
+	if (ele == NULL)
+	{
+		printf("can't del layer element %s\r\n", name);
+	}
+	else
+	{
+		ele->Delete();
+	//	elem.erase(name);
+	}
+}
+
+
 
  void ele_nest_extend::configChildAbsPos(){  //当父控件的scroll_x改变时，子控件的绝对位置就会改变，父控件需要调用此函数
 	 iterator it;
@@ -337,4 +353,14 @@ void element::ParseModifRes()
 		ele->Delete();
 	}
  }
-
+	void ele_nest_extend::resetChildren()
+	{
+		iterator it;
+		element * ele;
+		for(it=elem.begin();it!=elem.end();++it){
+			ele=it->second;
+			if(ele!=NULL){
+				ele->parent=NULL;
+			}
+		}
+	}

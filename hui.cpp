@@ -19,13 +19,31 @@
 #include "Framebuffer.h"
 #include "loaderDL.h"
 #include "dlproc.h"
+#include <sys/sysinfo.h>
+
+
+
+
 using namespace std;
 
-#define DEFAULT_XMLFILE "hu.xml"
+#define DEFAULT_XMLFILE "start.xml"
+#define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
+
 void RefreshPage(xmlproc * xml);
 
 
-
+int getFreeMemPercent()
+{
+        static struct sysinfo si;
+        sysinfo(&si);
+        int all=si.totalram>>20;//MB
+        int free= si.freeram>>20;
+        int percent=(free*100)/all;
+        printf("Totalram:       %d MB\n", all);
+        printf("Available:      %d MB\n", free);
+//        printf("Available:      %d \n",percent );
+        return percent;
+}
 void huErrExit(const char * str)
 {
 	printf("**************error exit*****************\r\n");
@@ -83,7 +101,17 @@ void JumpToFile(const char * jump, const char * snap)
 			}
 			else  //重新打开，这里最好添加一个内存判断，如果内存不够，释放掉缓存中的某个页面
 			{
+				if(getFreeMemPercent()<MIN_MEN_PERCENT){
 
+					map<hustr, pXmlproc>::iterator it;
+					it = g_xml_proc.begin();
+						if(it!=g_xml_proc.end()){
+							debug("kill %s page to free mem!!!\n",it->first.c_str());
+							it->second->cancel();
+							g_xml_proc.erase(it);
+						}
+
+				}
 //				hustr snapfile;
 //				if (snap == NULL)
 //				{

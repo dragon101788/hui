@@ -98,6 +98,62 @@ public:
 	map<hustr, SmartPtr<element> > elem; //ʹ������ָ��
 
 };
+
+class element_manager_for_ele
+{
+public:
+
+
+	virtual void AddElement(const char * name, element * ele)
+	{
+
+		if (GetElementByName(name) == NULL)
+		{
+			elem[name] = ele;
+		}
+		else
+		{
+			printf("Repeat to add element %s\r\n", name);
+		}
+
+	}
+	void ClearElement()
+	{
+		elem.clear();
+	}
+	 void DelElement(const char * name);
+
+	virtual element * GetElementByName(const char * name)
+	{
+		iterator it;
+		it = elem.find(name);
+		if (it != elem.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	typedef map<hustr,element* >::iterator iterator;
+	iterator begin()
+	{
+		return elem.begin();
+	}
+	iterator end()
+	{
+		return elem.end();
+	}
+	element_manager_for_ele()
+	{
+	}
+	virtual ~element_manager_for_ele()
+	{
+	}
+	map<hustr, element * > elem; //ʹ������ָ��
+
+};
 /******************************
  * 最元素的最基本类
  * 仅提供显示区域的x,y及高度，宽度
@@ -114,7 +170,7 @@ public:
  * ele_nest_extend 此类为了扩展元素嵌套功能独立出来的。如果需要实现控件嵌套，元素必须继承它
  *
  */
-class ele_nest_extend:virtual public window,public element_manager, virtual public Mutex{
+class ele_nest_extend:virtual public window, public element_manager_for_ele, virtual public Mutex{
 public:
 
 	ele_nest_extend(){
@@ -135,6 +191,11 @@ public:
 		children_touch_lock=0;
 		isDraw=0;
 	}
+	~ele_nest_extend(){
+		Destroy();
+	}
+
+
 	void tobeParent(const char * name,element * son){ //调此函数会添加一个儿子
 		if(!is_parent){  //还不是父亲
 			top_image.SetBuffer(width*x_page_num,height*y_page_num);//成为父亲你得想有一个家
@@ -171,6 +232,14 @@ public:
 		render_width=width;
 		render_height=height;
 	}
+
+
+	void resetChildren();
+
+	void Destroy(){
+		ClearElement();
+	}
+
 
 	int abs_x;//触摸的位置是相对屏幕绝对的
 	int abs_y;
@@ -244,8 +313,8 @@ public:
 	void onSchedule()
 	{
 		debug("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
-		if(parent!=NULL)
-		debug(" parent is %s !!!!!!!!!!1\n",parent->name.c_str());
+		//if(parent!=NULL)
+		//debug(" parent is %s !!!!!!!!!!1\n",parent->name.c_str());
 		RenderOut();
 		//debug("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
 	}
@@ -534,14 +603,12 @@ public:
 		debug("###HU### distroy element %s\r\n", name.c_str());
 		//backstack();
 		ResetLayers();
-		debug("###HU### distroy element %s after backstack\r\n", name.c_str());
 		map<int, image>::iterator it;
 
 		for (it = res.begin(); it != res.end(); ++it)
 		{
 			it->second.destroy();
 		}
-		debug("###HU### distroy element %s  out\r\n", name.c_str());
 	}
 
 	hustr name;

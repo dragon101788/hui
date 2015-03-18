@@ -277,7 +277,6 @@ private:
 		{
 			if (ptr != NULL)
 				debug("$$$HU$$$ Auto Ptr DestroyUse Release content\n");
-
 			delete ptr;
 			delete pUse;
 			ptr = NULL;
