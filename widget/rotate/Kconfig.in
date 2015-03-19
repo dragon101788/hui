@@ -1,0 +1,4 @@
+config  CONTROL_ROTATE_IMAGE 
+        bool "rotate_image Control" 
+        help 
+			path=$AUTOPATH
