@@ -13,7 +13,11 @@ public:
 //		ypos = 0;
 		id = 0;
 		rsp=0;
-		stepAngle=2;
+		stepAngle=6;
+		stop=0;
+		center=0;
+		zoomY=1;
+		zoomX=1;
 	}
 	~rotate_image()
 	{
@@ -27,7 +31,7 @@ public:
 	int doTimer(int tm)
 	{
 
-		if (0)
+		if (stop)
 		{
 			TimerStop();
 		}
@@ -36,7 +40,7 @@ public:
 			TimerSet(tm + rsp);
 		}
 		Flush();
-		angle=(angle+stepAngle)%360;
+		angle=(angle-stepAngle)%360;
 	}
 
 
@@ -57,6 +61,13 @@ public:
 		angle=m_mp["angle"]->getvalue_int();
 		rsp = m_mp["timeSlot"]->getvalue_int();
 		stepAngle = m_mp["stepAngle"]->getvalue_int();
+		center=m_mp["center"]->getvalue_int();
+		stop=m_mp["stop"]->getvalue_int();
+		if (m_mp.exist("zoomY"))
+		zoomY=(float)m_mp["zoomY"]->getvalue_int()/100;
+		if (m_mp.exist("zoomX"))
+		zoomX=(float)m_mp["zoomX"]->getvalue_int()/100;
+
 		for (int i = 0; i < m_mp.count("node"); i++)
 		{
 			printf("doFlushConfig %d %s\r\n",i, m_mp["node"][i]->getvalue());
@@ -74,7 +85,16 @@ public:
 		hide = m_mp["hide"]->getvalue_int();
 		scroll_x = m_mp["scroll_x"]->getvalue_int();
 		scroll_y = m_mp["scroll_y"]->getvalue_int();
+		angle=m_mp["angle"]->getvalue_int();
+		rsp = m_mp["timeSlot"]->getvalue_int();
+		stepAngle = m_mp["stepAngle"]->getvalue_int();
+		center=m_mp["center"]->getvalue_int();
+		stop=m_mp["stop"]->getvalue_int();
 		id = m_mp["id"]->getvalue_int();
+		if (m_mp.exist("zoomY"))
+		zoomY=(float)m_mp["zoomY"]->getvalue_int()/100;
+		if (m_mp.exist("zoomX"))
+		zoomX=(float)m_mp["zoomX"]->getvalue_int()/100;
 
 		Flush();
 	}
@@ -85,7 +105,10 @@ public:
 		//image::Render(&res[id], xpos, ypos, width, height, 0, 0);
 		res[id].LoadResource();
 		//rotate(&res[id],&rotated,angle);
-		rotate( rotated, res[id],angle,1,1,0,0);
+		if(center)
+		center_rotate( rotated, res[id],angle,zoomX,zoomY);
+		else
+		rotate( rotated, res[id],angle,zoomX,zoomY,0,0);
 		cur_res=&rotated;
 		//scroll_x=tan(angle*3.1415/180)*height;
 		//scroll_y=tan(angle*3.1415/180)*width;
@@ -97,6 +120,10 @@ public:
 	int id;
 	int rsp;
 	int stepAngle;
+	int stop;
+	int center;
+	float zoomY;
+	float zoomX;
 };
 
 #endif //__STATIC_IMAGE_H__
