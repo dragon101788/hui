@@ -186,8 +186,8 @@ public:
 		render_height=0;
 		parent=NULL;
 		is_parent=false;
-		children_x_lock = 0;
-		children_y_lock = 0;
+		//children_x_lock = 0;
+		//children_y_lock = 0;
 		children_touch_lock=0;
 		isDraw=0;
 	}
@@ -251,8 +251,8 @@ public:
 	int render_offset_y;
 	int render_width;
 	int render_height;
-	int children_x_lock;
-	int children_y_lock;
+	//int children_x_lock;
+	//int children_y_lock;
 	int children_touch_lock;
 	int isDraw;
 	element * parent;

@@ -115,11 +115,11 @@ public:
 	}
 	int move_x()
 	{
-		int lock=0;
-		if(hasParent()){
-			lock=x_lock|parent->children_x_lock;
-		}
-		if (lock)
+//		int lock=x_lock;
+//		if(hasParent()){
+//			lock|=parent->children_x_lock;
+//		}
+		if (x_lock)
 			return 0;
 		if (isdn == 0)
 			return 0;
@@ -128,11 +128,11 @@ public:
 	}
 	int move_y()
 	{
-		int lock=0;
-		if(hasParent()){
-			lock=y_lock|parent->children_y_lock;
-		}
-		if (lock)
+//		int lock=y_lock;
+//		if(hasParent()){
+//			lock|=parent->children_y_lock;
+//		}
+		if (y_lock)
 			return 0;
 		if (isdn == 0)
 			return 0;
@@ -260,6 +260,7 @@ public:
 			touch_element * toe = (*it);
 			int lock=0;
 			if(toe->hasParent()){
+				//children_touch_lock在父控件里面经常动态改变，比如滑动时锁定，所以lock得动态赋值，不能在解析时赋值
 				lock=toe->touch_lock |toe->parent->children_touch_lock;
 			}
 			if (lock==0)
