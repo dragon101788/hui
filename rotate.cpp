@@ -54,7 +54,13 @@ const double PI=3.1415926535897932384626433832795;
 #endif
 
 
-
+    void center_rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY)
+    {
+        long dst_wh=(long)( ::sqrt(1.0*srcPic.GetWidth()*srcPic.GetWidth()+srcPic.GetHeight()*srcPic.GetHeight()) +4 +0.5);
+        dstPic.SetBuffer(dst_wh,dst_wh);
+        double rotaryAngle=(PI*2)*(angle*1.0/360);
+        PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, (dstPic.GetWidth()-srcPic.GetWidth())*0.5,(dstPic.GetHeight()-srcPic.GetHeight())*0.5);
+    }
 
 void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,double move_x,double move_y)
 {
@@ -64,16 +70,10 @@ void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,
 //    const long rCount=360; //分成rCount个角度测试速度
     double rotaryAngle=(PI*2)*(angle*1.0/360);
 
-
   //  PicRotary2(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
-    PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
-//    clock_t t0=clock();
-//    for (long c=0;c<csRunCount;++c){
-//        for (long r=0;r<rCount;r+=20){
-//            double rotaryAngle=(PI*2)*(r*1.0/rCount+30.0/360);
-//            fproc(dstPic.getRef(),srcPic.getRef(),rotaryAngle,1,1,(dstPic.getWidth()-srcPic.getWidth())*0.5,(dstPic.getHeight()-srcPic.getHeight())*0.5);
-//        }
-//    }
+   // PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
+   // PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, (dstPic.GetWidth()-srcPic.GetWidth())*0.5,(dstPic.GetHeight()-srcPic.GetHeight())*0.5);
+
 }
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //RotaryAngle为逆时针旋转的角度;
@@ -81,10 +81,10 @@ void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,
     //move_x,move_y为x轴y轴的平移量;
 
 
-    void PicRotary2(const image_reduced& Dst,const image_reduced& Src,double RotaryAngle,double ZoomX,double ZoomY,double move_x,double move_y)
+    void PicRotary2(const base_image& Dst,const base_image& Src,double RotaryAngle,double ZoomX,double ZoomY,double move_x,double move_y)
     {
 
-        if ( (fabs(ZoomX*Src.u32Width)<1.0e-4) || (fabs(ZoomY*Src.u32Height)<1.0e-4) ) return; //太小的缩放比例认为已经不可见
+      //  if ( (fabs(ZoomX*Src.u32Width)<1.0e-4) || (fabs(ZoomY*Src.u32Height)<1.0e-4) ) return; //太小的缩放比例认为已经不可见
         double tmprZoomXY=1.0/(ZoomX*ZoomY);
         double rZoomX=tmprZoomXY*ZoomY;
         double rZoomY=tmprZoomXY*ZoomX;
@@ -338,7 +338,7 @@ void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,
         }
     };
 
-must_inline void BilInear_Fast(const image_reduced& pic,const long x_16,const long y_16,Color32* result)
+must_inline void BilInear_Fast(const base_image& pic,const long x_16,const long y_16,Color32* result)
 {
     Color32* PColor0=&pic.pixels(x_16>>16,y_16>>16);
     Color32* PColor1=(Color32*)((UInt8*)PColor0+pic.u32Stride);
@@ -368,7 +368,7 @@ must_inline void BilInear_Fast(const image_reduced& pic,const long x_16,const lo
 
 
 
-inline void BilInear_Border(const image_reduced& pic,const long x_16,const long y_16,Color32* result)
+inline void BilInear_Border(const base_image& pic,const long x_16,const long y_16,Color32* result)
 {
     unsigned long x0=(x_16>>16);
     unsigned long y0=(y_16>>16);
@@ -379,7 +379,7 @@ inline void BilInear_Border(const image_reduced& pic,const long x_16,const long 
     pixel[1]=pic.getPixelsBorder(x0+1,y0);
     pixel[3]=pic.getPixelsBorder(x0+1,y0+1);
 
-    image_reduced npic;
+    base_image npic;
     npic.pSrcBuffer     =&pixel[0];
     npic.u32Width=2*sizeof(Color32);
     //npic.u32Width     =2;
@@ -447,7 +447,7 @@ must_inline Color32 AlphaBlend(Color32 dst,Color32 src)
 
 
 void PicRotary_BilInear_CopyLine(Color32* pDstLine,long dst_border_x0,long dst_in_x0,long dst_in_x1,long dst_border_x1,
-                        const image_reduced& SrcPic,long srcx0_16,long srcy0_16,long Ax_16,long Ay_16)
+                        const base_image& SrcPic,long srcx0_16,long srcy0_16,long Ax_16,long Ay_16)
 {
     long x;
     for (x=dst_border_x0;x<dst_in_x0;++x)
@@ -475,7 +475,7 @@ void PicRotary_BilInear_CopyLine(Color32* pDstLine,long dst_border_x0,long dst_i
 }
 
 
-    void PicRotaryBilInear(const image_reduced & Dst,const image_reduced& Src,double RotaryAngle,double ZoomX,double ZoomY,double move_x,double move_y)
+    void PicRotaryBilInear(const base_image & Dst,const base_image& Src,double RotaryAngle,double ZoomX,double ZoomY,double move_x,double move_y)
     {
         if ( (fabs(ZoomX*Src.u32Width)<1.0e-4) || (fabs(ZoomY*Src.u32Height)<1.0e-4) ) return; //太小的缩放比例认为已经不可见
         double tmprZoomXY=1.0/(ZoomX*ZoomY);

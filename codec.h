@@ -73,17 +73,17 @@ struct Color32 {
 
 
 //图像数据区的描述信息
-class image_reduced{
+class base_image{
 public:
 	void * pSrcBuffer;
 	unsigned long SrcSize;
 	unsigned int u32Width;	// crop width
 	unsigned int u32Height;	// crop height
 	unsigned int u32Stride;
-	~image_reduced(){};
+	~base_image(){};
 	//////////////////////////////////////////////////////////////////////////
-    inline image_reduced() :pSrcBuffer(0),u32Stride(0),u32Width(0),u32Height(0){}
-    inline image_reduced(const image_reduced& ref) :pSrcBuffer(ref.pSrcBuffer),u32Stride(ref.u32Stride),u32Width(ref.u32Width),u32Height(ref.u32Height){}
+    inline base_image() :pSrcBuffer(0),u32Stride(0),u32Width(0),u32Height(0){}
+    inline base_image(const base_image& ref) :pSrcBuffer(ref.pSrcBuffer),u32Stride(ref.u32Stride),u32Width(ref.u32Width),u32Height(ref.u32Height){}
 //
     //访问(x,y)坐标处的颜色
     inline Color32& pixels(const long x,const long y) const { return getLinePixels(y)[x]; }
@@ -147,7 +147,7 @@ public:
 
 
 
-class image:public image_reduced, virtual public Mutex
+class image:public base_image, virtual public Mutex
 {
 	/*
 protected:
