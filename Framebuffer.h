@@ -82,7 +82,7 @@ public:
 			lock();
 			if(from_img!=NULL){
 		//	from_img->lock();
-		//	printf("run  RenderImageToFrameBuffer_self!!!\n");
+		//	printf("run  RenderImageToFrameBuffer!!!\n");
 			RenderImageToFrameBuffer(from_img);
 		//	from_img->unlock();
 			}

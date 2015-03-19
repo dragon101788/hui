@@ -252,9 +252,12 @@ public:
                 rcn = m_mp["rcn"]->getvalue_int();
 		remax = m_mp["remax"]->getvalue_int();
 		remin = m_mp["remin"]->getvalue_int();
-		sum_w=width;
-		width/=const_page+1;//触摸及可视宽度等于图片宽度除以页数
+
+
 		page_w=width;
+		sum_w=width*(const_page+1);
+
+
 
 		if (m_mp.exist("small_pic"))
 		{

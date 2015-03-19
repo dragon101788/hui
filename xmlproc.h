@@ -177,7 +177,6 @@ public:
 	{
 		while (go && m_exit)
 		{
-
 			if(!fore){ //如果非前台，直接睡眠等待
 				resetSem();
 				waitSem();
@@ -188,7 +187,6 @@ public:
 			else
 			ProcDraw();
 			FPSWaitFPS(30);
-
 		}
 	}
 	void ProcDraw()

@@ -335,6 +335,15 @@ public:
 		name = m_mp["name"]->getvalue();
 		int tmpX = m_mp["x"]->getvalue_int();
 		int tmpY = m_mp["y"]->getvalue_int();
+
+		if (m_mp.exist("inParentXpage"))//在父元素的第几个页面里
+		{
+			tmpX+=parent->width* m_mp["inParentXpage"]->getvalue_int();
+		}
+		if (m_mp.exist("inParentYpage"))
+		{
+			tmpY+=parent->height* m_mp["inParentYpage"]->getvalue_int();
+		}
 		width = m_mp["width"]->getvalue_int();
 		height = m_mp["height"]->getvalue_int();
 		render_width=width;
