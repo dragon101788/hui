@@ -336,13 +336,13 @@ public:
 		int tmpX = m_mp["x"]->getvalue_int();
 		int tmpY = m_mp["y"]->getvalue_int();
 
-		if (m_mp.exist("inParentXpage"))//在父元素的第几个页面里
+		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
 		{
-			tmpX+=parent->width* m_mp["inParentXpage"]->getvalue_int();
+			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
 		}
-		if (m_mp.exist("inParentYpage"))
+		if (m_mp.exist("parentYPage"))
 		{
-			tmpY+=parent->height* m_mp["inParentYpage"]->getvalue_int();
+			tmpY+=parent->height* m_mp["parentYPage"]->getvalue_int();
 		}
 		width = m_mp["width"]->getvalue_int();
 		height = m_mp["height"]->getvalue_int();
@@ -397,6 +397,15 @@ public:
 	{
 		int tmpX = m_mp["x"]->getvalue_int();
 		int tmpY = m_mp["y"]->getvalue_int();
+		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
+		{
+			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
+		}
+		if (m_mp.exist("parentYPage"))
+		{
+			tmpY+=parent->height* m_mp["parentYPage"]->getvalue_int();
+		}
+
 		hide = m_mp["hide"]->getvalue_int();
 		if (m_mp.exist("x_page_num"))
 		{
