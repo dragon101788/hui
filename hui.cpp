@@ -27,7 +27,7 @@
 using namespace std;
 
 #define DEFAULT_XMLFILE "start.xml"
-#define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
+#define MIN_MEN_PERCENT 60  //当剩余内存小于20%时开始清楚多余的页面
 
 void RefreshPage(xmlproc * xml);
 
@@ -416,6 +416,7 @@ inline void RefreshPage( xmlproc * xml)
 
 	element_manager::iterator it;
 	element * ele ;
+	xml->UnDoneProc();
 	for (it = xml->begin(); it != xml->end(); ++it)
 	{
 		 ele = it->second;
@@ -424,7 +425,7 @@ inline void RefreshPage( xmlproc * xml)
 		// ele->doFlushConfig();
 		// xml->que.addele( ele);
 	}
-
+	xml->DoneProc();
 
 
 }
@@ -439,7 +440,7 @@ void ParseRefreshPage(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 void ParseRefreshElement(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 {
 
-	//xml->UnDoneProc();
+	xml->UnDoneProc();
 
 	for (int i = 0; i < xmlmp.count("element"); i++)
 	{
@@ -449,7 +450,7 @@ void ParseRefreshElement(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 		 if(ele!=NULL)
 		 ele->Flush();
 	}
-	//xml->DoneProc();
+	xml->DoneProc();
 
 
 }

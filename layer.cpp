@@ -189,7 +189,6 @@ void element::FlushConfigReduced()
 }
 void element::Delete()
 {
-	debug("Delete in !!\n");
 	doDelete();
 	if(isParent()){
 		delChildren();
@@ -197,14 +196,23 @@ void element::Delete()
 	revocation();
 	hide = 1;
 	RenderOut();
-	debug("Delete after RenderOut !!\n");
-	ResetLayers();
-	debug("Delete after ResetLayers !!\n");
+	//ResetLayers();
+	//debug("Delete after ResetLayers !!\n");
 	if(hasParent()){
 		parent->elem.erase(name);
 	}
 	xml_mgr->elem.erase(name);
-	debug("Delete out !!\n");
+}
+
+
+void element::DeleteByParent()
+{
+	doDelete();
+	if(isParent()){
+		delChildren();
+	}
+	revocation();
+	xml_mgr->elem.erase(name);
 }
 /*
  * 在加载图片及文字，显示在同一层
@@ -350,7 +358,7 @@ void element::ParseModifRes()
 	{
 		element *ele=it->second;
 		if(ele!=NULL)
-		ele->Delete();
+		ele->DeleteByParent();
 	}
  }
 	void ele_nest_extend::resetChildren()

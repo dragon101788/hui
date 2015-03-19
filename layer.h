@@ -170,7 +170,7 @@ public:
  * ele_nest_extend 此类为了扩展元素嵌套功能独立出来的。如果需要实现控件嵌套，元素必须继承它
  *
  */
-class ele_nest_extend:virtual public window, public element_manager_for_ele, virtual public Mutex{
+class ele_nest_extend:virtual public window, virtual public element_manager_for_ele, virtual public Mutex{
 public:
 
 	ele_nest_extend(){
@@ -192,7 +192,7 @@ public:
 		isDraw=0;
 	}
 	~ele_nest_extend(){
-		Destroy();
+		//Destroy();
 	}
 
 
@@ -309,7 +309,7 @@ public:
 		unlock();
 	}
 	void Delete();
-
+	void DeleteByParent();//父控件删除时，调用此函数删除子元素
 	void onSchedule()
 	{
 		debug("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
