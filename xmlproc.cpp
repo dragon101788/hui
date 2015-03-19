@@ -45,10 +45,12 @@ int xmlproc::init()
 
 void xmlproc::ForeProc()
 {
-	fore = 1;
+
 	g_th_touch.SwitchProc(this);
 	g_th_timer.SwitchProc(this);
 	g_exec.ChangeContainer(this);
+	fore = 1;
+	isDraw++;//切换前台后自动刷新一次屏幕
 	postSem();
 }
 void xmlproc::UnForeProc()

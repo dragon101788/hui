@@ -193,8 +193,8 @@ public:
 	}
 	void ProcDraw()
 	{
-		if (fore == 0 || isDraw == 0)
-			return;
+//		if (fore == 0 || isDraw == 0)
+//			return;
 
 		//lock();
 		if (isDraw != 0 && fore == 1 && done == 1)

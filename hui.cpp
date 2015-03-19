@@ -27,7 +27,7 @@
 using namespace std;
 
 #define DEFAULT_XMLFILE "start.xml"
-#define MIN_MEN_PERCENT 60  //当剩余内存小于20%时开始清楚多余的页面
+#define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
 
 void RefreshPage(xmlproc * xml);
 
@@ -96,7 +96,7 @@ void JumpToFile(const char * jump, const char * snap)
 //				}
 				g_cur_xml = g_xml_proc[jump];
 				g_cur_xml->ForeProc();
-				RefreshPage(g_cur_xml);
+			//	RefreshPage(g_cur_xml);
 
 			}
 			else  //重新打开，这里最好添加一个内存判断，如果内存不够，释放掉缓存中的某个页面
