@@ -56,23 +56,35 @@ const double PI=3.1415926535897932384626433832795;
 
     void center_rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY)
     {
-        long dst_wh=(long)( ::sqrt(1.0*srcPic.GetWidth()*srcPic.GetWidth()+srcPic.GetHeight()*srcPic.GetHeight()) +4 +0.5);
-        dstPic.SetBuffer(dst_wh,dst_wh);
+    	static int src_width=0;
+    	static int src_height=0;
+    	static long dst_wh=0;
+    	if(src_width!=srcPic.GetWidth()||src_height!=srcPic.GetHeight()){
+    	//	debug("src_height!=srcPic.GetHeight()!!!!\n");
+    		src_width=srcPic.GetWidth();
+    		src_height=srcPic.GetHeight();
+    		dst_wh=(long)( ::sqrt(1.0*srcPic.GetWidth()*srcPic.GetWidth()+srcPic.GetHeight()*srcPic.GetHeight()) +4 +0.5);
+    	}
+    	dstPic.SetBuffer(dst_wh,dst_wh);
         double rotaryAngle=(PI*2)*(angle*1.0/360);
         PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, (dstPic.GetWidth()-srcPic.GetWidth())*0.5,(dstPic.GetHeight()-srcPic.GetHeight())*0.5);
     }
 
 void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,double move_x,double move_y)
 {
-        long dst_wh=(long)( ::sqrt(1.0*srcPic.GetWidth()*srcPic.GetWidth()+srcPic.GetHeight()*srcPic.GetHeight()) +4 +0.5);
+	static int src_width=0;
+	static int src_height=0;
+	static long dst_wh=0;
+	if(src_width!=srcPic.GetWidth()||src_height!=srcPic.GetHeight()){
+		debug("src_height!=srcPic.GetHeight()!!!!\n");
+		src_width=srcPic.GetWidth();
+		src_height=srcPic.GetHeight();
+		dst_wh=(long)( ::sqrt(1.0*srcPic.GetWidth()*srcPic.GetWidth()+srcPic.GetHeight()*srcPic.GetHeight()) +4 +0.5);
+	}
     dstPic.SetBuffer(dst_wh,dst_wh);
-   // dstPic.getRef().fillColor(Color32(0,0,255));
-//    const long rCount=360; //分成rCount个角度测试速度
     double rotaryAngle=(PI*2)*(angle*1.0/360);
-
   //  PicRotary2(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
-   // PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
-   // PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, (dstPic.GetWidth()-srcPic.GetWidth())*0.5,(dstPic.GetHeight()-srcPic.GetHeight())*0.5);
+    PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
 
 }
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -477,20 +489,32 @@ void PicRotary_BilInear_CopyLine(Color32* pDstLine,long dst_border_x0,long dst_i
 
     void PicRotaryBilInear(const base_image & Dst,const base_image& Src,double RotaryAngle,double ZoomX,double ZoomY,double move_x,double move_y)
     {
-        if ( (fabs(ZoomX*Src.u32Width)<1.0e-4) || (fabs(ZoomY*Src.u32Height)<1.0e-4) ) return; //太小的缩放比例认为已经不可见
-        double tmprZoomXY=1.0/(ZoomX*ZoomY);
-        double rZoomX=tmprZoomXY*ZoomY;
-        double rZoomY=tmprZoomXY*ZoomX;
-        double sinA,cosA;
-        SinCos(RotaryAngle,sinA,cosA);
-        long Ax_16=(long)(rZoomX*cosA*(1<<16));
-        long Ay_16=(long)(rZoomX*sinA*(1<<16));
-        long Bx_16=(long)(-rZoomY*sinA*(1<<16));
-        long By_16=(long)(rZoomY*cosA*(1<<16));
-        double rx0=Src.u32Width*0.5;  //(rx0,ry0)为旋转中心
-        double ry0=Src.u32Height*0.5;
-        long Cx_16=(long)((-(rx0+move_x)*rZoomX*cosA+(ry0+move_y)*rZoomY*sinA+rx0)*(1<<16));
-        long Cy_16=(long)((-(rx0+move_x)*rZoomX*sinA-(ry0+move_y)*rZoomY*cosA+ry0)*(1<<16));
+    	static double sZoomX=0;
+    	static double sZoomY=0;
+    	static int src_width=0;
+    	static int src_height=0;
+    	static double tmprZoomXY,rZoomX,rZoomY,sinA,cosA,rx0,ry0;
+    	long Ax_16,Ay_16,Bx_16,By_16,Cx_16,Cy_16;
+    	//	使用静态变量规避很多重复的计算
+    	if(sZoomX!=ZoomX||sZoomY!=ZoomY||src_width!=Src.u32Width||src_height!=Src.u32Height){
+    		sZoomX=ZoomX;
+    		sZoomY=ZoomY;
+    		src_width=Src.u32Width;
+    		src_height=Src.u32Height;
+			//if ( (fabs(ZoomX*Src.u32Width)<1.0e-4) || (fabs(ZoomY*Src.u32Height)<1.0e-4) ) return; //太小的缩放比例认为已经不可见
+			 tmprZoomXY=1.0/(ZoomX*ZoomY);
+			 rZoomX=tmprZoomXY*ZoomY;
+			 rZoomY=tmprZoomXY*ZoomX;
+			rx0=Src.u32Width*0.5;  //(rx0,ry0)为旋转中心
+			ry0=Src.u32Height*0.5;
+    	}
+		SinCos(RotaryAngle,sinA,cosA);
+		Ax_16=(long)(rZoomX*cosA*(1<<16));
+		Ay_16=(long)(rZoomX*sinA*(1<<16));
+		Bx_16=(long)(-rZoomY*sinA*(1<<16));
+		By_16=(long)(rZoomY*cosA*(1<<16));
+		Cx_16=(long)((-(rx0+move_x)*rZoomX*cosA+(ry0+move_y)*rZoomY*sinA+rx0)*(1<<16));
+		Cy_16=(long)((-(rx0+move_x)*rZoomX*sinA-(ry0+move_y)*rZoomY*cosA+ry0)*(1<<16));
 
         TRotaryClipData rcData;
         rcData.Ax_16=Ax_16;

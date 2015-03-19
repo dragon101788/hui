@@ -7,6 +7,7 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "include/autoconf.h"
+
 using namespace std;
 
 #include "hui.h"
@@ -18,6 +19,7 @@ using namespace std;
 #include "alpha.h"
 
 extern int snapcache;
+
 
 void MyMemMove(void *dst,const void *src,size_t count);
 int bmpCodec_to_image(image * sobj, const char *filename);
@@ -428,7 +430,7 @@ public:
 
 		//path.format("SetBuffer-%dx%d",width,height);
 		lock();
-		int dep = 4;
+		static int dep = 4;
 
 		int tmpsize = width * height * dep;
 		if (tmpsize > SrcSize)
