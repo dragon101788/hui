@@ -6,6 +6,8 @@
 #include "schedule.h"
 #include <deque>
 #include <set>
+//#include "image_rotate.h"
+#include "rotate.h"
 using namespace std;
 
 class schedule_draw;

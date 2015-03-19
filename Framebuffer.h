@@ -221,8 +221,8 @@ public:
 			{
 				for(int x=0;x<u32Width;x++)
 				{
-					IMG_PIX * pix = img->GetPix(x,y);
-					*(((unsigned short*)pSrcBuffer)+(y*u32Width+x)) = RGB565(pix->u8Red,pix->u8Green,pix->u8Blue);
+					Color32 * pix = &img->pixels(x,y);
+					*(((unsigned short*)pSrcBuffer)+(y*u32Width+x)) = RGB565(pix->r,pix->g,pix->b);
 				}
 			}
 			img->lock();

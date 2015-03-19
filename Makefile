@@ -39,6 +39,7 @@ obj-y += hulib.o
 obj-y += codec.o
 obj-y += Framebuffer.o
 obj-y += hui.o 
+obj-y += rotate.o 
 obj-$(CONFIG_TOUCH_EKTF2K) += platfrom/touch_ektf2k.o
 obj-$(CONFIG_TOUCH_NONE) += platfrom/touch_none.o
 
