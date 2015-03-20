@@ -107,7 +107,7 @@ void JumpToFile(const char * jump, const char * snap)
 					it = g_xml_proc.begin();
 						if(it!=g_xml_proc.end()){
 							debug("kill %s page to free mem!!!\n",it->first.c_str());
-							it->second->cancel();
+							//it->second->cancel();
 							g_xml_proc.erase(it);
 						}
 

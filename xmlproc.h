@@ -309,7 +309,8 @@ public:
 		m_exit = 0;
 		lock();
 		printf("Destroy wait thread \r\n");
-		wait();
+		cancel();
+		//wait();
 		debug("Destroy wait timer_manager::ClearElement \r\n");
 		timer_manager::ClearElement();
 
