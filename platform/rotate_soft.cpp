@@ -3,8 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include"codec.h"
-#include"rotate.h"
+#include"../codec.h"
+#include"rotate_soft.h"
 #include <math.h>
 
 

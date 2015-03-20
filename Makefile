@@ -23,8 +23,8 @@ MAKE=make CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CC) CFLAG="$(CFLAG)" TOPDIR=$(TOPD
 
 obj-y += XMLInstal.o
 obj-y += loaderDL.o
-obj-$(CONFIG_ALPHA_BLT) += platfrom/alpha_w55.o
-obj-$(CONFIG_ALPHA_SOFT) += platfrom/alpha_soft.o
+obj-$(CONFIG_ALPHA_BLT) += platform/alpha_w55.o
+obj-$(CONFIG_ALPHA_SOFT) += platform/alpha_soft.o
 obj-y += thread_msg.o
 obj-y += thread_timer.o
 obj-y += thread_touch.o
@@ -39,9 +39,9 @@ obj-y += hulib.o
 obj-y += codec.o
 obj-y += Framebuffer.o
 obj-y += hui.o 
-obj-y += rotate.o 
-obj-$(CONFIG_TOUCH_EKTF2K) += platfrom/touch_ektf2k.o
-obj-$(CONFIG_TOUCH_NONE) += platfrom/touch_none.o
+obj-y += platform/rotate_soft.o 
+obj-$(CONFIG_TOUCH_EKTF2K) += platform/touch_ektf2k.o
+obj-$(CONFIG_TOUCH_NONE) += platform/touch_none.o
 
 ifeq ($(CONFIG_USING_FONT),y) 
 	#LDFLAG+=-liconv 
