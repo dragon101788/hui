@@ -254,6 +254,13 @@ public:
 		}
 		lock();
 		cur_samp = *samp;
+		if(cur_samp.pressure!=0){ //用于通知用户触摸屏是否按下
+			in_touch=1;
+			onGlobalTouchPressed();
+		}else{
+			in_touch=0;
+			onGlobalTouchReleased();
+		}
 		iterator it;
 		for (it = mp.begin(); it != mp.end(); ++it)
 		{
@@ -269,10 +276,8 @@ public:
 				if (toe->isArea(cur_samp.x, cur_samp.y)
 						&& cur_samp.pressure != 0)
 				{
-					//printf("%d %d down\r\n",samp.x,samp.y);
 					toe->touch_area();
 					toe->isdn = 1;
-					//ooe = it->second;
 				}
 				else
 				{
@@ -335,6 +340,7 @@ public:
 	}
 	touch_manager()
 	{
+		in_touch=0;
 	}
 	virtual ~touch_manager()
 	{
@@ -345,6 +351,15 @@ public:
 	touch_sample cur_samp;
 	typedef set<touch_element *>::iterator iterator;
 	set<touch_element *> mp;
+
+	int  inTouch(){
+		//log_s("in_touch= %d!!!!!!!!!!!\n",in_touch);
+		return in_touch;
+	}
+	virtual void onGlobalTouchPressed(){};
+	virtual void onGlobalTouchReleased(){};
+private :
+	int in_touch; //触摸处于处理状态，添加此标识用于通知耗时的控件触摸时是否让出系统资源
 };
 
 #endif //__TOUCH_MGR_H__

@@ -139,6 +139,7 @@ private:
 public:
 	int directDraw;
 
+
 	void Draw(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 	{
 		//lock();
@@ -221,7 +222,9 @@ public:
 		lock();
 		if (fore == 1 && done == 1)
 		{
+
 			touch_proc_event(samp);
+
 		}
 		else
 		{
@@ -281,6 +284,7 @@ public:
 	{
 		init();
 		directDraw=0;
+
 	}
 	xmlproc(const char * file)
 	{
