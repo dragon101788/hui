@@ -276,7 +276,7 @@ private:
 		if (--*pUse == 0)
 		{
 			if (ptr != NULL)
-				debug("$$$HU$$$ Auto Ptr DestroyUse Release content\n");
+				log_i("$$$HU$$$ Auto Ptr DestroyUse Release content\n");
 			delete ptr;
 			delete pUse;
 			ptr = NULL;
@@ -376,17 +376,17 @@ class thread
 public:
 	virtual int run()
 	{
-		printf("call base thread run\r\n");
+		log_i("call base thread run\r\n");
 	}
 
 	virtual int destroy()
 	{
-		printf("call base thread destroy\r\n");
+		log_i("call base thread destroy\r\n");
 	}
 	static void cleanup(void * arg)
 	{
 		thread * is = (thread *) arg;
-		printf("[%s] thread asynchronous interrupt\r\n", is->name.c_str());
+		log_i("[%s] thread asynchronous interrupt\r\n", is->name.c_str());
 		is->destroy();
 	}
 	static void * create_thread(void *arg)
@@ -431,13 +431,13 @@ public:
 		{
 			if (!pthread_cancel(tid))
 			{
-				printf("pthread_cancel %s OK\n ", name.c_str());
+				log_i("pthread_cancel %s OK\n ", name.c_str());
 				wait();
 				tid = -1;
 			}
 			else
 			{
-				printf("pthread_cancel %s faild: %s\n ", name.c_str(), strerror(errno));
+				log_e("pthread_cancel %s faild: %s\n ", name.c_str(), strerror(errno));
 			}
 		}
 	}
@@ -470,7 +470,7 @@ public:
 		{
 			if (GetTickCount() > timer + m_max)
 			{
-				printf("%s thread Timer Out\r\n", m_name.nstr());
+				log_w("%s thread Timer Out\r\n", m_name.nstr());
 				m_thd->kill(11);
 				return -1;
 			}
@@ -725,7 +725,7 @@ public:
 	{
 		int usetime = GetTickCount() - oldtime;
 		if (str != NULL)
-			debug("debug_timer [%s] %dfps/S fps/%dms\r\n", str,
+			log_s("debug_timer [%s] %dfps/S fps/%dms\r\n", str,
 					usetime ? 1000 / usetime : 1000, usetime);
 		oldtime = GetTickCount();
 	}
@@ -1196,7 +1196,7 @@ public:
 			}
 			if (i >= count)
 			{
-				printf("key %s id %d not find\r\n", key, i);
+				log_i("key %s id %d not find\r\n", key, i);
 				exit(-1);
 			}
 		}
@@ -1208,7 +1208,7 @@ public:
 	void display()
 	{
 		displayspace(retrospect_tree());
-		printf("[%s]=[%s]  <%d>\r\n", m_key.c_str(), m_val.c_str(),m_order);
+		log_i("[%s]=[%s]  <%d>\r\n", m_key.c_str(), m_val.c_str(),m_order);
 		iterator it;
 		for (it = this->begin(); it != this->end(); ++it)	//遍历
 		{
@@ -1231,7 +1231,7 @@ public:
 	void displayspace(int n, const char * str = "     ")
 	{
 		for (int i = 0; i < n; i++)
-			printf("%s", str);
+			log_i("%s", str);
 	}
 	void setfather(humap * father)
 	{

@@ -10,7 +10,7 @@ class CS_manager :virtual public Mutex
 public:
 	void CreateCS(const char * str, HUMap & xmlmp)
 	{
-		//printf("CreateCS++ %s\r\n",str);
+		//log_i("CreateCS++ %s\r\n",str);
 		lock();
 		m_cs[str].accept(xmlmp);
 //		m_cs[str].fetch(xmlmp);
@@ -18,7 +18,7 @@ public:
 		unlock();
 		//m_cs[str].display();
 
-		//printf("CreateCS--\r\n");
+		//log_i("CreateCS--\r\n");
 		return;
 	}
 	void PostScfg(HUMap & mp);

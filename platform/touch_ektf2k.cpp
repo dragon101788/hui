@@ -31,11 +31,11 @@ int GetTouchSample(touch_sample * samp)
 		}
 		if (data.type == EV_ABS)
 		{
-			//printf("data.code=(%#x %d) data.value=(%#x %d) data.type=(%#x %d) \r\n",data.code,data.code,data.value,data.value,data.type,data.type);
+			//log_i("data.code=(%#x %d) data.value=(%#x %d) data.type=(%#x %d) \r\n",data.code,data.code,data.value,data.value,data.type,data.type);
 
 			if (data.code == ABS_MT_TOUCH_MAJOR)
 			{
-				//printf("ABS_MT_TOUCH_MAJOR %d\r\n", data.value);
+				//log_i("ABS_MT_TOUCH_MAJOR %d\r\n", data.value);
 				//tssmp->pressure = data.value;
 
 			}

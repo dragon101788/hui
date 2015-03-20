@@ -55,7 +55,7 @@ public:
 
 		if (ioctl(blt_fd, BLT_IOCTMMU, 1) == -1)
 		{
-			printf("### Error: failed to configure BLT device to MMU mode: %s\n", strerror(errno));
+			log_e("### Error: failed to configure BLT device to MMU mode: %s\n", strerror(errno));
 			exit(-1);
 		}
 		unlock();

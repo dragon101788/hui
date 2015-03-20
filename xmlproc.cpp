@@ -19,7 +19,7 @@ int HuExec::doStart()
 		}
 		if (!cs.empty())
 		{
-			printf("exec xml=%s cs=%s\r\n", g_cur_xml->filename.c_str(), cs.c_str());
+			log_i("exec xml=%s cs=%s\r\n", g_cur_xml->filename.c_str(), cs.c_str());
 			g_cur_xml->PostCS(cs);
 		}
 	}
@@ -43,6 +43,10 @@ int xmlproc::init()
 	create();
 }
 
+/********************************
+ * 执行完这个函数，页面就前台了，可以考虑在后头添加过场动画
+ */
+
 void xmlproc::ForeProc()
 {
 
@@ -53,6 +57,9 @@ void xmlproc::ForeProc()
 	isDraw++;//切换前台后自动刷新一次屏幕
 	postSem();
 }
+/********************************
+ * 执行完这个函数，页面就后台了，可以考虑在前头添加过场动画
+ */
 void xmlproc::UnForeProc()
 {
 	fore = 0;

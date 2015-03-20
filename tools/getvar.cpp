@@ -21,7 +21,7 @@ int main(int argc, char * argv[])
 	char * q = strchr(p,'=');
 	if(q==NULL)
 	{
-		printf("%s", p);
+		log_i("%s", p);
 		return 0;
 	}
 	else
@@ -33,7 +33,7 @@ int main(int argc, char * argv[])
 		int n = (int)(q-p);
 		char put[24]={0};
 		strncpy(put,p,n);
-		printf("%s",put);
+		log_i("%s",put);
 		return 0;
 	}
 	return -1;

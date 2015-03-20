@@ -14,13 +14,13 @@ void CS_manager::PostCS(HUMap::OrderList & mp)
 		{
 			continue;
 		}
-		//printf("parse %s\r\n",(*it).m_key.c_str());
+		//log_i("parse %s\r\n",(*it).m_key.c_str());
 		//(*it).display();
 		ParseXMLElement2(NULL,(*it).m_key, (*it), elemgr);
-		//printf("CS_manager::PostCS %s\r\n", it->first.c_str());
+		//log_i("CS_manager::PostCS %s\r\n", it->first.c_str());
 //		for(int i=0;i<it->second.BrotherCount();i++)
 //		{
-//			printf("CS_manager::PostCS %s[%d]\r\n", it->first.c_str(),i);
+//			log_i("CS_manager::PostCS %s[%d]\r\n", it->first.c_str(),i);
 //			HUMap & tmp = it->second[i];
 //			//tmp.display();
 //			ParseXMLElement2(it->first, tmp, elemgr);
@@ -36,23 +36,23 @@ void CS_manager::PostCS(const char * str)
 		return;
 
 	lock();
-	printf("PostCS %s ++\r\n", str);
+	log_i("PostCS %s ++\r\n", str);
 	iterator it;
 
 	it = m_cs.find(str);
 	if (it != m_cs.end())
 	{
-		//printf("PostCS find %s\r\n", str);
+		//log_i("PostCS find %s\r\n", str);
 		//it->second.display();
-		//printf("count=%d\r\n",cnt);
+		//log_i("count=%d\r\n",cnt);
 		PostCS(it->second);
 
 	}
 	else
 	{
-		printf("PostCS can't find cs [%s]\r\n", str);
+		log_i("PostCS can't find cs [%s]\r\n", str);
 	}
-	printf("PostCS %s--\r\n", str);
+	log_i("PostCS %s--\r\n", str);
 	unlock();
 }
 
@@ -60,7 +60,7 @@ void CS_manager::PostScfg(HUMap & mp)
 {
 	lock();
 	hustr name = mp["name"]->getvalue();
-	//printf("PostCS name = %s\r\n", name.c_str());
+	//log_i("PostCS name = %s\r\n", name.c_str());
 
 	element * ele = elemgr->GetElementByName(name);
 	if (ele != NULL)
@@ -69,7 +69,7 @@ void CS_manager::PostScfg(HUMap & mp)
 	}
 	else
 	{
-		printf("PostCS can't find element [%s]\r\n", name.c_str());
+		log_w("PostCS can't find element [%s]\r\n", name.c_str());
 	}
 	unlock();
 }
@@ -77,7 +77,7 @@ void CS_manager::PostPartialConfig(HUMap & mp)
 {
 	lock();
 	hustr name = mp["name"]->getvalue();
-	//printf("PostCS name = %s\r\n", name.c_str());
+	//log_i("PostCS name = %s\r\n", name.c_str());
 
 	element * ele = elemgr->GetElementByName(name);
 	if (ele != NULL)
@@ -86,7 +86,7 @@ void CS_manager::PostPartialConfig(HUMap & mp)
 	}
 	else
 	{
-		printf("PostConfig can't find element [%s]\r\n", name.c_str());
+		log_i("PostConfig can't find element [%s]\r\n", name.c_str());
 	}
 	unlock();
 }

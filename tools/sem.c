@@ -47,12 +47,12 @@ int main(int argc, char *argv[])
         if(!semaphore_p())
             exit(EXIT_FAILURE);
         //向屏幕中输出数据
-        printf("%c", message);
+        log_i("%c", message);
         //清理缓冲区，然后休眠随机时间
         fflush(stdout);
         sleep(rand() % 3);
         //离开临界区前再一次向屏幕输出数据
-        printf("%c", message);
+        log_i("%c", message);
         fflush(stdout);
         //离开临界区，休眠随机时间后继续循环
         if(!semaphore_v())
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     }
 
     sleep(10);
-    printf("\n%d - finished\n", getpid());
+    log_i("\n%d - finished\n", getpid());
 
     if(argc > 1)
     {

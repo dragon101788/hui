@@ -24,7 +24,7 @@ public:
 	}
 	~wheel_text(){
 
-//		printf("~wheel_text()!!!!!!!!!!!!!!!!!!!\n");
+//		log_i("~wheel_text()!!!!!!!!!!!!!!!!!!!\n");
 
 		nodemp.clear();
 	}
@@ -50,7 +50,7 @@ public:
 		~node()
 		{
 
-			//printf("~node()!!!!!!!!!!!!!!!!!!!\n");
+			//log_i("~node()!!!!!!!!!!!!!!!!!!!\n");
 			//xml_mgr->DelElement(name);
 		}
 
@@ -99,7 +99,7 @@ public:
 
 			if (pSrcBuffer == NULL)
 			{
-				//printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+				//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
 				SetBuffer(width, height);
 				path.format("ele-%s %dx%d", name.c_str(), width, height);
 			}
@@ -109,12 +109,12 @@ public:
 			size = m_mp["size"]->getvalue_int();
 
 			ttf.m_font = &font_mp[font];
-			printf("get font_mp %x %x\r\n", font_mp[font].face,
+			log_i("get font_mp %x %x\r\n", font_mp[font].face,
 					font_mp[font].ft_Lib);
 			ttf.fontHeight = size;
 			ttf.color = color;
 			ttf.style = style;
-			//printf("width=%d, height= %d\r\n", width,height);
+			//log_i("width=%d, height= %d\r\n", width,height);
 */
 			doFlushConfigCom();
 			if(!m_mp["cached"]->getvalue_int()){
@@ -158,7 +158,7 @@ public:
 
 		void doRender()
 		{
-			//printf("in mode doRender()!!!!!\n");
+			//log_i("in mode doRender()!!!!!\n");
 			//image::Render(&ttf, 0, 0);
 			cur_res=&ttf;
 			//	image::Render(&img, 0, 0, width, height, 0, 0);
@@ -243,7 +243,7 @@ public:
 	void FlushConfigCom()
 				{
 
-					printf("doFlushConfigCom()!!!!!!!  \n");
+					log_i("doFlushConfigCom()!!!!!!!  \n");
 					set_num= m_mp["set_num"]->getvalue_int();
 					if(node_num==3){
 

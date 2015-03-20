@@ -406,7 +406,7 @@ public:
 		}
 		if (path.empty())
 		{
-			debug("warning LoadResource empty path\r\n");
+			log_w("warning LoadResource empty path\r\n");
 			return -1;
 		}
 		return codec_to_Image(this, path.nstr());//装载图片
@@ -656,7 +656,7 @@ inline 	image()
 	{
 		if (pSrcBuffer != NULL)
 		{
-			debug("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
+			log_i("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
 			free(pSrcBuffer);
 			pSrcBuffer = NULL;
 		}
@@ -666,7 +666,7 @@ inline 	image()
 
 		if (pSrcBuffer != NULL)
 		{
-			debug("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
+			log_i("destroy image pSrcBuffer [%s] %dx%d\r\n", path.c_str(), u32Width, u32Height);
 			free(pSrcBuffer);
 			pSrcBuffer = NULL;
 			SrcSize = 0;

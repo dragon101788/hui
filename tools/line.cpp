@@ -32,7 +32,7 @@ public:
 	{
 		if ((fd = open("/dev/input/event0", O_RDONLY)) < 0)
 		{
-			printf("Error open %s\n\n", "/dev/input/event0");
+			log_i("Error open %s\n\n", "/dev/input/event0");
 			exit(-1);
 		}
 	}
@@ -67,7 +67,7 @@ public:
 				}
 				else
 				{
-					printf("touch_proc_event huts_read %s %d\r\n", strerror(errno),
+					log_i("touch_proc_event huts_read %s %d\r\n", strerror(errno),
 					errno);
 					exit(-1);
 				}

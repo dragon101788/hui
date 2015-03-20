@@ -20,6 +20,6 @@ int main(int argc, char** argv)                               //argc:ï¿½ï¿½ï¿½ï¿
 	msg.send_message(100,argv[2]);
 
 
-	printf("msg count = %d\r\n",msg.count());
+	log_i("msg count = %d\r\n",msg.count());
 
 }

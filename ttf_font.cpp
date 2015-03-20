@@ -39,7 +39,7 @@ extern unsigned long ttfSize;
 //      memset(text_buffer,color,sizeof(int)*h*w);
 //       if (text_buffer==NULL)
 //         {
-//	 printf("added_txt:malloc failed!\n");
+//	 log_i("added_txt:malloc failed!\n");
 //         return -1;
 //       }
 //	return 0;
@@ -54,14 +54,14 @@ extern unsigned long ttfSize;
 //void  truetype::Disp_txt(unsigned int * pSrcBuffer,unsigned int SrcBuffer_W, unsigned int x,unsigned int y,unsigned int w,unsigned int h)
 //{
 //int i,j;
-//printf("i am in Disp_txt!!\n");
+//log_i("i am in Disp_txt!!\n");
 //// ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
 //    for(j=y;j<y+h;j++)
 //      for(i=x;i<x+w;i++)
 //	*((unsigned int *) pSrcBuffer + j * SrcBuffer_W +i) =*((unsigned int *) text_buffer+ (j-y) * Width_text + (i-x));
 //// ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
 //
-//printf("i will out Disp_txt!!\n");
+//log_i("i will out Disp_txt!!\n");
 //}
 
 //void text::ft_draw_bitmap(FT_Bitmap *bitmap, int x, int y, unsigned int color)
@@ -78,7 +78,7 @@ extern unsigned long ttfSize;
 //		for (j = 0; j < bitmap->width; j++)
 //		{
 //			gray = bitmap->buffer[i * bitmap->pitch + j];
-//			//                  printf("gray=%d\n",gray);
+//			//                  log_i("gray=%d\n",gray);
 //			if (gray > 0)
 //			{
 //				LCD_PutPixel(x + j, y + i, color, gray);
@@ -147,7 +147,7 @@ extern unsigned long ttfSize;
 //		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 //		if (ft_error)
 //		{
-//			printf("Error at load char!\n");
+//			log_w("Error at load char!\n");
 //			return -1;
 //		}
 //
@@ -171,7 +171,7 @@ ssize_t FontDev::convert(const char *tocode, const char *fromcode, char *inbufp,
 	ic = iconv_open(tocode, fromcode);
 	if (ic == (iconv_t) -1)
 	{
-		printf("iconv_open failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
+		log_e("iconv_open failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
 		return -1;
 	}
 	while (inbytesleft > 0)
@@ -179,14 +179,14 @@ ssize_t FontDev::convert(const char *tocode, const char *fromcode, char *inbufp,
 		ret = iconv(ic, &inbufp, &inbytesleft, &outbufp, &outbytes);
 		if (ret == -1)
 		{
-			printf("iconv failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
+			log_e("iconv failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
 			return -1;
 		}
 	}
 	ret = iconv_close(ic);
 	if (ret == -1)
 	{
-		printf("iconv_close failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
+		log_e("iconv_close failed: from: %s, to: %s: %s", fromcode, tocode, strerror(errno));
 		return -1;
 	}
 	return outbytesleft - outbytes;
@@ -283,7 +283,7 @@ void FontDev::DrawText(text * ptext, const char *encode, char * showtxt,int buff
 //		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 //		if (ft_error)
 //		{
-//			printf("Error at load char!\n");
+//			log_i("Error at load char!\n");
 //			return -1;
 //		}
 //
@@ -312,8 +312,8 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2;//给点余量吧
 	int y = 0;
-	printf("TTF_DisplayUnicode!,num=%d\n", num);
-	printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
+	log_i("TTF_DisplayUnicode!,num=%d\n", num);
+	//log_i("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	for (i = 0; i < num; i++)
@@ -333,7 +333,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
-			printf("Error at load char!\n");
+			log_e("Error at load char!\n");
 			return -1;
 		}
 
@@ -362,7 +362,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 	}
 
-	printf("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
+	log_i("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
 	return final_num;
 }
 int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
@@ -379,8 +379,8 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2+padding_left;//给点余量吧
 	int y = padding_top;
-	printf("TTF_DisplayUnicode!,num=%d\n", num);
-	printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
+	log_i("TTF_DisplayUnicode!,num=%d\n", num);
+	//printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	for (i = 0; i < num; i++)
@@ -400,7 +400,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
-			printf("Error at load char!\n");
+			log_e("Error at load char!\n");
 			return -1;
 		}
 
@@ -429,7 +429,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 	}
 
-	printf("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
+	log_i("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
 	return final_num;
 }
 
@@ -447,8 +447,8 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2+padding_left;//给点余量吧
 	int y = padding_top;
-	printf("TTF_DisplayUnicode!,num=%d\n", num);
-	printf("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
+	log_i("TTF_DisplayUnicode!,num=%d\n", num);
+	//log_i("buff_width=%d ,buff_height=%d\n",buff_width,buff_height);
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	for (i = 0; i < num; i++)
@@ -468,7 +468,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
-			printf("Error at load char!\n");
+			log_e("Error at load char!\n");
 			return -1;
 		}
 
@@ -497,7 +497,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 	}
 
-	printf("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
+	log_i("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
 	return final_num;
 }
 
@@ -513,18 +513,18 @@ void ParseFont(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 	const char * name = xmlmp["name"]->getvalue();
 	path = xmlmp["path"]->getvalue();
 
-	printf("ParseFont %s=%s\n", name, path);
+	log_i("ParseFont %s=%s\n", name, path);
 	map<hustr, FontDev>::iterator it;
 	for (it = font_mp.begin(); it != font_mp.end(); ++it)
 	{
 
 		if(it->first==name){
-			printf("font %s had init before\n", name);
+			log_i("font %s had init before\n", name);
 			return ;
 		}
 	}
 	font_mp[name].TTF_Init(path, FT_LOAD_NO_BITMAP | FT_LOAD_RENDER);
-	//printf("get font_mp %x %x\r\n",font_mp[name].face,font_mp[name].ft_Lib);
+	//log_i("get font_mp %x %x\r\n",font_mp[name].face,font_mp[name].ft_Lib);
 }
 //XMLinstan["font"] = ParseFont;
 static InstallXMLinstan install2("font",ParseFont);

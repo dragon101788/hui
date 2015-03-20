@@ -51,7 +51,7 @@ int crossAlgorithm(element * r1, element * r2)
 			(r1->y + r1->height) <= (r2->y + r2->height) ?
 					(r1->y + r1->height) : (r2->y + r2->height);
 	// 判断是否相交
-	//printf("crossAlgorithm %d %d %d %d\r\n",nMaxLeft , nMinRight , nMaxTop , nMinBottom);
+	//log_i("crossAlgorithm %d %d %d %d\r\n",nMaxLeft , nMinRight , nMaxTop , nMinBottom);
 	if (nMaxLeft >= nMinRight || nMaxTop >= nMinBottom)
 	{
 		return 0;
@@ -108,12 +108,12 @@ void element::RenderOut()
 	}
 	else
 	{
-		debug("Render %s hide\r\n", name.c_str());
+		log_i("Render %s hide\r\n", name.c_str());
 	}
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 
 	if(parent!=NULL){
-		//debug("%s draw to parent!!!!!!!\n",name.c_str());
+		//log_i("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
@@ -121,7 +121,7 @@ void element::RenderOut()
 		parent->RenderOut();
 
 	}else{
-		//debug("%s draw to xmlout!!!!!!!\n",name.c_str());
+		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
 		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
 			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
 		}else
@@ -138,7 +138,7 @@ void element::cleanLastPos()
 
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 	if(parent!=NULL){
-		debug("%s draw to parent!!!!!!!\n",name.c_str());
+		log_i("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
@@ -243,7 +243,7 @@ void element::ParseModifRes()
 			file.SetResource(xmlmp["file"]->getvalue());
 			file.LoadResource();
 
-			printf(
+			log_i(
 					"$$$HU$$$ XML Draw Render %s to %s res=%d %d %d %d %d %d %d\r\n",
 					file.path.c_str(), name.c_str(), id, src_x, src_y, cp_width,
 					cp_height, dst_x, dst_y);
@@ -281,7 +281,7 @@ void element::ParseModifRes()
 
 			text tmpttf;
 			tmpttf.m_font = &font_mp[font];
-			printf("get font_mp %s %x %x\r\n",font.nstr() ,tmpttf.m_font->face,
+			log_i("get font_mp %s %x %x\r\n",font.nstr() ,tmpttf.m_font->face,
 					tmpttf.m_font->ft_Lib);
 			tmpttf.fontHeight = size;
 			tmpttf.color = color;
@@ -289,7 +289,7 @@ void element::ParseModifRes()
 			tmpttf.SetBuffer(cp_width, cp_height);
 			tmpttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
 
-			printf("ParseModifRes text=%s\r\n",txt.c_str());
+			log_i("ParseModifRes text=%s\r\n",txt.c_str());
 			if (!res[id].isNULL())
 			{
 
@@ -315,7 +315,7 @@ void element::ParseModifRes()
 	element * ele = GetElementByName(name);
 	if (ele == NULL)
 	{
-		printf("can't del layer element %s\r\n", name);
+		log_w("can't del layer element %s\r\n", name);
 	}
 	else
 	{
@@ -328,7 +328,7 @@ void element::ParseModifRes()
 	element * ele = GetElementByName(name);
 	if (ele == NULL)
 	{
-		printf("can't del layer element %s\r\n", name);
+		log_w("can't del layer element %s\r\n", name);
 	}
 	else
 	{

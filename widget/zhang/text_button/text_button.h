@@ -11,7 +11,7 @@ class text_button: public element, public touch_element
 public:
 	void doTouchDown()
 	{
-		//printf("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
+		//log_i("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
 		if (isdn == 1)
 			return;
 		Flush();
@@ -63,7 +63,7 @@ public:
 		xml_mgr->AddEleArea(this);
 		setTextRes();//设置文字相关属性
 		ParseModifRes();
-		//printf("Render_img_to_img!!!!\n");
+		//log_i("Render_img_to_img!!!!\n");
 		//Render_img_to_img(&res[0], &ttf, 0, 0, width, height,0,0);//将文字复制到图片上
 		//Render_img_to_img(&res[1], &ttf, 0, 0, width, height,0,0);//将文字复制到图片上
 

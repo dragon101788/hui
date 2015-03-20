@@ -168,9 +168,9 @@ public:
 		u32Height = var.yres;
 
 		lcm_dpp = var.bits_per_pixel;
-		printf("FrameBuffer Accept %d %d %d %d %d %d %d\r\n",u32Width,u32Height,lcm_dpp,var.xres_virtual,var.yres_virtual,var.xoffset,var.yoffset);
+		log_i("FrameBuffer Accept %d %d %d %d %d %d %d\r\n",u32Width,u32Height,lcm_dpp,var.xres_virtual,var.yres_virtual,var.xoffset,var.yoffset);
 		SrcSize = u32Width * u32Height * (lcm_dpp / 8);
-		//printf("$$$luo$$$ SrcSize is %d \r\n",SrcSize);
+		//log_i("$$$luo$$$ SrcSize is %d \r\n",SrcSize);
 
 		pSrcBuffer = mmap(NULL, SrcSize, PROT_READ | PROT_WRITE, MAP_SHARED, lcm_fd, 0);
 		if (pSrcBuffer == MAP_FAILED)
@@ -183,7 +183,7 @@ public:
 
 	void Destroy()
 	{
-		printf("$$$HU$$$ framebuffer Destroy\r\n");
+		log_i("$$$HU$$$ framebuffer Destroy\r\n");
 		if (pSrcBuffer != NULL && pSrcBuffer != MAP_FAILED)
 		{
 			munmap(pSrcBuffer, SrcSize);
@@ -195,13 +195,13 @@ public:
 	}
 
 	void NotifyRenderFrameBuffer(image * img){
-		//printf("RenderImageToFrameBuffer in!!!\n");
+		//log_i("RenderImageToFrameBuffer in!!!\n");
 		img->lock();
     	from_img=img;
     	img->unlock();
     	//sem_post(&sem);
     	postSem();
-    //	printf("RenderImageToFrameBuffer out!!!!\n");
+    //	log_i("RenderImageToFrameBuffer out!!!!\n");
     }
 	void RenderImageToFrameBuffer(image * img)
 	{
@@ -216,7 +216,7 @@ public:
 		if (lcm_dpp == 16)
 		{
 			img->lock();
-			//printf("$$$luo$$$ bpp=16\r\n");
+			//log_i("$$$luo$$$ bpp=16\r\n");
 			for(int y=0;y<u32Height;y++)
 			{
 				for(int x=0;x<u32Width;x++)
@@ -229,7 +229,7 @@ public:
 		}
 		else if (lcm_dpp == 32)
 		{
-			//printf("$$$luo$$$ bpp=32\r\n");
+			//log_i("$$$luo$$$ bpp=32\r\n");
 			img->dump_to_buf(pSrcBuffer);
 		}
 		//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);

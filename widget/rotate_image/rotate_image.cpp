@@ -5,5 +5,5 @@ static InstallXMLinstan install("rotate_image",Install_Element<rotate_image>);
 
 hucall int init(HUMap & mp,void * data)
 {
-	printf("module init\r\n");
+	log_i("module init\r\n");
 }

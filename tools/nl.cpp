@@ -120,5 +120,5 @@ int main(int argc, char * argv[])
 
 	int n_mon = (LunarCalendarDay & 0x3C0) >> 6;
 	int n_day = LunarCalendarDay & 0x3F;
-	printf("%d:%d\n",n_mon,n_day);
+	log_i("%d:%d\n",n_mon,n_day);
 }

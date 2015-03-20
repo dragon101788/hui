@@ -93,7 +93,7 @@ int main(int argc, char** argv)                     //argc:�������
 
 	if(argc==3)
 	{
-		printf("read msg:\r\n%s\r\n", qbuf.mtext);
+		log_i("read msg:\r\n%s\r\n", qbuf.mtext);
 	}
 	else if(argc == 4)
 	{
@@ -110,7 +110,7 @@ int main(int argc, char** argv)                     //argc:�������
 			char str[q2-q1+1];
 			memset(str,0,q2-q1+1);
 			strncpy(str,q1,q2-q1);
-			printf("%s",str);
+			log_i("%s",str);
 		}
 	}
 	sem.V();

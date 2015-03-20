@@ -138,7 +138,7 @@ public:
 
 		Flush();
 
-		printf("Radio_buttons OK\r\n");
+		log_i("Radio_buttons OK\r\n");
 	}
 	void doRender()
 	{

@@ -5,5 +5,5 @@ static InstallXMLinstan install("cartoon",Install_Element<cartoon>);
 
 hucall int init(HUMap & mp,void * data)
 {
-	printf("module init\r\n");
+	log_i("module init\r\n");
 }

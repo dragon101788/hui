@@ -30,7 +30,7 @@ public:
 			}
 			//usleep(1000);
 		}
-		printf("msg thread exit\r\n");
+		log_i("msg thread exit\r\n");
 	}
 	void SwitchProc(xmlproc * xml)
 	{
@@ -47,7 +47,7 @@ public:
 		}
 		else
 		{
-			printf("TouchInit failed !!!\r\n");
+			log_e("TouchInit failed !!!\r\n");
 		}
 	}
 	touch_thread()

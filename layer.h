@@ -48,7 +48,7 @@ public:
 		}
 		else
 		{
-			printf("Repeat to add element %s\r\n", name);
+			log_i("Repeat to add element %s\r\n", name);
 		}
 
 	}
@@ -62,7 +62,7 @@ public:
 //		element * ele = GetElementByName(name);
 //		if (ele == NULL)
 //		{
-//			printf("can't del layer element %s\r\n", name);
+//			log_i("can't del layer element %s\r\n", name);
 //		}
 //		else
 //		{
@@ -116,7 +116,7 @@ public:
 		}
 		else
 		{
-			printf("Repeat to add element %s\r\n", name);
+			log_i("Repeat to add element %s\r\n", name);
 		}
 
 	}
@@ -287,11 +287,11 @@ public:
 //	}
 	virtual void doGetInfo(info & info)
 	{
-		printf("warning element bash doGetInfo\r\n");
+		log_i("warning element bash doGetInfo\r\n");
 	}
 	virtual void doDelete()
 	{
-		printf("warning element bash OnDelete\r\n");
+		log_i("warning element bash OnDelete\r\n");
 
 	}
 
@@ -315,11 +315,11 @@ public:
 	void DeleteByParent();//父控件删除时，调用此函数删除子元素
 	void onSchedule()
 	{
-		debug("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
+		log_i("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
 		//if(parent!=NULL)
-		//debug(" parent is %s !!!!!!!!!!1\n",parent->name.c_str());
+		//log_i(" parent is %s !!!!!!!!!!1\n",parent->name.c_str());
 		RenderOut();
-		//debug("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
+		//log_i("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
 	}
 
 	void Flush();
@@ -385,7 +385,7 @@ public:
 
 		if (pSrcBuffer == NULL)
 		{
-			//printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+			//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
 			SetBuffer(width, height);
 			path.format("ele-%s %dx%d", name.c_str(), width, height);
 		}
@@ -496,7 +496,7 @@ public:
 				ele = *it;
 				if (ele->hide == 0)
 				{
-					//printf("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
+					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
 
 					 s_ofx = 0; //源偏移x
 					 d_ofx = render_offset_x; //目标偏移x
@@ -576,7 +576,7 @@ public:
 		}
 		if (it == layers.end())
 		{
-			//printf("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
+			//log_i("$$$HU$$$ [%s] add [%s] ET\r\n",name.c_str(),ele->name.c_str());
 			layers.push_back(ele);
 			layers.sort(Cmpare());
 		}
@@ -601,7 +601,7 @@ public:
 	{
 		if (res[id].path != path || res[id].isNULL())
 		{
-			//printf("SetRes %d %s\r\n",id,path);
+			//log_i("SetRes %d %s\r\n",id,path);
 			res[id].SetResource(path);
 		}
 	}
@@ -621,7 +621,7 @@ public:
 
 	virtual ~element()
 	{
-		debug("###HU### distroy element %s\r\n", name.c_str());
+		log_i("###HU### distroy element %s\r\n", name.c_str());
 		//backstack();
 		ResetLayers();
 		map<int, image>::iterator it;

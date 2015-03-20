@@ -9,5 +9,5 @@ static InstallXMLinstan install1("static_text",Install_Element<static_text>);
 
 hucall int init(HUMap & mp,void * data)
 {
-	printf("module init\r\n");
+	log_i("module init\r\n");
 }

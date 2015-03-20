@@ -13,7 +13,7 @@ template<class T>
 void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 {
 	//xml->mtx.lock();
-	debug("parent name=%s !!!!\n",parentName.c_str());
+	log_i("parent name=%s !!!!\n",parentName.c_str());
 	const char * name = xmlmp["name"]->getvalue();
 	element * ele;
 
@@ -22,7 +22,7 @@ void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 	{
 		 ele = it->second;
 		if(ele->name==name){
-			printf("element %s has already added!!!\n",name);
+			log_i("element %s has already added!!!\n",name);
 			return ;
 		}
 	}

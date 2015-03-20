@@ -57,11 +57,11 @@ int codec_to_Image(image * enode, const char * filename)
 
 	if (image_read_from_snap(enode, filename) == 0)
 	{
-		debug("codec_to_Image %s load snap\r\n", filename);
+		log_i("codec_to_Image %s load snap\r\n", filename);
 	}
 	else
 	{
-		debug("codec_to_Image %s load file\r\n", filename);
+		log_i("codec_to_Image %s load file\r\n", filename);
 
 		const char * type = strrchr(filename, '.') + 1;
 		if (strcasecmp(type, "png") == 0)

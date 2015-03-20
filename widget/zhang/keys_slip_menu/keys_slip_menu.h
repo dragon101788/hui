@@ -50,11 +50,11 @@ int hu_abs(int number)
 			if(m_mp.exist("name"))
                 name = m_mp["name"]->getvalue();
         		else{
-        		//	printf("need add a default name!!!!!!!\n");
+        		//	log_i("need add a default name!!!!!!!\n");
         			name=hustr("%s-%d",parent->name.c_str(),id);
         		}
 
-		//	printf("%s,doFlushConfig\n",name.c_str());
+		//	log_i("%s,doFlushConfig\n",name.c_str());
                 x = m_mp["x"]->getvalue_int();
                 y = m_mp["y"]->getvalue_int();
 
@@ -73,7 +73,7 @@ int hu_abs(int number)
 
                 if (isNULL())
                 {
-                        //printf("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+                        //log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
                         SetBuffer(width, height);
                         path.format("ele-%s %dx%d", name.c_str(), width, height);
                 }
@@ -93,7 +93,7 @@ int hu_abs(int number)
 		}
 		void doFlushConfigReduced()
 		{
-		//	printf("%s,doFlushConfigReduced node\n",name.c_str());
+		//	log_i("%s,doFlushConfigReduced node\n",name.c_str());
 			hide=parent->hide;
 			x = m_mp["x"]->getvalue_int();
 			y = m_mp["y"]->getvalue_int();
@@ -103,7 +103,7 @@ int hu_abs(int number)
 		}
 		void doRender()
 		{
-              //  printf("this->x=%d,this->cx=%d\n",x,cx);
+              //  log_i("this->x=%d,this->cx=%d\n",x,cx);
                //
 		//	printf("%s,doRender node\n",name.c_str());
 			 if(x-parent->x<parent->width&&y-parent->y<parent->height&&x>=0&&y>=0){
@@ -122,7 +122,7 @@ int hu_abs(int number)
 
 	int doTimer(int tm)
 	{
-	//	printf("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
+	//	log_i("slip_menu::OnTimer %dms cx=%d dx=%d mx=%d \r\n", tm,cx,dx,mx);
 		if(vertical_mode){
 			for (int i = 0; i < rcn && cy > dy; i++)
 				if (cy > dy){ //当前x大于目的x，则减小当前x(cx),包括翻页和回弹(自动向左运动)page-
@@ -174,8 +174,8 @@ int hu_abs(int number)
 
 
 	void changePage(){
-		//printf("page_node_num=%d\r\n", page_node_num);
-		//printf("page=%d\r\n", page);
+		//log_i("page_node_num=%d\r\n", page_node_num);
+		//log_i("page=%d\r\n", page);
 		if (select_id>=page_node_num*(page+1))//右移，页面+1
 		{
 			int cnt =select_id/(page_node_num*(page+1));

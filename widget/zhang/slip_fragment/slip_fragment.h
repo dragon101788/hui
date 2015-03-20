@@ -89,10 +89,10 @@ public:
 		my=0;
 		if (hu_abs(move_x()) > remax)
 		{ //移动页面
-			printf("move\r\n");
+			log_i("move\r\n");
 			if (move_x() > 0)//右移，页面减1
 			{
-				printf("--\r\n");
+				log_i("--\r\n");
 				if (x_page  > 0)
 				{
 					x_page--;
@@ -107,7 +107,7 @@ public:
 					x_page++;
 			        dx=width*x_page;
 				}
-				printf("++OK\r\n", x_page);
+				log_i("++OK\r\n", x_page);
 			}
             TimerSet(0);
 			xml_mgr->PostCS(hustr("x_page%d", x_page + 1));
@@ -131,10 +131,10 @@ public:
 
 		if (hu_abs(move_y()) > remax)
 		{ //移动页面
-			printf("move\r\n");
+			log_i("move\r\n");
 			if (move_y() > 0)//右移，页面减1
 			{
-				printf("--\r\n");
+				log_i("--\r\n");
 				if (y_page > 0)
 				{
 					y_page--;
@@ -149,7 +149,7 @@ public:
 					y_page++;
 			        dy=height*y_page;
 				}
-				printf("++OK\r\n", y_page);
+				log_i("++OK\r\n", y_page);
 			}
             TimerSet(0);
 			xml_mgr->PostCS(hustr("y_page%d", y_page + 1));

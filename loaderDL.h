@@ -32,7 +32,7 @@ public:
 		error = dlerror(); /* 检测错误 */
 		if (error) /* 若出错则退出 */
 		{
-			printf("dlerror::%s\r\n", error);
+			log_i("dlerror::%s\r\n", error);
 			exit(1);
 		}
 		int ret = fun(mp,dat); /* 调用此共享函数 */

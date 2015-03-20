@@ -37,7 +37,7 @@ public:
 			}
 
 		}
-		printf("msg thread exit\r\n");
+		log_i("msg thread exit\r\n");
 	}
 };
 
@@ -59,14 +59,14 @@ extern msg_thread g_th_msg;
 //	{
 //		if (cnt != 0)
 //		{
-//			printf("ExeMsg::start %s\r\n", snd.nstr());
+//			log_i("ExeMsg::start %s\r\n", snd.nstr());
 //			g_th_msg.PostMsg(snd);
 //		}
 //		return cnt;
 //	}
 //	void add(const char * key, const char * value)
 //	{
-//		//printf("ExeMsg add %s %s\r\n",key,value);
+//		//log_i("ExeMsg add %s %s\r\n",key,value);
 //		snd += key;
 //		snd += "=\"";
 //		snd += value;
@@ -93,7 +93,7 @@ extern msg_thread g_th_msg;
 //		add(mp, "jump");
 //		add(mp, "cs");
 //		snd += "/>";
-//		debug("executable::parase %s\r\n", snd.nstr());
+//		log_i("executable::parase %s\r\n", snd.nstr());
 //	}
 //};
 

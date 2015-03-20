@@ -174,7 +174,7 @@ int main(int argc, char * argv[])
 
 	int n_mon = (LunarCalendarDay & 0x3C0) >> 6;
 	int n_day = LunarCalendarDay & 0x3F;
-	printf("%d:%d\n", n_mon, n_day);
+	log_i("%d:%d\n", n_mon, n_day);
 
 	hustr str;
 	str += "<scfg name=timer txt=";
@@ -188,6 +188,6 @@ int main(int argc, char * argv[])
 
 	str += "\"";
 	str += "/>";
-	printf("%s\r\n", str.nstr());
+	log_i("%s\r\n", str.nstr());
 	system(hustr("./p ./hui '%s'", str.nstr()));
 }

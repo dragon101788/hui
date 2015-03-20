@@ -79,7 +79,7 @@ private:
 		void RenderToFramebuffer(framebuffer * fb)
 		{
 			//lock();
-		//	printf("before fb->RenderImageToFrameBuffer(this);!!!!!!!!\r\n");
+		//	log_i("before fb->RenderImageToFrameBuffer(this);!!!!!!!!\r\n");
 			fb->NotifyRenderFrameBuffer(this);
 		//	unlock();
 		}
@@ -108,20 +108,20 @@ private:
 		}
 		~save_snap()
 		{
-			printf("~snap\r\n");
+			log_i("~snap\r\n");
 		}
 		int SaveSnap(const char * file)
 		{
 			if (!access_Image(file))
 			{
-				printf("%s no exist , save Snap !!!\r\n", file);
+				log_i("%s no exist , save Snap !!!\r\n", file);
 				m_xml->out.SaveResource(file);
 				return 1;
 
 			}
 			else
 			{
-				printf("%s exist , no save Snap !!!\r\n", file);
+				log_i("%s exist , no save Snap !!!\r\n", file);
 				return 0;
 			}
 		}
@@ -160,12 +160,12 @@ public:
 	}
 	static int timerfun_cs(int tm, hustr cs)
 	{
-		printf("exec xml=%s cs=%s\r\n", g_cur_xml->filename.c_str(), cs.c_str());
+		log_i("exec xml=%s cs=%s\r\n", g_cur_xml->filename.c_str(), cs.c_str());
 		g_cur_xml->PostCS(cs);
 	}
 	void AddExec(int ptimer, HuExec c)
 	{
-		printf("$$$HU$$$ exec %s %s\r\n", c.run.nstr(), c.cs.nstr());
+		log_i("$$$HU$$$ exec %s %s\r\n", c.run.nstr(), c.cs.nstr());
 		HUTimerAdd(filename, g_exec.GetUpTimer() + ptimer, HuExec::_exec, c);
 	}
 
@@ -197,7 +197,7 @@ public:
 		//lock();
 		if (isDraw != 0 && fore == 1 && done == 1)
 		{
-			printf("%s RenderFromBuffer\r\n",filename.c_str());
+			log_i("%s RenderFromBuffer\r\n",filename.c_str());
 			out.RenderToFramebuffer(&fb);
 			fps.debug_timer("<fps>");
 			isDraw = 0;
@@ -225,7 +225,7 @@ public:
 		}
 		else
 		{
-			printf("ProcTouch [%s] Not ready to touch fore=%d done=%d\r\n", filename.c_str(), fore, done);
+			log_i("ProcTouch [%s] Not ready to touch fore=%d done=%d\r\n", filename.c_str(), fore, done);
 		}
 		unlock();
 	}
@@ -241,7 +241,7 @@ public:
 		}
 		else
 		{
-			//printf("ProcTimer %s Not ready to timer fore=%d done=%d\r\n", filename.c_str(), fore, done);
+			//log_i("ProcTimer %s Not ready to timer fore=%d done=%d\r\n", filename.c_str(), fore, done);
 		}
 		unlock();
 	}
@@ -254,13 +254,13 @@ public:
 		if (filename.empty())
 		{
 			huErrExit("can't init filename\r\n");
-		}debug("+++++++++++++%s++++++++++++++\r\n", filename.c_str());
+		}log_i("+++++++++++++%s++++++++++++++\r\n", filename.c_str());
 		UnDoneProc();
 		//DebugTimer dbg;
 		ParaseTinyXmlFile(filename, this);
 		//dbg.debug_timer("ParaseTinyXmlFile3");
 		DoneProc();
-		debug("+++++++++++++%s++++++++++++++OK\r\n", filename.c_str());
+		log_i("+++++++++++++%s++++++++++++++OK\r\n", filename.c_str());
 	}
 	void ParseXMLElementFile(const char * file)
 	{
@@ -271,7 +271,7 @@ public:
 
 	virtual ~xmlproc()
 	{
-		printf("~xmlproc %s\r\n", filename.c_str());
+		log_i("~xmlproc %s\r\n", filename.c_str());
 		Destroy();
 	}
 
@@ -301,35 +301,35 @@ public:
 	void Destroy()
 	{
 
-		debug("---------------%s----------------\r\n", filename.c_str());
+		log_i("---------------%s----------------\r\n", filename.c_str());
 		//system("ps|grep hui|sed -n \'1 p\'");
 
 		UnForeProc();
 		UnDoneProc();
 		m_exit = 0;
 		lock();
-		printf("Destroy wait thread \r\n");
+		log_i("Destroy wait thread \r\n");
 		cancel();
 		//wait();
-		debug("Destroy wait timer_manager::ClearElement \r\n");
+		log_i("Destroy wait timer_manager::ClearElement \r\n");
 		timer_manager::ClearElement();
 
-		debug("Destroy wait touch_manager::ClearElement \r\n");
+		log_i("Destroy wait touch_manager::ClearElement \r\n");
 		touch_manager::ClearElement();
 
-		debug("Destroy wait element_manager::ClearElement \r\n");
+		log_i("Destroy wait element_manager::ClearElement \r\n");
 		element_manager::ClearElement();
 		//system("ps|grep hui|sed -n \'1 p\'");
 		out.destroy();
 		unlock();
-		debug("---------------%s----------------OK\r\n", filename.c_str());
+		log_i("---------------%s----------------OK\r\n", filename.c_str());
 
 	}
 //	int LoadSnap(const char * file)
 //	{
 //		if (access(file, F_OK) == 0)
 //		{
-//			printf("%s exist Load Snap !!!\r\n", file);
+//			log_i("%s exist Load Snap !!!\r\n", file);
 //			out.SetResource(file);
 //			out.LoadResource();
 //			return 1;
@@ -344,13 +344,13 @@ public:
 //	{
 //		if (access(file, F_OK) != 0)
 //		{
-//			printf("%s no exist , save Snap !!!\r\n", file);
+//			log_i("%s no exist , save Snap !!!\r\n", file);
 //			out.SaveResource(file);
 //			return 1;
 //		}
 //		else
 //		{
-//			printf("%s exist , no save Snap !!!\r\n", file);
+//			log_i("%s exist , no save Snap !!!\r\n", file);
 //			return 0;
 //		}
 //	}

@@ -49,7 +49,7 @@ public:
 	void TimerParaseXml(HUMap & mp)
 	{
 		timer_stop = mp["stop"]->getvalue_int();
-		//printf("TimerParaseXml lock=%d\r\n", timer_stop);
+		//log_i("TimerParaseXml lock=%d\r\n", timer_stop);
 	}
 	//pMutex mutex;
 	int m_tm;
@@ -69,7 +69,7 @@ public:
 		iterator it;
 		for (it = mp.begin(); it != mp.end();)
 		{
-			//printf("UpdateTimer %dms %dms\r\n", cur, (*it)->m_tm);
+			//log_i("UpdateTimer %dms %dms\r\n", cur, (*it)->m_tm);
 			if (cur > (*it)->m_tm && (*it)->timer_stop==0)
 			{
 				int ret = (*it)->Timer(cur);
@@ -112,7 +112,7 @@ public:
 		iterator it;
 		for (it = mp.begin(); it != mp.end(); ++it)
 		{
-			//printf("current = %dms %dms\r\n",cur,mp[i]->m_tm);
+			//log_i("current = %dms %dms\r\n",cur,mp[i]->m_tm);
 			(*it)->TimerStop();
 		}
 		unlock();
@@ -123,7 +123,7 @@ public:
 		iterator it;
 		for (it = mp.begin(); it != mp.end(); ++it)
 		{
-			//printf("current = %dms %dms\r\n",cur,mp[i]->m_tm);
+			//log_i("current = %dms %dms\r\n",cur,mp[i]->m_tm);
 			(*it)->TimerStart();
 		}
 		unlock();
