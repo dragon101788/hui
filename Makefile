@@ -40,6 +40,7 @@ obj-y += codec.o
 obj-y += Framebuffer.o
 obj-y += hui.o 
 obj-y += platform/rotate_soft.o 
+obj-y += platform/zoom_soft.o 
 obj-$(CONFIG_TOUCH_EKTF2K) += platform/touch_ektf2k.o
 obj-$(CONFIG_TOUCH_NONE) += platform/touch_none.o
 

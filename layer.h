@@ -8,6 +8,7 @@
 #include <set>
 //#include "image_rotate.h"
 #include "rotate.h"
+#include "zoom.h"
 using namespace std;
 
 class schedule_draw;
