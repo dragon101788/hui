@@ -1,4 +1,4 @@
-#include "../codec.h"
+#include "codec.h"
 #include "alpha_w55.h"
 
 BLT g_blt;

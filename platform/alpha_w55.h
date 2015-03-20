@@ -23,7 +23,7 @@
 #include <list>
 using namespace std;
 
-#include "../hulib.h"
+#include "hulib.h"
 #include "w55fa92_blt.h"
 
 class BLT: public Mutex

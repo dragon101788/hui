@@ -5,7 +5,9 @@ CROSS_COMPILE:=arm-linux-
 CC=$(CROSS_COMPILE)g++
 STRIP=$(CROSS_COMPILE)strip
 TOPDIR=$(PWD)/
+MAIN=$(PWD)/main/
 CFLAG+=-I$(TOPDIR)
+CFLAG+=-I$(MAIN)
 CFLAG+=-I$(TOPDIR)include
 LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt
 OUTPUT =../output/
@@ -21,33 +23,33 @@ MKAUTO=Makefile.auto
 
 MAKE=make CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CC) CFLAG="$(CFLAG)" TOPDIR=$(TOPDIR)
 
-obj-y += XMLInstal.o
-obj-y += loaderDL.o
+obj-y += main/XMLInstal.o
+obj-y += main/loaderDL.o
 obj-$(CONFIG_ALPHA_BLT) += platform/alpha_w55.o
 obj-$(CONFIG_ALPHA_SOFT) += platform/alpha_soft.o
-obj-y += thread_msg.o
-obj-y += thread_timer.o
-obj-y += thread_touch.o
-obj-y += manager_timer.o
-obj-y += manager_cs.o
-obj-y += manager_touch.o
-obj-y += schedule.o
-obj-y += xmlproc.o
-obj-y += layer.o
-obj-y += ParaseXML.o
-obj-y += hulib.o
-obj-y += codec.o
-obj-y += Framebuffer.o
-obj-y += hui.o 
-obj-y += platform/rotate_soft.o 
-obj-y += platform/zoom_soft.o 
+obj-y += main/thread_msg.o
+obj-y += main/thread_timer.o
+obj-y += main/thread_touch.o
+obj-y += main/manager_timer.o
+obj-y += main/manager_cs.o
+obj-y += main/manager_touch.o
+obj-y += main/schedule.o
+obj-y += main/xmlproc.o
+obj-y += main/layer.o
+obj-y += main/ParaseXML.o
+obj-y +=main/hulib.o
+obj-y +=main/codec.o
+obj-y += main/Framebuffer.o
+obj-y +=main/hui.o 
+obj-y +=platform/rotate_soft.o 
+obj-y +=platform/zoom_soft.o 
 obj-$(CONFIG_TOUCH_EKTF2K) += platform/touch_ektf2k.o
 obj-$(CONFIG_TOUCH_NONE) += platform/touch_none.o
 
 ifeq ($(CONFIG_USING_FONT),y) 
 	#LDFLAG+=-liconv 
 	obj-y += $(patsubst %.c,%.o,$(wildcard trueType/*.c))
-	obj-$(CONFIG_USING_FONT) += ttf_font.o
+	obj-$(CONFIG_USING_FONT) += main/ttf_font.o
 else
 endif 
 
