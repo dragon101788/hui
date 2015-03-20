@@ -2,9 +2,9 @@
 #define __STATIC_IMAGE_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+#include "view.h"
 
-class static_image: public element
+class static_image: public BaseView
 {
 public:
 	static_image()

@@ -5,7 +5,7 @@
 #include "manager_timer.h"
 #include "manager_cs.h"
 #include "Framebuffer.h"
-
+#include "page_control.h"
 class xmlproc;
 typedef SmartPtr<xmlproc> pXmlproc;
 extern pXmlproc g_cur_xml;
@@ -138,8 +138,8 @@ private:
 
 public:
 	int directDraw;
-
-
+	hustr filename;
+	PageControl *windCtl;
 	void Draw(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 	{
 		//lock();
@@ -148,7 +148,7 @@ public:
 		//unlock();
 	}
 
-	hustr filename;
+
 
 	void ForeProc(); //将页面切换前台
 	void UnForeProc(); //将页面切换后台
@@ -263,6 +263,8 @@ public:
 		//DebugTimer dbg;
 		ParaseTinyXmlFile(filename, this);
 		//dbg.debug_timer("ParaseTinyXmlFile3");
+		if(windCtl!=NULL)
+			windCtl->loadDone();
 		DoneProc();
 		log_i("+++++++++++++%s++++++++++++++OK\r\n", filename.c_str());
 	}
@@ -285,6 +287,7 @@ public:
 	{
 		init();
 		directDraw=0;
+		windCtl=NULL;
 
 	}
 	xmlproc(const char * file)
@@ -311,6 +314,10 @@ public:
 
 		UnForeProc();
 		UnDoneProc();
+		if(windCtl!=NULL){
+			delete windCtl;
+			windCtl=NULL;
+		}
 		m_exit = 0;
 		lock();
 		log_i("Destroy wait thread \r\n");

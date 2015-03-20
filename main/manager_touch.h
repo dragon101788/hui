@@ -86,9 +86,9 @@ public:
 		return bottom - top;
 	}
 
-	virtual void doTouchDown()=0;
-	virtual void doTouchUp()=0;
-	virtual void doTouchActive() = 0;
+	virtual void onTouchDown()=0;
+	virtual void onTouchUp()=0;
+	virtual void onTouchActive() = 0;
 
 	void touch_init_area(int x, int y, int width, int height)
 	{
@@ -144,13 +144,13 @@ public:
 
 		lock();
 		origin_in();
-		doTouchDown();
+		onTouchDown();
 		unlock();
 	}
 	void free_area()
 	{
 		lock();
-		doTouchUp();
+		onTouchUp();
 		origin_out();
 		if (GetTouchP() == 0 && isArea(GetTouchX(), GetTouchY()))
 		{
@@ -161,7 +161,7 @@ public:
 	void touch_activate()
 	{
 		lock();
-		doTouchActive();
+		onTouchActive();
 		unlock();
 	}
 	void TouchParaseXml(HUMap & mp)

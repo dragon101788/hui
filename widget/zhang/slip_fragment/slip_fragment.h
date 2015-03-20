@@ -2,11 +2,12 @@
 #define __SLIP_FRAGMENT_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+//#include "layer.h"
+#include "view.h"
 #include "thread_msg.h"
 
 
-class slip_fragment: public element, public touch_element, public timer_element
+class slip_fragment: public View
 {
 
 	int hu_abs(int number)

@@ -55,6 +55,9 @@ void xmlproc::ForeProc()
 	g_exec.ChangeContainer(this);
 	fore = 1;
 	isDraw++;//切换前台后自动刷新一次屏幕
+	if(windCtl!=NULL){
+		windCtl->onComing();
+	}
 	postSem();
 }
 /********************************
@@ -66,14 +69,24 @@ void xmlproc::UnForeProc()
 	g_th_touch.SwitchProc(NULL);
 	g_th_timer.SwitchProc(NULL);
 	g_exec.ChangeContainer(NULL);
+	if(windCtl!=NULL){
+		windCtl->onLeaving();
+	}
 }
 
 void xmlproc::DoneProc()
 {
 	done = 1;
+	if(windCtl!=NULL){
+		windCtl->onResume();
+	}
 }
 void xmlproc::UnDoneProc()
 {
 	done = 0;
+	if(windCtl!=NULL){
+		if(windCtl->isRun())
+			windCtl->onPause();
+	}
 }
 

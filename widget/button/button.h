@@ -2,10 +2,11 @@
 #define __BUTTON_IMAGE_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+//#include "layer.h"
+#include "view.h"
 #include "thread_msg.h"
 
-class button: public element, public touch_element
+class button: public TouchView
 {
 public:
 	void doTouchDown()

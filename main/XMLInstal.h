@@ -44,8 +44,26 @@ void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 
 
 }
+/****************************************
+ * 逻辑本地化处理
+ * 一个页面里面添加一个window_Control 控件用于控制元素动作
+ */
+template<class T>
+void install_page_control(hustr parentName,HUMap &xmlmp, xmlproc * xml)
+{
+	//const char * name = xmlmp["name"]->getvalue();
+	PageControl * ctl;
 
-
+	if(xml->windCtl!=NULL){
+		return ;//一个页面只能有一个页面控制器
+	}
+	T * te = new T;
+	te->m_mp.fetch(xmlmp);
+	te->viewManager = xml;
+	te->FlushConfig();
+	xml->windCtl=te;
+	//te->onCreate();
+}
 
 class InstallXMLinstan
 {
@@ -55,7 +73,7 @@ public:
 		XMLinstan[name] = fun;
 	}
 };
-
+#define InstallXMLinstanPageCtl(a,b) static InstallXMLinstan install##_##b(a,install_page_control<b>);
 #define InstallXMLinstanWidget(a,b) static InstallXMLinstan install##_##b(a,Install_Element<b>);
 #ifdef HUMODULE
 #define hucall extern "C"

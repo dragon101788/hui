@@ -2,11 +2,11 @@
 #define __STATIC_IMAGE_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+#include "view.h"
 #include "thread_msg.h"
 
 
-class cartoon: public element, public timer_element
+class cartoon: TimerView
 {
 public:
 

@@ -2,9 +2,9 @@
 #define __ROTATE_IMAGE_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+#include "view.h"
 
-class rotate_image: public element,public  timer_element
+class rotate_image: TimerView
 {
 public:
 	rotate_image()

@@ -2,11 +2,12 @@
 #define __STATIC_IMAGE_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+//#include "layer.h"
+#include "view.h"
 #include "ttf_font.h"
-#include "alpha.h"
+//#include "alpha.h"
 
-class static_text: public element
+class static_text: public BaseView
 {
 public:
 
@@ -96,8 +97,8 @@ public:
 			int red = m_mp["red"]->getvalue_int();
 			int green = m_mp["green"]->getvalue_int();
 			int blue = m_mp["blue"]->getvalue_int();
-			int padding_left=m_mp["padding_left"]->getvalue_int();
-			int padding_top=m_mp["padding_top"]->getvalue_int();
+			 padding_left=m_mp["padding_left"]->getvalue_int();
+			 padding_top=m_mp["padding_top"]->getvalue_int();
 			if (m_mp.exist("align_center"))
 			align_center=m_mp["align_center"]->getvalue_int();
 			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
@@ -110,7 +111,6 @@ public:
 				padding_top+=(height-size)/2;
 				padding_top>0?padding_top:0;
 				}
-
 			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 	}
 		Flush();
@@ -121,7 +121,36 @@ public:
 		cur_res=&ttf;
 		//	image::Render(&img, 0, 0, width, height, 0, 0);
 	}
-
+	void setText(hustr txt){
+		this->txt =txt.c_str();
+		ttf.cleanBuf();
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		Flush();
+	}
+	void setText(hustr txt,unsigned int color){
+		this->txt =txt.c_str();
+		ttf.color = color;
+		ttf.cleanBuf();
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		Flush();
+	}
+	void setColor(unsigned int color){
+		ttf.color = color;
+		ttf.cleanBuf();
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		Flush();
+	}
+	void setSize( int size){
+		ttf.fontHeight = size;
+		if(align_center){
+			padding_left+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			padding_left>0?padding_left:0;
+			padding_top+=(height-size)/2;
+			padding_top>0?padding_top:0;
+			}
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		Flush();
+	}
 	text ttf;
 	map<hustr, text>::iterator font_it;
 	unsigned int color;
@@ -133,6 +162,8 @@ public:
 	int lenth;
 	int buf_len;
 	int align_center;
+	int padding_left;
+	int padding_top;
 };
 
 #endif //__STATIC_IMAGE_H__

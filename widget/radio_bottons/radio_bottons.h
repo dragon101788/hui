@@ -2,10 +2,10 @@
 #define __STATIC_IMAGE_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+#include "view.h"
 #include "thread_msg.h"
 
-class Radio_buttons: public element
+class Radio_buttons: public BaseView
 {
 public:
 	class node: public element, public touch_element

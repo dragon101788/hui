@@ -36,6 +36,7 @@ obj-y += main/manager_touch.o
 obj-y += main/schedule.o
 obj-y += main/xmlproc.o
 obj-y += main/layer.o
+obj-y += main/page_control.o
 obj-y += main/ParaseXML.o
 obj-y +=main/hulib.o
 obj-y +=main/codec.o

@@ -12,13 +12,13 @@ class timer_manager;
 class timer_element: virtual public Mutex
 {
 public:
-	virtual int doTimer(int tm) = 0;
+	virtual int onTimer(int tm) = 0;
 	int Timer(int tm)
 	{
 		int ret = 0;
 		lock();
 		if (timer_stop == 0)
-			ret = doTimer(tm);
+			ret = onTimer(tm);
 		unlock();
 		return ret;
 	}
