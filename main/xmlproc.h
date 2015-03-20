@@ -257,7 +257,8 @@ public:
 		if (filename.empty())
 		{
 			huErrExit("can't init filename\r\n");
-		}log_i("+++++++++++++%s++++++++++++++\r\n", filename.c_str());
+		}
+		log_i("+++++++++++++%s++++++++++++++\r\n", filename.c_str());
 		UnDoneProc();
 		//DebugTimer dbg;
 		ParaseTinyXmlFile(filename, this);
