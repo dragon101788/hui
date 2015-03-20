@@ -22,8 +22,8 @@ extern int snapcache;
 
 
 void MyMemMove(void *dst,const void *src,size_t count);
-int bmpCodec_to_image(image * sobj, const char *filename);
-int jpegCodec_to_image(image * sobj, const char *filename);
+//int bmpCodec_to_image(image * sobj, const char *filename);
+//int jpegCodec_to_image(image * sobj, const char *filename);
 int pngCodec_to_image(image * sobj, const char *filepath);
 int pngEndec_to_image(const char *file_name, image * graph);
 int codec_to_Image(image * enode, const char * filename);
@@ -36,13 +36,13 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 int fill_image(image * img, int a = 255, int r = 128, int g = 128, int b = 128);
 int access_Image(const char * filename);
 
-typedef struct
-{
-	unsigned char u8Blue;
-	unsigned char u8Green;
-	unsigned char u8Red;
-	unsigned char u8Alpha;
-} IMG_PIX;
+//typedef struct
+//{
+//	unsigned char u8Blue;
+//	unsigned char u8Green;
+//	unsigned char u8Red;
+//	unsigned char u8Alpha;
+//} IMG_PIX;
 
 //base type
 typedef char            Int8;
@@ -84,8 +84,8 @@ public:
 	unsigned int u32Stride;
 	~base_image(){};
 	//////////////////////////////////////////////////////////////////////////
-    inline base_image() :pSrcBuffer(0),u32Stride(0),u32Width(0),u32Height(0){}
-    inline base_image(const base_image& ref) :pSrcBuffer(ref.pSrcBuffer),u32Stride(ref.u32Stride),u32Width(ref.u32Width),u32Height(ref.u32Height){}
+    inline base_image() :pSrcBuffer(0),u32Stride(0),u32Width(0),u32Height(0),SrcSize(0){}
+    inline base_image(const base_image& ref) :pSrcBuffer(ref.pSrcBuffer),u32Stride(ref.u32Stride),u32Width(ref.u32Width),u32Height(ref.u32Height),SrcSize(ref.SrcSize){}
 //
     //访问(x,y)坐标处的颜色
     inline Color32& pixels(const long x,const long y) const { return getLinePixels(y)[x]; }
@@ -632,14 +632,14 @@ public:
 //	}
 
 //	
-	image()
+inline 	image()
 	{
 
-		pSrcBuffer = NULL;
-		SrcSize = 0;
-		u32Width = 0;       // crop width
-		u32Height = 0;      // crop height
-		u32Stride = 0;
+//		pSrcBuffer = NULL;
+//		SrcSize = 0;
+//		u32Width = 0;       // crop width
+//		u32Height = 0;      // crop height
+//		u32Stride = 0;
 		transp = 100;		//控件透明度-默认不透明
 
 		//s_sblitop.transformation = &stransformation;

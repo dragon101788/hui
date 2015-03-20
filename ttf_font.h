@@ -151,13 +151,13 @@ public:
 			unsigned char gray)
 	{
 
-		((IMG_PIX *) pSrcBuffer + y * u32Width + x)->u8Red = color >> 16
+		((Color32 *) pSrcBuffer + y * u32Width + x)->r = color >> 16
 				& 0xff;
-		((IMG_PIX *) pSrcBuffer + y * u32Width + x)->u8Green = color >> 8
+		((Color32 *) pSrcBuffer + y * u32Width + x)->g = color >> 8
 				& 0xff;
-		((IMG_PIX *) pSrcBuffer + y * u32Width + x)->u8Blue = color
+		((Color32 *) pSrcBuffer + y * u32Width + x)->b = color
 				& 0xff;
-		((IMG_PIX *) pSrcBuffer + y * u32Width + x)->u8Alpha = gray;
+		((Color32 *) pSrcBuffer + y * u32Width + x)->a = gray;
 	}
 	void ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,
 			unsigned int color)

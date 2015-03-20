@@ -649,34 +649,55 @@ void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	}
 }
 
+//void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
+//{
+//	int y;
+//	if (dst_img->SrcGPUAddr() == 0 || src_img->SrcGPUAddr() == 0)
+//		{
+//			debug("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
+//			return;
+//		}
+//	dst_img->lock();
+//	src_img->lock();
+//	int line_byte=cp_width<<2;
+//	ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
+//	for (y = 0; y < cp_height; y++)
+//	{
+//		memcpy((unsigned int *) dst_img->pSrcBuffer + (y + dst_y) * dst_img->u32Width + dst_x,
+//				(unsigned int *) src_img->pSrcBuffer + (y + src_y) * src_img->u32Width + src_x, line_byte);
+//	}
+//	dst_img->unlock();
+//	src_img->unlock();
+//}
 void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 {
-	int x;
+	//int x;
 	int y;
 
 	if (dst_img->SrcGPUAddr() == 0 || src_img->SrcGPUAddr() == 0)
 		{
-			printf("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
+		//	log_w("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
 			return;
 		}
 	dst_img->lock();
 	src_img->lock();
-
-	//printf("$$$HU$$$ AreaCopy1 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
-	//printf("$$$HU$$$ AreaCopy2 src_x=%d src_y=%d cp_width=%d cp_height=%d dst_x=%d dst_y=%d\r\n", src_x, src_y, cp_width, cp_height, dst_x, dst_y);
+	int line_byte=cp_width<<2;
+//	unsigned int dst_step= dst_img->u32Width;
+//	unsigned int src_step= src_img->u32Width;
+	unsigned int * dst_start=(unsigned int *)dst_img->pSrcBuffer +  dst_y * dst_img->u32Width + dst_x;
+	unsigned int * src_start=(unsigned int *)src_img->pSrcBuffer +  src_y * src_img->u32Width + src_x;
+	unsigned int dst_offset=0;
+	unsigned int src_offset=0;
 	for (y = 0; y < cp_height; y++)
 	{
-//			for(x=0;x<cp_width;x++)
-//			{
-//				*(((unsigned int *)pSrcBuffer)+dst_x+dst_y*u32Width+x+y*cp_width)=*(((unsigned int *)img->pSrcBuffer)+src_x+src_y*img->u32Width+x+y*cp_width);
-//			}
-		memcpy((unsigned int *) dst_img->pSrcBuffer + (y + dst_y) * dst_img->u32Width + dst_x,
-				(unsigned int *) src_img->pSrcBuffer + (y + src_y) * src_img->u32Width + src_x, cp_width * 4);
+		memcpy( dst_start+dst_offset,
+				 src_start+src_offset, line_byte);
+		dst_offset+=dst_img->u32Width;
+		src_offset+=src_img->u32Width;
 	}
 
 	dst_img->unlock();
 	src_img->unlock();
 }
-
 
