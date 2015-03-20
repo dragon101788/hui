@@ -68,12 +68,13 @@ public:
 					children_touch_lock=0;
 
 				}
+				configChildAbsPos();
 		}
 		else{ //步子大一点才刷新
 
 			if(child_lock){
 				children_touch_lock=1;
-				configChildAbsPos();
+				//configChildAbsPos();
 			}
 			Flush();
 		}

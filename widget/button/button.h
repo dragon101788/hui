@@ -61,7 +61,6 @@ public:
 		cur_res=&res[isdn];
 	}
 	void onAbsPosChanged(){
-
 		touch_init_area(abs_x, abs_y, width, height);
 	}
 	button()
