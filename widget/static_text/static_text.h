@@ -121,14 +121,14 @@ public:
 		cur_res=&ttf;
 		//	image::Render(&img, 0, 0, width, height, 0, 0);
 	}
-	void setText(hustr txt){
-		this->txt =txt.c_str();
+	void setText(const char * t){
+		this->txt =t;
 		ttf.cleanBuf();
 		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 		Flush();
 	}
-	void setText(hustr txt,unsigned int color){
-		this->txt =txt.c_str();
+	void setText(hustr t,unsigned int color){
+		this->txt =t;
 		ttf.color = color;
 		ttf.cleanBuf();
 		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);

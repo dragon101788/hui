@@ -13,7 +13,7 @@ template<class T>
 void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 {
 	//xml->mtx.lock();
-	log_i("parent name=%s !!!!\n",parentName.c_str());
+	//log_i("parent name=%s !!!!\n",parentName.c_str());
 	const char * name = xmlmp["name"]->getvalue();
 	element * ele;
 
@@ -51,9 +51,6 @@ void Install_Element(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 template<class T>
 void install_page_control(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 {
-	//const char * name = xmlmp["name"]->getvalue();
-	PageControl * ctl;
-
 	if(xml->windCtl!=NULL){
 		return ;//一个页面只能有一个页面控制器
 	}
@@ -62,7 +59,7 @@ void install_page_control(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 	te->viewManager = xml;
 	te->FlushConfig();
 	xml->windCtl=te;
-	//te->onCreate();
+
 }
 
 class InstallXMLinstan

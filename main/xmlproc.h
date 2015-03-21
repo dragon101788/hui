@@ -5,7 +5,7 @@
 #include "manager_timer.h"
 #include "manager_cs.h"
 #include "Framebuffer.h"
-#include "page_control.h"
+#include "screenHandler.h"
 class xmlproc;
 typedef SmartPtr<xmlproc> pXmlproc;
 extern pXmlproc g_cur_xml;
@@ -139,7 +139,7 @@ private:
 public:
 	int directDraw;
 	hustr filename;
-	PageControl *windCtl;
+	ScreenHandler *windCtl;
 	void Draw(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 	{
 		//lock();
@@ -248,11 +248,11 @@ public:
 		}
 		unlock();
 	}
-	virtual void doLoader()
+	 void doLoader()
 	{
 		ParseXMLFile();
 	}
-	void ParseXMLFile()
+	inline void ParseXMLFile()
 	{
 		if (filename.empty())
 		{
@@ -263,8 +263,10 @@ public:
 		//DebugTimer dbg;
 		ParaseTinyXmlFile(filename, this);
 		//dbg.debug_timer("ParaseTinyXmlFile3");
-		if(windCtl!=NULL)
+		if(windCtl!=NULL){
+			log_s("%s windCtl!=NULL!!!!!!!!!\n",filename.c_str());
 			windCtl->loadDone();
+		}
 		DoneProc();
 		log_i("+++++++++++++%s++++++++++++++OK\r\n", filename.c_str());
 	}
@@ -286,8 +288,7 @@ public:
 	xmlproc()
 	{
 		init();
-		directDraw=0;
-		windCtl=NULL;
+
 
 	}
 	xmlproc(const char * file)
@@ -321,7 +322,7 @@ public:
 		m_exit = 0;
 		lock();
 		log_i("Destroy wait thread \r\n");
-		cancel();
+		//cancel();
 		//wait();
 		log_i("Destroy wait timer_manager::ClearElement \r\n");
 		timer_manager::ClearElement();

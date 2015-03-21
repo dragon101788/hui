@@ -54,7 +54,7 @@ typedef unsigned long   UInt32;
 
 //32bitARGB颜色类型
 struct Color32 {
-    inline static UInt32 packColor32Data(unsigned long r8,unsigned long g8,unsigned long b8,unsigned long a8=255) { return b8|(g8<<8)|(r8<<16)|(a8<<24);  }
+
     union {
         UInt32   argb;
         struct
@@ -65,12 +65,13 @@ struct Color32 {
             UInt8  a;
         };
     };
-    inline Color32(){}
-    inline Color32(const Color32& color32):argb(color32.argb){}
-    inline explicit Color32(const UInt32 color32):argb(color32){}
-    inline explicit Color32(unsigned long r8,unsigned long g8,unsigned long b8,unsigned long a8=255):argb(packColor32Data(r8,g8,b8,a8)){}
-    inline bool operator ==(const Color32& color32) const { return argb==color32.argb; }
-    inline bool operator !=(const Color32& color32) const{ return !((*this)==color32); }
+// inline Color32(){}
+//inline static UInt32 packColor32Data(unsigned long r8,unsigned long g8,unsigned long b8,unsigned long a8=255) { return b8|(g8<<8)|(r8<<16)|(a8<<24);  }
+//    inline Color32(const Color32& color32):argb(color32.argb){}
+//    inline explicit Color32(const UInt32 color32):argb(color32){}
+//    inline explicit Color32(unsigned long r8,unsigned long g8,unsigned long b8,unsigned long a8=255):argb(packColor32Data(r8,g8,b8,a8)){}
+//    inline bool operator ==(const Color32& color32) const { return argb==color32.argb; }
+//    inline bool operator !=(const Color32& color32) const{ return !((*this)==color32); }
 };
 
 

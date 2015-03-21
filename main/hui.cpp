@@ -27,7 +27,7 @@
 using namespace std;
 
 #define DEFAULT_XMLFILE "start.xml"
-#define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
+#define MIN_MEN_PERCENT 60  //当剩余内存小于20%时开始清楚多余的页面
 
 void RefreshPage(xmlproc * xml);
 
@@ -39,8 +39,8 @@ int getFreeMemPercent()
         int all=si.totalram>>20;//MB
         int free= si.freeram>>20;
         int percent=(free*100)/all;
-        log_i("Totalram:       %d MB\n", all);
-        log_i("Available:      %d MB\n", free);
+        log_s("Totalram:       %d MB\n", all);
+        log_s("Available:      %d MB\n", free);
 //        log_i("Available:      %d \n",percent );
         return percent;
 }
