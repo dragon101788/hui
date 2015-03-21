@@ -455,7 +455,7 @@ inline 	image()
 
 	}
 
-	virtual ~image()
+	 ~image()
 	{
 		destroy();
 	}
