@@ -12,7 +12,8 @@
 extern int go;
 
 
-class KeypadThread:public thread, private Mutex
+
+class KeypadThread:public thread, public Mutex
 
 {
 
@@ -21,14 +22,13 @@ class KeypadThread:public thread, private Mutex
 	{
 		while (go)
 		{
-
-				getKeyEvent(m_scrhandler);
+				getKeyEvent(this);
 		}
 		log_i("touch thread exit\r\n");
 	}
 
-
-
+	ScreenHandler * m_scrhandler;
+public:
 
 	void init()
 	{
@@ -39,8 +39,8 @@ class KeypadThread:public thread, private Mutex
 		}
 	}
 
-	ScreenHandler * m_scrhandler;
-public:
+
+
 
 	void SwitchProc(ScreenHandler * handler)
 	{
@@ -55,7 +55,12 @@ public:
 
 	}
 
-
+  void getKey(int key){
+	  lock();
+	  if(m_scrhandler!=NULL)
+		  m_scrhandler->getKeyValue(key);
+	  unlock();
+  }
 
 
 };

@@ -15,6 +15,7 @@
 #include "xmlproc.h"
 #include "thread_timer.h"
 #include "thread_touch.h"
+#include "thread_keypad.h"
 #include "XMLInstal.h"
 #include "Framebuffer.h"
 #include "loaderDL.h"
@@ -741,6 +742,9 @@ int main(int argc, char *argv[])
 #ifndef CONFIG_TOUCH_NONE
 	g_th_touch.init();
 #endif
+#ifndef CONFIG_KEYPAD_NONE
+	g_th_keypad.init();
+#endif
 	g_th_msg.create();
 	g_th_timer.create();
 	fb.create();
@@ -755,6 +759,9 @@ int main(int argc, char *argv[])
 	log_i("wait g_th_timer OK\r\n");
 #ifndef CONFIG_TOUCH_NONE
 	g_th_touch.wait();
+#endif
+#ifndef CONFIG_KEYPAD_NONE
+	g_th_keypad.wait();
 #endif
 	log_i("wait g_th_touch OK\r\n");
 	g_th_msg.cancel();

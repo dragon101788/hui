@@ -6,14 +6,14 @@
 #include "debug.h"
 #include "keypad.h"
 
-static int touchFd;
+ int keyFd;
 
 
 int getKyes(struct input_event ev_key);
 int keypadInit()
 {
- 	int touchFd = open("/dev/event0", 666);
- 	if (touchFd < 0)
+ 	 keyFd = open("/dev/event0", 666);
+ 	if (keyFd < 0)
 	{
   		log_e("open device event");
   		exit(1);
@@ -22,17 +22,21 @@ int keypadInit()
 }
 
 
+
+
 //template<class T>
-void  getKeyEvent(ScreenHandler *handler)
-{
-	static struct input_event ev_key;
-	int count = read(touchFd,&ev_key,sizeof(struct input_event));
-	for(int i=0; i<(int)count/sizeof(struct input_event); i++)
-	{
-		if(handler!=NULL)
-			handler->getKeyValue(getKyes(ev_key));
-	}
-}
+//void  getKeyEvent(T t)
+////void  getKeyEvent(T *t)
+//{
+//	static struct input_event ev_key;
+//	int count = read(touchFd,&ev_key,sizeof(struct input_event));
+//
+//	for(int i=0; i<(int)count/sizeof(struct input_event); i++)
+//	{
+//			//p(getKyes(ev_key));
+//		//t;
+//	}
+//}
 
 int getKyes(struct input_event ev_key){
 	switch (ev_key.type)
