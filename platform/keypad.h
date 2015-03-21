@@ -10,10 +10,13 @@ template<class T>
 inline void  getKeyEvent(T *t)
 {
 	static struct input_event ev_key;
+	int key;
 	int count = read(keyFd,&ev_key,sizeof(struct input_event));
 	for(int i=0; i<(int)count/sizeof(struct input_event); i++)
 	{
-			t->getKey((getKyes(ev_key)));
+		key=getKyes(ev_key);
+		if(key!=0)
+			t->getKey(key);
 	}
 }
 
