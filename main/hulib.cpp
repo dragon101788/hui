@@ -201,4 +201,43 @@ void dumpstack()
 	log_i("Backstrace (%d deep)\n", cnt);
 
 }
+/*
+ 以当前事件对象，阻塞线程，将其挂起指定时间间隔
+ 之后线程自动恢复可调度
+*/
+bool semphore::waitSem(long milliseconds){
+	if ( 0 == milliseconds )
+	{
+		int ret = sem_trywait(&m_event);
+		if ( 0 == ret )
+		{
+			if ( m_manual )
+			{
+				sem_post(&m_event);
+			}
+		}
+	}
+	else
+	{
+		int roopMax = milliseconds/10;
+		do
+		{
+			usleep(10*1000);
+			int ret = sem_trywait(&m_event);
+			if ( 0 == ret )
+			{
+				if ( m_manual )
+				{
+					sem_post(&m_event);
+				}
+
+				break;
+			}
+
+			roopMax--;
+		} while( roopMax > 0 );
+	}
+
+	return true;
+}
 

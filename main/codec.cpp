@@ -700,4 +700,132 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 	dst_img->unlock();
 	src_img->unlock();
 }
+void base_image::fillColor(const Color32 color)const{
+    Color32* pDstLine=(Color32*)pSrcBuffer;
+    for (long y=0;y<u32Height;++y){
+        for (long x=0;x<u32Width;++x){
+            pDstLine[x]=color;
+        }
+        nextLine(pDstLine);
+    }
+}
 
+void image::dump_from_buf(const void * buf, int width, int height)
+{
+	lock();
+	SetBuffer(width, height);
+	memcpy(pSrcBuffer, buf, SrcSize);
+	unlock();
+}
+void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h, int dst_w,int dst_h,int dst_x, int dst_y)
+	{
+		int x;
+		int y;
+		//int s_x=src_x;
+		//int s_y=src_y;
+		int cp_w=src_w;
+		int cp_h=src_h;
+		unsigned int * dst_start;
+		lock();
+
+		if (dst_x < 0)
+		{
+			src_x -=dst_x;
+			dst_x = 0;
+		}
+		if (dst_y < 0)
+		{
+			src_y -= dst_y;
+			dst_y = 0;
+		}
+		if(dst_x+cp_w>dst_w){
+			cp_w=dst_w-dst_x;
+		}
+		if(dst_y+cp_h>dst_h){
+			cp_h=dst_h-dst_y;
+		}
+
+		int line_byte=cp_w * 4;
+		unsigned int dst_step= dst_w;
+		unsigned int src_step= u32Width;
+		unsigned int * src_start=(unsigned int *)pSrcBuffer +src_y * src_step + src_x;
+		unsigned int dst_offset=0;
+		unsigned int src_offset=0;
+
+
+	#ifdef CONFIG_REVERSE_SCREEN
+		dst_x=dst_w-dst_x-1;
+		dst_y=dst_h-dst_y-1;
+		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
+
+		for (y = 0; y<cp_h; y++)
+		{
+			//memcpy( dst_start+dst_offset,src_start+src_offset, line_byte);
+			for(x=0;x<cp_w;x++){
+				*(dst_start+dst_offset-x)=*(src_start+src_offset+x);
+			}
+			dst_offset-=dst_step;
+			src_offset+=src_step;
+		}
+	#else
+		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
+		for (y = 0; y < cp_h; y++)
+		{
+			memcpy( dst_start+dst_offset, src_start+src_offset, line_byte);
+			dst_offset+=dst_step;
+			src_offset+=src_step;
+		}
+	#endif
+		unlock();
+	}
+
+
+
+
+int image::SetBuffer(int width, int height)
+{
+
+	//path.format("SetBuffer-%dx%d",width,height);
+	lock();
+	static int dep = 4;
+
+	int tmpsize = width * height * dep;
+	if (tmpsize > SrcSize)
+	{
+		destroy();
+	}
+	if (pSrcBuffer == NULL)
+	{
+		pSrcBuffer = malloc(tmpsize);
+		if (pSrcBuffer == NULL)
+		{
+			errexitf("image malloc failed: width=%d height=%d\n", width, height);
+		}
+	}
+	SrcSize = tmpsize;
+
+	u32Width = width;
+	u32Height = height;
+	u32Stride = width * dep;
+
+	cleanBuf();
+	unlock();
+	return 0;
+}
+
+void image::AreaCmp(image * img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
+{
+	int x;
+	int y;
+	for (y = 0; y < cp_height; y++)
+	{
+		for (x = 0; x < cp_width; x++)
+		{
+			if (*((unsigned int *) pSrcBuffer + (y + dst_y) * u32Width + dst_x + x)
+					== *((unsigned int *) img->pSrcBuffer + (y + src_y) * img->u32Width + src_x + x))
+			{
+				*((unsigned int *) pSrcBuffer + (y + dst_y) * u32Width + dst_x + x) = 0;
+			}
+		}
+	}
+}

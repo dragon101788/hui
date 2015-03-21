@@ -3,7 +3,7 @@
 
 #include "hulib.h"
 #include <list>
-using namespace std;
+
 
 class schedule_ele
 {

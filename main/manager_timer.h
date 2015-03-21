@@ -35,7 +35,7 @@ public:
 	{
 		timer_stop = 0;
 	}
-	int GetUpTimer();
+	inline int GetUpTimer();
 	timer_element()
 	{
 		timer_stop = 1;
@@ -61,31 +61,7 @@ public:
 class timer_manager: virtual public Mutex
 {
 public:
-	void UpdateTimer()
-	{
-		int cur = GetUpTimer();
-
-		lock();
-		iterator it;
-		for (it = mp.begin(); it != mp.end();)
-		{
-			//log_i("UpdateTimer %dms %dms\r\n", cur, (*it)->m_tm);
-			if (cur > (*it)->m_tm && (*it)->timer_stop==0)
-			{
-				int ret = (*it)->Timer(cur);
-				if (ret == TIMER_DEL_ELE)
-				{
-					delete *it;
-					mp.erase(it++);
-					continue;
-				}
-
-			}
-			++it;
-
-		}
-		unlock();
-	}
+	void UpdateTimer();
 	void AddTimerElement(timer_element * ele)
 	{
 		lock();

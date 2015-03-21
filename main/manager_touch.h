@@ -51,6 +51,7 @@ class touch_manager;
 //	int mx, my;
 //
 //};
+
 class touch_element :virtual public ele_nest_extend,virtual public Mutex
 {
 public:
@@ -179,9 +180,9 @@ public:
 		return (x > left && x < right && y > top && y < bottom);
 	}
 
-	int GetTouchX();
-	int GetTouchY();
-	int GetTouchP();
+	 int GetTouchX();
+	 int GetTouchY();
+	 int GetTouchP();
 
 	int top;
 	int bottom;
@@ -203,31 +204,6 @@ struct touch_sample
 };
 int GetTouchSample(touch_sample * samp);
 int TouchInit();
-//class touch_panel_sample_base
-//{
-//public:
-//	touch_panel_sample_base()
-//	{
-//		x = 0;
-//		y = 0;
-//		pressure = 0;
-//	}
-//	int operator==(touch_panel_sample_base& other)
-//	{
-//		return (x == other.x && y == other.y && pressure == other.pressure);
-//	}
-//	virtual int init_touch_panel()
-//	{
-//		errexitf("using is virtual touch sample\r\n");
-//	}
-//
-//	virtual int gather()
-//	{
-//		errexitf("using is virtual touch sample\r\n");
-//	}
-//};
-//
-//touch_panel_sample_base * GetTouchSample();
 
 
 class touch_manager :virtual public Mutex
@@ -246,62 +222,7 @@ public:
 	{
 
 	}
-	int touch_proc_event(touch_sample * samp)
-	{
-		if (cur_samp.x == samp->x &&cur_samp.y == samp->y&&cur_samp.pressure == samp->pressure)
-		{				//过滤重复坐标
-			return 0;
-		}
-		lock();
-		cur_samp = *samp;
-		if(cur_samp.pressure!=0){ //用于通知用户触摸屏是否按下
-			in_touch=1;
-			onGlobalTouchPressed();
-		}else{
-			in_touch=0;
-			onGlobalTouchReleased();
-		}
-		iterator it;
-		for (it = mp.begin(); it != mp.end(); ++it)
-		{
-			touch_element * toe = (*it);
-			int lock=0;
-			if(toe->hasParent()){
-				//children_touch_lock在父控件里面经常动态改变，比如滑动时锁定，所以lock得动态赋值，不能在解析时赋值
-				lock=toe->touch_lock |toe->parent->children_touch_lock;
-			}
-			if (lock==0)
-			//if (toe->touch_lock == 0)
-			{
-				if (toe->isArea(cur_samp.x, cur_samp.y)
-						&& cur_samp.pressure != 0)
-				{
-					toe->touch_area();
-					toe->isdn = 1;
-				}
-				else
-				{
-					if (toe->isdn == 1)
-					{
-						toe->free_area();
-						toe->isdn = 0;
-					}
-				}
-			}
-			else
-			{
-				//如果锁住了，并且处于按下状态，那么弹起按钮
-				if (toe->isdn == 1)
-				{
-					toe->free_area();
-					toe->isdn = 0;
-				}
-
-			}
-		}
-		unlock();
-
-	}
+	int touch_proc_event(touch_sample * samp);
 //	void StopElement(touch_element * ele)
 //	{
 //		mp[name]->touch_lock = 1;

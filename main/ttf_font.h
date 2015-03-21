@@ -159,85 +159,10 @@ public:
 				& 0xff;
 		((Color32 *) pSrcBuffer + y * u32Width + x)->a = gray;
 	}
-	void ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,
-			unsigned int color)
-	{
-		int y, x;
-		unsigned char gray;
-
-		if (dst_x + bitmap->width > u32Width)
-		{
-			log_w("warning ft_draw_bitmap u32Width[%d] to low\r\n",u32Width);
-			return;
-		}
-		if (dst_y + bitmap->rows > u32Height)
-		{
-			log_w("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
-			return;
-		}
-		for (y = 0; y < bitmap->rows; y++)
-		{
-			if (dst_y + y > u32Height)
-			{
-				break;
-			}
-			for (x = 0; x < bitmap->width; x++)
-			{
-				if (dst_x + x > u32Width)
-				{
-					break;
-				}
-				gray = bitmap->buffer[y * bitmap->pitch + x];
-				//                  log_i("gray=%d\n",gray);
-				if (gray > 0)
-				{
-					LCD_PutPixel(dst_x + x, dst_y + y, color, gray);
-				}
-			}
-		}
-	}
-  //字体渐渐隐藏显示
+	void ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,unsigned int color);
+	//字体渐渐隐藏显示
 	void ft_draw_bitmap_fade(FT_Bitmap *bitmap, int dst_x, int dst_y,
-				unsigned int color,float startAlpha,float endAlpha)
-		{
-			int y, x;
-			unsigned char gray;
-			float alpha,fadeStep;
-			if (dst_x + bitmap->width > u32Width)
-			{
-				log_w("warning ft_draw_bitmap u32Width[%d] to low\r\n",u32Width);
-				return;
-			}
-			if (dst_y + bitmap->rows > u32Height)
-			{
-				log_w("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
-				return;
-			}
-			alpha=startAlpha;
-			fadeStep= (startAlpha-endAlpha)/bitmap->rows;
-
-			for (y = 0; y < bitmap->rows; y++)
-			{
-				alpha-=fadeStep;
-				if (dst_y + y > u32Height)
-				{
-					break;
-				}
-				for (x = 0; x < bitmap->width; x++)
-				{
-					if (dst_x + x > u32Width)
-					{
-						break;
-					}
-					gray = bitmap->buffer[y * bitmap->pitch + x]*alpha;
-					//                  printf("gray=%d\n",gray);
-					if (gray > 0)
-					{
-						LCD_PutPixel(dst_x + x, dst_y + y, color, gray);
-					}
-				}
-			}
-		}
+				unsigned int color,float startAlpha,float endAlpha);
 	//int added_txt(unsigned int w, unsigned int h, unsigned int color);
 	//void free_text();
 	//void Disp_txt(unsigned int * pSrcBuffer, unsigned int SrcBuffer_W, unsigned int x, unsigned int y, unsigned int w,unsigned int h);

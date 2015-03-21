@@ -333,111 +333,12 @@ public:
 	void FlushConfigReduced();
 
 	void ParseModifRes();
-	void PraseElement()
-	{
-		name = m_mp["name"]->getvalue();
-		int tmpX = m_mp["x"]->getvalue_int();
-		int tmpY = m_mp["y"]->getvalue_int();
-
-		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
-		{
-			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
-		}
-		if (m_mp.exist("parentYPage"))
-		{
-			tmpY+=parent->height* m_mp["parentYPage"]->getvalue_int();
-		}
-		width = m_mp["width"]->getvalue_int();
-		height = m_mp["height"]->getvalue_int();
-		render_width=width;
-		render_height=height;
-		hide = m_mp["hide"]->getvalue_int();
-		if (m_mp.exist("x_page_num"))
-		{
-			x_page_num = m_mp["x_page_num"]->getvalue_int();
-		}
-		if (m_mp.exist("y_page_num"))
-		{
-			y_page_num = m_mp["y_page_num"]->getvalue_int();
-		}
-		//控件被移动
-		if (tmpX != x || tmpY != y)
-		{
-			cleanLastPos();
-			x = tmpX;
-			y = tmpY;
-		}
-		if(hasParent()){
-		abs_x=x+parent->abs_x-parent->scroll_x;
-		abs_y=y+parent->abs_y-parent->scroll_y;
-		}else{
-			abs_x=x;
-			abs_y=y;
-		}
-		if (m_mp.exist("lay"))
-		{
-			lay = m_mp["lay"]->getvalue_int();
-		}
-		else
-		{
-			lay = 5;
-		}
-
-		if (pSrcBuffer == NULL)
-		{
-			//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
-			SetBuffer(width, height);
-			path.format("ele-%s %dx%d", name.c_str(), width, height);
-		}
-		initstack();
-
-	}
+	void PraseElement();
 /*********************************
  * for sdcfg
  * called by FlushConfigReduced()
  */
-	void rePraseElement()
-	{
-		int tmpX = m_mp["x"]->getvalue_int();
-		int tmpY = m_mp["y"]->getvalue_int();
-		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
-		{
-			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
-		}
-		if (m_mp.exist("parentYPage"))
-		{
-			tmpY+=parent->height* m_mp["parentYPage"]->getvalue_int();
-		}
-
-		hide = m_mp["hide"]->getvalue_int();
-		if (m_mp.exist("x_page_num"))
-		{
-			x_page_num = m_mp["x_page_num"]->getvalue_int();
-		}
-		if (m_mp.exist("y_page_num"))
-		{
-			y_page_num = m_mp["y_page_num"]->getvalue_int();
-		}
-		//控件被移动
-		if (tmpX != x || tmpY != y)
-		{
-			cleanLastPos();
-			x = tmpX;
-			y = tmpY;
-		}
-		if(hasParent()){
-		abs_x=x+parent->abs_x-parent->scroll_x;
-		abs_y=y+parent->abs_y-parent->scroll_y;
-		}else{
-			abs_x=x;
-			abs_y=y;
-		}
-		if (m_mp.exist("lay"))
-		{
-			lay = m_mp["lay"]->getvalue_int();
-		}
-		initstack();
-	}
+	void rePraseElement();
 
 
 	void ModifXmlMap(HUMap &mp)
@@ -479,75 +380,7 @@ public:
 	}
 
 
-	void renderLayers()
-	{
-		int cnt=0;
-		if (!layers.empty())
-		{
-			list<element *>::iterator it;
-			element * ele;
-			int s_ofx ; //源x
-			int d_ofx ; //目标x
-			int s_ofy ; //源x
-			int d_ofy ; //目标x
-
-			for (it = layers.begin(); it != layers.end(); ++it)
-			{
-				ele = *it;
-				if (ele->hide == 0)
-				{
-					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
-
-					 s_ofx = 0; //源偏移x
-					 d_ofx = render_offset_x; //目标偏移x
-					if (ele->x < x+render_offset_x)
-					{
-						s_ofx = x+render_offset_x - ele->x;
-						//d_ofx = render_offset_x;
-					}
-					else if (ele->x > x+render_offset_x)
-					{
-						s_ofx = 0;
-						d_ofx = ele->x - x;
-					}
-
-					 s_ofy = 0; //源x
-					 d_ofy = render_offset_y; //目标x
-					if (ele->y < y+render_offset_y)
-					{
-						s_ofy = y +render_offset_y- ele->y;
-						//d_ofy = 0;
-					}
-					else if (ele->y > y)
-					{
-						s_ofy = 0;
-						d_ofy = ele->y - y;
-					}
-					if(cnt==0){//最底的元素直接复制
-						if(ele->cur_res!=NULL){ //当前有资源
-							AreaCopy(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
-						}
-						if(ele->isParent()){
-							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
-						}
-					}
-					else{
-							if(ele->cur_res!=NULL) {//当前有资源
-								Render(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
-							}
-							if(ele->isParent()){
-								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
-							}
-					}
-					cnt++;
-				}
-
-			}
-		}
-		if(!cnt){ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
-			cleanBuf();
-		}
-	}
+	void renderLayers();
 
 
 	class Cmpare
@@ -587,16 +420,6 @@ public:
 		layers.remove(ele);
 	}
 
-//	void backstack()  //此元素从队列中每个元素的队列中消失掉
-//	{
-//		list<element *>::iterator it;
-//		for (it = layers.begin(); it != layers.end(); ++it)
-//		{
-//			if(*it!=this)
-//			(*it)->delLayers(this);
-//		}
-//
-//	}
 	void SetRes(int id, const char * path)
 	{
 		if (res[id].path != path || res[id].isNULL())
