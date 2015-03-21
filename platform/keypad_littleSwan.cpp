@@ -1,6 +1,3 @@
-#ifndef __THREAD_KEYPAD_H__
-#define __THREAD_KEYPAD_H__
-
 #include "hulib.h"
 #include <linux/input.h>
 #include "debug.h"
@@ -105,7 +102,3 @@ int getKyes(struct input_event ev_key){
 
 
 
-
-
-
-#endif //__THREAD_TOUCH_H__

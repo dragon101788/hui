@@ -49,6 +49,7 @@ obj-y +=platform/zoom_soft.o
 obj-$(CONFIG_TOUCH_EKTF2K) += platform/touch_ektf2k.o
 obj-$(CONFIG_TOUCH_NONE) += platform/touch_none.o
 obj-$(CONFIG_KEYPAD_LITTLESWAN) += platform/keypad_littleSwan.o
+obj-$(CONFIG_KEYPAD_NONE) += platform/keypad_none.o
 ifeq ($(CONFIG_USING_FONT),y) 
 	#LDFLAG+=-liconv 
 	obj-y += $(patsubst %.c,%.o,$(wildcard trueType/*.c))
