@@ -2,11 +2,11 @@
 #define __WHEEL_IMAGE_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+#include "view.h"
 #include "ttf_font.h"
 
 
-class wheel_text:public element{
+class wheel_text:public BaseView{
 private:
 	int num_min,num_max;
 	int step;
@@ -104,18 +104,19 @@ public:
 				path.format("ele-%s %dx%d", name.c_str(), width, height);
 			}
 			initstack();
+			log_i("get font_mp %x %x\r\n", font_mp[font].face,
+			font_mp[font].ft_Lib);
+
+			ttf.color = color;
+
+			*/
 			font = m_mp["font"]->getvalue();
 			style = (unsigned char) m_mp["style"]->getvalue_int();
 			size = m_mp["size"]->getvalue_int();
-
-			ttf.m_font = &font_mp[font];
-			log_i("get font_mp %x %x\r\n", font_mp[font].face,
-					font_mp[font].ft_Lib);
 			ttf.fontHeight = size;
-			ttf.color = color;
 			ttf.style = style;
-			//log_i("width=%d, height= %d\r\n", width,height);
-*/
+			ttf.m_font = &font_mp[font];
+
 			doFlushConfigCom();
 			if(!m_mp["cached"]->getvalue_int()){
 				Flush();
@@ -131,15 +132,13 @@ public:
 		}
 		void doFlushConfigCom()
 		{
-
-			hide=parent->hide;
+			hide=father->hide;
 			int red = m_mp["red"]->getvalue_int();
 			int green = m_mp["green"]->getvalue_int();
 			int blue = m_mp["blue"]->getvalue_int();
 			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
 			ttf.color = color;
 			ttf.SetBuffer(width, height);
-			//ttf.cleanBuf();
 
 			int padding_left=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 			padding_left>0?padding_left:0;
@@ -147,7 +146,7 @@ public:
 			padding_top>0?padding_top:0;
 			if(id==0){
 				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
-			}else if(id==parent->node_num-1){
+			}else if(id==father->node_num-1){
 				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
 			}
 			else
@@ -158,10 +157,7 @@ public:
 
 		void doRender()
 		{
-			//log_i("in mode doRender()!!!!!\n");
-			//image::Render(&ttf, 0, 0);
 			cur_res=&ttf;
-			//	image::Render(&img, 0, 0, width, height, 0, 0);
 		}
 
 		map<hustr, text>::iterator font_it;
@@ -174,7 +170,7 @@ public:
 		int lenth;
 		int buf_len;
 		int id;
-		wheel_text * parent;
+		wheel_text * father;
 	};
 
 
@@ -212,7 +208,7 @@ public:
 					//nodemp[i]->name=hustr("%s-%d",name.c_str(),i);
 					nodemp[i]->m_mp.fetch(m_mp["node"][i]);
 					nodemp[i]->id=i;
-					nodemp[i]->parent = this;
+					nodemp[i]->father = this;
 					nodemp[i]->xml_mgr = xml_mgr;
 					nodemp[i]->mgr = mgr;
 				}

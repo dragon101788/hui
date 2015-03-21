@@ -129,7 +129,7 @@ void ParaseTinyXmlFile(const char * file, xmlproc * xml)
 		return;
 	}
 
-	ParaseUpdateXml3("",root, xml);
+	ParaseUpdateXml3(NULL,root, xml);
 
 }
 

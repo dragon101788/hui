@@ -2,12 +2,12 @@
 #define __KEYS_SLIP_MENU_H__
 
 #include "XMLInstal.h"
-#include "layer.h"
+#include "view.h"
 #include "thread_msg.h"
 
 
 extern int msgSkip;//当滑动菜单滚动时应该忽略信息处理，此标志谨慎使用
-class keys_slip_menu: public element,  public timer_element
+class keys_slip_menu: public TimerView
 {
 public:
 

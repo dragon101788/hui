@@ -397,7 +397,7 @@ public:
 
 
 
-	void addLayers(element * ele)
+ inline	void addLayers(element * ele)
 	{
 		list<element *>::iterator it;
 		for (it = layers.begin(); it != layers.end(); ++it)

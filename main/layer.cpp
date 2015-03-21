@@ -156,18 +156,18 @@
 					}
 					if(cnt==0){//最底的元素直接复制
 						if(ele->cur_res!=NULL){ //当前有资源
-							AreaCopy(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
+							AreaCopy(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 						if(ele->isParent()){
-							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
+							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 					}
 					else{
 							if(ele->cur_res!=NULL) {//当前有资源
-								Render(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
+								Render(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 							}
 							if(ele->isParent()){
-								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_width, d_ofx, d_ofy);
+								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 							}
 					}
 					cnt++;
@@ -175,7 +175,7 @@
 
 			}
 		}
-		if(!cnt){ //没有底队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
+		if(!cnt){ //没有队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
 			cleanBuf();
 		}
 	}
@@ -248,13 +248,7 @@ void element::initstack()
 {
 
 	element_manager::iterator it;
-//	element_manager *ele_mgr;
-//	if(hasParent()){
-//		ele_mgr=parent;
-//
-//	}
-//	else
-//		ele_mgr=xml_mgr;//有一个问题：非子元素会将子元素考虑进来
+
 	for (it = xml_mgr->begin(); it != xml_mgr->end(); ++it)
 	{
 		element * ele = it->second;
@@ -262,8 +256,8 @@ void element::initstack()
 			if (crossAlgorithm(ele, this))
 			{
 				if(ele->lay != lay){
-					addLayers(ele);   //区域内有重叠元素，并且层小于自己则加入底队列
-					ele->addLayers(this); //将自己加入顶队列
+					addLayers(ele);   //区域内有重叠元素，并且层小于自己则加入队列
+					ele->addLayers(this); //将自己加入队列
 				}
 			}
 		}
@@ -294,7 +288,7 @@ void element::RenderOut()
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 
 	if(parent!=NULL){
-		//log_i("%s draw to parent!!!!!!!\n",name.c_str());
+		log_i("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}

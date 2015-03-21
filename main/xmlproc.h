@@ -18,6 +18,7 @@ void JumpToFile(const char * jump, const char * snap);
 
 extern DebugTimer fps;
 
+
 class HuExec
 {
 public:
@@ -135,7 +136,7 @@ private:
 	int done; //完成解析
 	int m_exit; //线程退出
 	int isDraw; //有改变图像
-
+	int switchProc;
 public:
 	int directDraw;
 	hustr filename;
@@ -182,7 +183,8 @@ public:
 				resetSem();
 				waitSem();
 			}
-			int ret = ScheduleProc();
+			//int ret = ScheduleProc();
+			 ScheduleProc();
 			if(directDraw)
 				printFps();
 			else
@@ -202,9 +204,15 @@ public:
 			out.RenderToFramebuffer(&fb);
 			fps.debug_timer("<fps>");
 			isDraw = 0;
+			if(switchProc){
+			switchProc=0;
+			switchProcs();
+			}
+
 		}
 	//	unlock();
 	}
+	void switchProcs();
 	void printFps()
 	{
 		if (isDraw != 0 && fore == 1 && done == 1)
@@ -338,6 +346,7 @@ public:
 		log_i("---------------%s----------------OK\r\n", filename.c_str());
 
 	}
+
 //	int LoadSnap(const char * file)
 //	{
 //		if (access(file, F_OK) == 0)
