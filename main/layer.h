@@ -429,6 +429,7 @@ public:
 		}
 	}
 
+
 	 element()
 	{
 		hide = 0;
@@ -439,6 +440,7 @@ public:
 		lay = 0;
 		mgr = NULL;
 		cur_res=NULL;//默认没有资源需要绘制
+		exclude_lay=-1;
 
 	}
 
@@ -458,7 +460,7 @@ public:
 	hustr name;
 	int hide;
 	int lay;
-
+	int exclude_lay;//不加入队列的层
 	HUMap m_mp;
 	xmlproc * xml_mgr;
 	map<int, image> res;

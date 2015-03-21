@@ -34,6 +34,10 @@
 		{
 			y_page_num = m_mp["y_page_num"]->getvalue_int();
 		}
+		if (m_mp.exist("exclude_lay"))
+		{
+			exclude_lay= m_mp["exclude_lay"]->getvalue_int();
+		}
 		//控件被移动
 		if (tmpX != x || tmpY != y)
 		{
@@ -63,7 +67,10 @@
 			SetBuffer(width, height);
 			path.format("ele-%s %dx%d", name.c_str(), width, height);
 		}
+
 		initstack();
+
+
 
 	}
 
@@ -125,7 +132,7 @@
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
-				if (ele->hide == 0)
+				if (ele->hide == 0&&ele->lay!=exclude_lay)
 				{
 					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
 
