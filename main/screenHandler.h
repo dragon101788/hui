@@ -152,7 +152,7 @@ class ScreenHandler{
 	void gotoPage(const char * xml){
 
 	}
-	bool isRun(){
+	bool isRun() const{
 		return isRunning;
 	}
 	BaseView * findViewByName(const char *name);

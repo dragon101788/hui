@@ -167,6 +167,13 @@ public:
 	int y;
 	int width;
 	int height;
+	window(){
+		x = 0;
+		y = 0;
+		height = 0;
+		width = 0;
+	}
+	virtual ~window(){};
 };
 /*****************************
  * ele_nest_extend 此类为了扩展元素嵌套功能独立出来的。如果需要实现控件嵌套，元素必须继承它
@@ -205,10 +212,10 @@ public:
 		}
 		AddElement( name, son);
 	}
-	bool isParent(){
+	bool isParent() const{
 		return is_parent;
 	}
-	bool hasParent(){
+	bool hasParent()const{
 		return parent!=NULL;
 	}
 	void configChildAbsPos();
@@ -462,10 +469,6 @@ public:
 	 element()
 	{
 		hide = 0;
-		x = 0;
-		y = 0;
-		height = 0;
-		width = 0;
 		lay = 0;
 		mgr = NULL;
 		cur_res=NULL;//默认没有资源需要绘制

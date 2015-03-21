@@ -83,7 +83,7 @@ public:
 	unsigned int u32Width;	// crop width
 	unsigned int u32Height;	// crop height
 	unsigned int u32Stride;
-	~base_image(){};
+	virtual ~base_image(){};
 	//////////////////////////////////////////////////////////////////////////
     inline base_image() :pSrcBuffer(0),u32Stride(0),u32Width(0),u32Height(0),SrcSize(0){}
     inline base_image(const base_image& ref) :pSrcBuffer(ref.pSrcBuffer),u32Stride(ref.u32Stride),u32Width(ref.u32Width),u32Height(ref.u32Height),SrcSize(ref.SrcSize){}
@@ -186,7 +186,7 @@ public:
 #endif
 		unlock();
 	}
-	inline int isNULL()
+	inline int isNULL() const
 	{
 		return (pSrcBuffer == NULL);
 	}
@@ -230,16 +230,16 @@ public:
 //		}
 //		return GetPix(y * u32Width + x);
 //	}
-	inline Color32 * GetPix(int pos)
+	inline Color32 * GetPix(int pos) const
 	{
-		if ((pos * 4) > SrcSize)
+		if ((pos << 2) > SrcSize)
 		{
 			huErrExitf("Get pixels beyond the range %s pos=%d width=%d height=%d\r\n", path.c_str(), pos, u32Width, u32Height);
 		}
 		return ((Color32 *) pSrcBuffer + pos);
 	}
 
-	inline unsigned long SrcGPUAddr()
+	inline unsigned long SrcGPUAddr() const
 	{
 		return (unsigned long) pSrcBuffer;
 	}

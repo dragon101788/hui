@@ -324,7 +324,7 @@ public:
 		pthread_mutexattr_settype(&mattr, flag);
 		pthread_mutex_init(&mutex, &mattr);
 	}
-	~Mutex()
+	virtual ~Mutex()
 	{
 		//printf("~Mutex\r\n");
 		pthread_mutex_destroy(&mutex);
@@ -599,6 +599,10 @@ public:
 	Sem()
 	{
 		sem_init(&m_sem, 0, 0);
+	}
+	virtual ~Sem()
+	{
+
 	}
 	int post()
 	{
@@ -1100,7 +1104,9 @@ public:
 
 	HUTimerContainer * m_Container;
 };
-
+/***********************
+ * 前面已经定义了一个sem，有时间合并
+ */
 class semphore
 {
 protected:
@@ -1144,7 +1150,7 @@ protected:
 	/*
 	 注销信号量
 	*/
-	~semphore(){
+	virtual ~semphore(){
 		sem_destroy(&m_event);
 	}
 
