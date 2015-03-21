@@ -38,7 +38,6 @@ class element_manager
 {
 public:
 
-
 	virtual void AddElement(const char * name, element * ele)
 	{
 
@@ -287,7 +286,7 @@ public:
 //	}
 	virtual void doGetInfo(info & info)
 	{
-		log_i("warning element bash doGetInfo\r\n");
+		//log_i("warning element bash doGetInfo\r\n");
 	}
 	virtual void doDelete()
 	{
@@ -322,9 +321,39 @@ public:
 		//log_i("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
 	}
 
-	void Flush();
-	//void Flush_for_Child();
-	void revocation();
+
+	void Flush()
+	{
+		if (mgr != NULL)
+		{
+			lock();
+			//resetRenderOffset();//父控件主动绘制时恢复整个控件输出
+			mgr->que.addele(this);
+			unlock();
+		}
+		else
+		{
+			errexitf("$$$$HU$$$$ Flush element %s manager is NULL\r\n",
+					name.c_str());
+		}
+	}
+
+	void revocation()
+	{
+		if (mgr != NULL)
+		{
+			lock();
+			mgr->que.delele(this);
+			unlock();
+		}
+		else
+		{
+			errexitf("$$$$HU$$$$ revocation element %s manager is NULL\r\n",
+					name.c_str());
+		}
+	}
+
+
 
 	void RenderOut();
 	void cleanLastPos();
@@ -440,7 +469,7 @@ public:
 		lay = 0;
 		mgr = NULL;
 		cur_res=NULL;//默认没有资源需要绘制
-		exclude_lay=-1;
+		hide_lay=-1;
 
 	}
 
@@ -460,7 +489,7 @@ public:
 	hustr name;
 	int hide;
 	int lay;
-	int exclude_lay;//不加入队列的层
+	int hide_lay;//向对此元素此层隐藏
 	HUMap m_mp;
 	xmlproc * xml_mgr;
 	map<int, image> res;

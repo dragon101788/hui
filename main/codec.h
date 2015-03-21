@@ -144,78 +144,7 @@ public:
 
 class image:public base_image, virtual public Mutex
 {
-	/*
-protected:
 
-//	Color32 * pSrcBuffer;
-
-
-public:
-	void * pSrcBuffer;
-	unsigned long SrcSize;
-	unsigned int u32Width;	// crop width
-	unsigned int u32Height;	// crop height
-	unsigned int u32Stride;
-
-
-
-	//////////////////////////////////////////////////////////////////////////
-//    inline TPixels32Ref() :pdata(0),byte_width(0),width(0),height(0){}
-//    inline TPixels32Ref(const TPixels32Ref& ref) :pdata(ref.pdata),byte_width(ref.byte_width),width(ref.width),height(ref.height){}
-//
-    //访问(x,y)坐标处的颜色
-    inline Color32& pixels(const long x,const long y) const { return getLinePixels(y)[x]; }
-    //得到y行的颜色首地址
-    inline Color32* getLinePixels(const long y) const { return (Color32*) ( ((UInt8*)pSrcBuffer) + u32Stride*y ); }
-
-    //是否是空图像区
-    inline bool getIsEmpty()const { return ((u32Width<=0)||(u32Height<=0)); }
-    //将pline指向下一行颜色
-    inline void nextLine(Color32*& pline)const {  ((UInt8*&)pline)+=u32Stride;   }
-
-    //坐标边界饱和  如果(x,y)坐标在图片数据区外,(x,y)值会被设置到图片最近的边界内,并返回false(否则什么也不做,返回true) //警告! 图片区域不能为空
-    inline bool clipToBorder(long& x, long& y)const{
-        bool isIn = true;
-        if (x < 0) {
-            isIn = false; x = 0;
-        } else if (x >= u32Width) {
-            isIn = false; x = u32Width - 1;
-        }
-        if (y < 0) {
-            isIn = false; y = 0;
-        } else if (y >= u32Height) {
-            isIn = false; y = u32Height - 1;
-        }
-        return isIn;
-    }
-    //获取一个点的颜色,默认执行边界饱和测试  当坐标超出区域的时候返回的颜色为最近的边界上的颜色值并且其alpha通道置零  //警告! 图片区域不能为空 速度很慢
-    inline Color32 getPixelsBorder(long x, long y) const {
-        bool isInPic = clipToBorder(x,y);
-        Color32 result = pixels(x,y);
-        if (!isInPic)
-            result.a=0;
-        return result;
-    }
-    inline bool getIsInPic(long x, long y)const{
-        //return (x>=0)&&(y>=0)&&(x<width)&&(y<height);
-        //利用负数的编码优化为:
-        return ((unsigned long)x<(unsigned long)u32Width)&&((unsigned long)y<(unsigned long)u32Height);
-    }
-
-    //填充颜色
-    void fillColor(const Color32 color)const{
-        Color32* pDstLine=(Color32*)pSrcBuffer;
-        for (long y=0;y<u32Height;++y){
-            for (long x=0;x<u32Width;++x){
-                pDstLine[x]=color;
-            }
-            nextLine(pDstLine);
-        }
-    }
-
-    ////////////////////////////////////////////////////
-
-*/
 public:
 	int transp;             //透明度
 	hustr path;
@@ -246,7 +175,7 @@ public:
 	}
 	void dump_from_buf(const void * buf, int width, int height);
 
-	void dump_to_buf(void * buf)
+	inline void dump_to_buf(void * buf)
 	{
 		lock();
 		//memcpy(buf, pSrcBuffer, SrcSize);
@@ -257,7 +186,7 @@ public:
 #endif
 		unlock();
 	}
-	int isNULL()
+	inline int isNULL()
 	{
 		return (pSrcBuffer == NULL);
 	}
@@ -310,7 +239,7 @@ public:
 		return ((Color32 *) pSrcBuffer + pos);
 	}
 
-	unsigned long SrcGPUAddr()
+	inline unsigned long SrcGPUAddr()
 	{
 		return (unsigned long) pSrcBuffer;
 	}

@@ -153,18 +153,27 @@ public:
 
 	void ForeProc(); //将页面切换前台
 	void UnForeProc(); //将页面切换后台
-	void DoneProc(); //强制完成
-	void UnDoneProc(); //强制未完成
 
-	static int timerfun_run(int tm, hustr cmd)
+	void DoneProc()
 	{
-		system(cmd);
+		done = 1;
 	}
-	static int timerfun_cs(int tm, hustr cs)
+	void UnDoneProc()
 	{
-		log_i("exec xml=%s cs=%s\r\n", g_cur_xml->filename.c_str(), cs.c_str());
-		g_cur_xml->PostCS(cs);
+		done = 0;
 	}
+
+
+
+//	static int timerfun_run(int tm, hustr cmd)
+//	{
+//		system(cmd);
+//	}
+//	static int timerfun_cs(int tm, hustr cs)
+//	{
+//		log_i("exec xml=%s cs=%s\r\n", g_cur_xml->filename.c_str(), cs.c_str());
+//		g_cur_xml->PostCS(cs);
+//	}
 	void AddExec(int ptimer, HuExec c)
 	{
 		log_i("$$$HU$$$ exec %s %s\r\n", c.run.nstr(), c.cs.nstr());
@@ -291,7 +300,27 @@ public:
 		Destroy();
 	}
 
-	int init();
+
+	int init()
+	{
+		switchProc=0;
+		elemgr = this;
+		isDraw = 0; //默认无绘制图像
+		fore = 0; //默认为后台进程
+		done = 0; //默认非完成状态
+		directDraw=0;
+
+		windCtl=NULL;
+		if (out.isNULL())
+		{
+			if (out.SetBuffer(fb.u32Width, fb.u32Height))
+			{
+				huErrExit("$$$HU$$$ blt_set_dest_buff error\r\n");
+			}
+		}
+		m_exit = 1;
+		create();
+	}
 
 	xmlproc()
 	{
@@ -313,6 +342,9 @@ public:
 		isDraw++;
 		//unlock();
 	}
+
+
+
 
 
 	void Destroy()

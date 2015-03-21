@@ -30,26 +30,7 @@ void xmlproc::switchProcs(){
 		g_th_timer.SwitchProc(this);
 		g_exec.ChangeContainer(this);
  }
-int xmlproc::init()
-{
-	switchProc=0;
-	elemgr = this;
-	isDraw = 0; //默认无绘制图像
-	fore = 0; //默认为后台进程
-	done = 0; //默认非完成状态
-	directDraw=0;
 
-	windCtl=NULL;
-	if (out.isNULL())
-	{
-		if (out.SetBuffer(fb.u32Width, fb.u32Height))
-		{
-			huErrExit("$$$HU$$$ blt_set_dest_buff error\r\n");
-		}
-	}
-	m_exit = 1;
-	create();
-}
 
 /********************************
  * 执行完这个函数，页面就前台了，可以考虑在后头添加过场动画
@@ -89,14 +70,14 @@ void xmlproc::UnForeProc()
 	}
 }
 
-void xmlproc::DoneProc()
-{
-	done = 1;
-
-}
-void xmlproc::UnDoneProc()
-{
-	done = 0;
-
-}
+//void xmlproc::DoneProc()
+//{
+//	done = 1;
+//
+//}
+//void xmlproc::UnDoneProc()
+//{
+//	done = 0;
+//
+//}
 

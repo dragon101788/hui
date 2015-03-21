@@ -34,9 +34,9 @@
 		{
 			y_page_num = m_mp["y_page_num"]->getvalue_int();
 		}
-		if (m_mp.exist("exclude_lay"))
+		if (m_mp.exist("hide_lay"))
 		{
-			exclude_lay= m_mp["exclude_lay"]->getvalue_int();
+			hide_lay= m_mp["hide_lay"]->getvalue_int();
 		}
 		//控件被移动
 		if (tmpX != x || tmpY != y)
@@ -132,7 +132,7 @@
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
-				if (ele->hide == 0&&ele->lay!=exclude_lay)
+				if (ele->hide == 0&&ele->lay!=hide_lay)
 				{
 					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
 
@@ -190,37 +190,6 @@
 
 
 
-
-void element::Flush()
-{
-	if (mgr != NULL)
-	{
-		lock();
-		//resetRenderOffset();//父控件主动绘制时恢复整个控件输出
-		mgr->que.addele(this);
-		unlock();
-	}
-	else
-	{
-		errexitf("$$$$HU$$$$ Flush element %s manager is NULL\r\n",
-				name.c_str());
-	}
-}
-
-void element::revocation()
-{
-	if (mgr != NULL)
-	{
-		lock();
-		mgr->que.delele(this);
-		unlock();
-	}
-	else
-	{
-		errexitf("$$$$HU$$$$ revocation element %s manager is NULL\r\n",
-				name.c_str());
-	}
-}
 
 int crossAlgorithm(element * r1, element * r2)
 {
