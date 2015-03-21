@@ -9,6 +9,7 @@ MAIN=$(PWD)/main/
 CFLAG+=-I$(TOPDIR)
 CFLAG+=-I$(MAIN)
 CFLAG+=-I$(TOPDIR)include
+CFLAG+=-g -O1
 LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt
 OUTPUT =../output/
 TARGET = $(OUTPUT)hui
@@ -30,6 +31,7 @@ obj-$(CONFIG_ALPHA_SOFT) += platform/alpha_soft.o
 obj-y += main/thread_msg.o
 obj-y += main/thread_timer.o
 obj-y += main/thread_touch.o
+obj-y += main/thread_keypad.o
 obj-y += main/manager_timer.o
 obj-y += main/manager_cs.o
 obj-y += main/manager_touch.o
@@ -46,7 +48,7 @@ obj-y +=platform/rotate_soft.o
 obj-y +=platform/zoom_soft.o 
 obj-$(CONFIG_TOUCH_EKTF2K) += platform/touch_ektf2k.o
 obj-$(CONFIG_TOUCH_NONE) += platform/touch_none.o
-
+obj-$(CONFIG_KEYPAD_LITTLESWAN) += platform/keypad_littleSwan.o
 ifeq ($(CONFIG_USING_FONT),y) 
 	#LDFLAG+=-liconv 
 	obj-y += $(patsubst %.c,%.o,$(wildcard trueType/*.c))

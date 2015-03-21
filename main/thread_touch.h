@@ -1,9 +1,9 @@
 #ifndef __THREAD_TOUCH_H__
 #define __THREAD_TOUCH_H__
 
-#include "manager_touch.h"
-#include "xmlproc.h"
 
+#include "xmlproc.h"
+#include "platform/keypad.h"
 //extern touch_manager g_touch_mgr;
 extern int go;
 

@@ -2,6 +2,7 @@
 #include "thread_touch.h"
 #include "thread_timer.h"
 #include "thread_msg.h"
+#include "thread_keypad.h"
 
 DebugTimer fps;
 pXmlproc g_cur_xml;
@@ -28,6 +29,7 @@ int HuExec::doStart()
 void xmlproc::switchProcs(){
 		g_th_touch.SwitchProc(this);
 		g_th_timer.SwitchProc(this);
+		g_th_keypad.SwitchProc(windCtl);
 		g_exec.ChangeContainer(this);
  }
 

@@ -40,7 +40,20 @@ config TOUCH_EKTF2K
         help
 		2d Bltting
 endchoice
-
+choice 
+        prompt "Keypad Device"
+        default Keypad_NONE
+        help
+		select keypad devices
+config KEYPAD_NONE
+        bool "none"
+        help
+		no keypad
+config  KEYPAD_LITTLESWAN
+        bool "keypad littleSwan"
+        help
+		enable keypad littleSwan
+endchoice
 config DEBUG
 	bool "enable debug"
 choice 

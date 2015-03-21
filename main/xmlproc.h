@@ -153,7 +153,6 @@ public:
 
 	void ForeProc(); //将页面切换前台
 	void UnForeProc(); //将页面切换后台
-
 	void DoneProc()
 	{
 		done = 1;

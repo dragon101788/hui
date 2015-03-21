@@ -738,8 +738,9 @@ int main(int argc, char *argv[])
 //	{
 //		fbf.BlackToSnap(snapfile);
 //	}
-
+#ifndef CONFIG_TOUCH_NONE
 	g_th_touch.init();
+#endif
 	g_th_msg.create();
 	g_th_timer.create();
 	fb.create();
@@ -752,7 +753,9 @@ int main(int argc, char *argv[])
 	log_i("Press Ctrl-C to exit ...\n");
 	g_th_timer.wait();
 	log_i("wait g_th_timer OK\r\n");
+#ifndef CONFIG_TOUCH_NONE
 	g_th_touch.wait();
+#endif
 	log_i("wait g_th_touch OK\r\n");
 	g_th_msg.cancel();
 	fb.wait();
