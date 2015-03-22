@@ -148,11 +148,8 @@ public:
 				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
 			}else if(id==father->node_num-1){
 				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
-			}
-			else
-			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
-
-
+			}else
+				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 		}
 
 		void doRender()

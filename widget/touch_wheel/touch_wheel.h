@@ -19,6 +19,7 @@ public:
 		num_max=1;
 		set_num=1;
 		step_cnt=1;
+		edge_fading=0;
 	}
 	~touch_wheel(){
 
@@ -104,10 +105,13 @@ public:
 			padding_left>0?padding_left:0;
 			int padding_top=(height-size)/2;
 			padding_top>0?padding_top:0;
-			if(id==0){
-				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
-			}else if(id==father->node_num-1){
-				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
+			if(father->edge_fading){
+				if(id==0){
+					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
+				}else if(id==father->node_num-1){
+					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
+				}else
+					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 			}
 			else
 			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
@@ -153,7 +157,7 @@ public:
 			num_max = m_mp["max"]->getvalue_int();
 			num_min = m_mp["min"]->getvalue_int();
 			step = m_mp["step"]->getvalue_int();
-
+			edge_fading=m_mp["edge_fading"]->getvalue_int();
 			node_num=m_mp.count("node");
 			for (int i = 0; i < node_num; i++)
 			{
@@ -309,6 +313,7 @@ private:
 	int my,step_my;
 	int step_h;
 	int step_cnt;
+	int edge_fading;
 	map<int, node *> nodemp;
 
 };
