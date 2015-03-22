@@ -1063,9 +1063,7 @@ class HUTimer: public thread, public Mutex
 {
 	int t;
 public:
-
 	typedef int (*timer_fun_ft)(int tm, T data);
-
 	class timer_node
 	{
 	public:
@@ -1094,7 +1092,6 @@ public:
 					continue;
 				}
 				++it;
-
 			}
 			unlock();
 		}
@@ -1134,6 +1131,7 @@ public:
 			int cur = GetUpTimer();
 			if (m_Container != NULL)
 			{
+
 				m_Container->UpdateContainer(cur);
 			}
 			unlock();

@@ -14,7 +14,7 @@ extern int go;
 int ParseXMLElement2(hustr parentName,hustr name, HUMap & xmlmp, xmlproc * xml);
 void ParaseTinyXmlFile(const char * file, xmlproc * xml);
 void hui_exit(const char * cmd);
-void JumpToFile(const char * jump, const char * snap);
+//void JumpToFile(const char * jump, const char * snap);
 
 extern DebugTimer fps;
 
@@ -54,6 +54,7 @@ public:
 	{
 		is.doStart();
 	}
+
 };
 
 typedef HUTimer<HuExec> ProcTimer;
@@ -174,6 +175,7 @@ public:
 //		log_i("exec xml=%s cs=%s\r\n", g_cur_xml->filename.c_str(), cs.c_str());
 //		g_cur_xml->PostCS(cs);
 //	}
+
 	void AddExec(int ptimer, HuExec c)
 	{
 		log_i("$$$HU$$$ exec %s %s\r\n", c.run.nstr(), c.cs.nstr());

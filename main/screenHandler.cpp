@@ -1,5 +1,7 @@
 #include "screenHandler.h"
 #include "xmlproc.h"
+
+DirectProcTimer g_dirctExec;
 	BaseView * ScreenHandler::findViewByName(const char *name){
 		BaseView * view=(BaseView *)viewManager->GetElementByName(name);
 		if(view==NULL){

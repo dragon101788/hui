@@ -6,12 +6,46 @@
 #include "ParaseXML.h"
 #include "codec.h"
 #include "schedule.h"
+#include "hulib.h"
 //#include "thread_keypad.h"
 #include <deque>
 #include <set>
 
 
 
+class DirectExe
+{
+public:
+	hustr xml;
+	typedef void (*pfunc)(const char *, const char *);
+	pfunc p;
+	DirectExe()
+	{
+		xml=NULL;
+		p=NULL;
+	}
+	DirectExe(const char *file,pfunc func)
+	{
+		xml=file;
+		p=func;
+	}
+	int setExec(const char *file,pfunc func)
+	{
+		xml=file;
+		p=func;
+	}
+	virtual int doStart(){
+		p(xml.c_str(),NULL);
+	}
+	static int _exec(int tm, DirectExe is)
+	{
+		is.doStart();
+	}
+
+};
+typedef HUTimer<DirectExe> DirectProcTimer;
+extern DirectProcTimer g_dirctExec;
+extern  void JumpToFile(const char * jump, const char * snap);
 class BaseView;
 class xmlproc;
 
@@ -24,25 +58,26 @@ public:
 
 	}
 
-	virtual void onDrag(const char *ele_name){
+	virtual void onDrag(hustr ele_name){
 
 	}
-	virtual void onTouchDown(const char *ele_name){
+	virtual void onTouchDown(hustr ele_name){
 		//log_s("eventListener  doTouchDown\n");
 	}
-	virtual void onTouchUp(const char *ele_name){
+	virtual void onTouchUp(hustr ele_name){
 
 	}
-	virtual void onTouchActive(const char *ele_name){
+	virtual void onTouchActive(hustr ele_name){
 
 	}
-	virtual void onTimer(const char *ele_name,int time){
+	virtual void onTimer(hustr ele_name,int time){
 
 	}
 };
 
 
-class ScreenHandler{
+class ScreenHandler:public DirectProcTimer::HUTimerContainer
+{
 	public:
 
 	ScreenHandler(){
@@ -71,6 +106,7 @@ class ScreenHandler{
 	 */
 	 void coming(const char *lastFile){
 		 isRunning=0;
+		 setProcs();
 		onComing(lastFile);
 		//onResume();
 	}
@@ -80,6 +116,7 @@ class ScreenHandler{
 	 void leaving(){
 		// onPause();
 		 isRunning=1;
+		 unSetProcs();
 		onLeaving();
 
 	}
@@ -149,18 +186,40 @@ class ScreenHandler{
 		doFlushConfig();
 
 	}
-	void gotoPage(const char * xml){
 
+	void AddExecDirect(int ptimer, DirectExe c)
+	{
+		log_i("%s DitectExe.xml=%s",name.c_str(),c.xml.c_str());
+		HUTimerAdd(name,g_dirctExec.GetUpTimer() + ptimer, DirectExe::_exec,c);
+
+	}
+
+	void gotoScreen(const char * xml){
+		DirectExe myExec;
+		myExec.setExec(xml,JumpToFile);
+		AddExecDirect(0,myExec);
+		//JumpToFile(xml,NULL);//不能直接调用此函数
 	}
 	bool isRun() const{
 		return isRunning;
 	}
+
+	void setProcs(){
+		g_dirctExec.ChangeContainer(this);
+	 }
+	void unSetProcs(){
+		g_dirctExec.ChangeContainer(NULL);
+	 }
 	BaseView * findViewByName(const char *name);
 
 	bool isRunning;
 	xmlproc *viewManager;
 	HUMap m_mp;
 	hustr name;
+
+
+
+
 };
 
 
