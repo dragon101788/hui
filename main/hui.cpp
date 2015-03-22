@@ -740,10 +740,14 @@ int main(int argc, char *argv[])
 //	{
 //		fbf.BlackToSnap(snapfile);
 //	}
-#ifndef CONFIG_TOUCH_NONE
+#ifdef CONFIG_TOUCH_NONE
+
+#else
 	g_th_touch.init();
 #endif
-#ifndef CONFIG_KEYPAD_NONE
+#ifdef CONFIG_KEYPAD_NONE
+
+#else
 	g_th_keypad.init();
 #endif
 	g_th_msg.create();
@@ -758,10 +762,14 @@ int main(int argc, char *argv[])
 	log_i("Press Ctrl-C to exit ...\n");
 	g_th_timer.wait();
 	log_i("wait g_th_timer OK\r\n");
-#ifndef CONFIG_TOUCH_NONE
+#ifdef CONFIG_TOUCH_NONE
+
+#else
 	g_th_touch.wait();
 #endif
-#ifndef CONFIG_KEYPAD_NONE
+#ifdef CONFIG_KEYPAD_NONE
+
+#else
 	g_th_keypad.wait();
 #endif
 	log_i("wait g_th_touch OK\r\n");

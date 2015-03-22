@@ -21,11 +21,7 @@ using namespace std;
 #define IOCTL_LCD_ENABLE_INT	_IO('v', 28)
 #define IOCTL_LCD_DISABLE_INT	_IO('v', 29)
 
-//fbflush fbf;
 extern int go;
-
-//static pthread_mutex_t mutex;
-
 #define RGB565(r,g,b)  ( ((r>>3)&(1<<5)-1)<<11 | ((g>>2)&(1<<6)-1)<<5 | ((b>>3)&(1<<5)-1)<<0 )
 class framebuffer: public Mutex, public thread,public Sem
 {
@@ -37,13 +33,9 @@ public:
 	unsigned int u32Width;	// crop width
 	unsigned int u32Height;	// crop height
 	int lcm_dpp;
-//	image put;
-//	image in_img;
-//	image out_img;
 	hustr snap;
 
 	image *from_img;
-	//sem_t sem;//信号量
 	/*
     pthread_cond_t cond;
 	int flag;
@@ -76,75 +68,20 @@ public:
 	{
 
 		while(go){
-			//printf("run  IN!!!\n");
-			//sem_wait(&sem);
 			waitSem();
 			lock();
 			if(from_img!=NULL){
-		//	from_img->lock();
-		//	printf("run  RenderImageToFrameBuffer!!!\n");
-			RenderImageToFrameBuffer(from_img);
-		//	from_img->unlock();
+				RenderImageToFrameBuffer(from_img);
 			}
 			unlock();
-		//	printf("run  out!!!\n");
 
 		}
-		/*
-		//return 0;
-		put.dump_from_buf(pSrcBuffer,u32Width,u32Height);
-		//memcpy(put.pSrcBuffer, pSrcBuffer, SrcSize);
-		if (!snap.empty())
-		{
-			printf("fbf snap = %s\r\n", snap.c_str());
-			out_img.ReSetResource(snap);
-			snap.clear();
-		}
-		//put.cleanBuf();
-		for (int i = 1; i <= 5; i++)
-		{
-			printf("fbflush run %d\r\n", i);
-//			in_img.stransformation.colorMultiplier.i16Alpha = 255 - 32 * i;
-//			put.Render(&in_img, 0, 0);
-			out_img.setTransp(20 * i);
-			put.Render(&out_img, 0, 0);
-			RenderImageToFrameBuffer(&put);
-			usleep(1000*30);
 
-			}*/
 	}
 
-//	void DumpToXml(image & out)
-//	{
-//		//cancel();
-//		wait();
-//		out_img = out;
-//		create();
-//	}
-//	void DumpToSnap(const char * path)
-//	{
-//		//cancel();
-//		printf("DumpToSnap %s\r\n", path);
-//		wait();
-//		snap = path;
-//		create();
-//	}
 	framebuffer()
 	{
 		Accept();
-		/*
-		put.path = "framebuffer change put buf";
-		in_img.path = "framebuffer change in buf";
-		out_img.path = "framebuffer change out buf";
-
-		put.SetBuffer(u32Width, u32Height);
-		in_img.SetBuffer(u32Width, u32Height);
-		out_img.SetBuffer(u32Width, u32Height);
-		*/
-		//flag=0;
-		//pthread_init();
-
-
 	}
 	~framebuffer()
 	{
@@ -170,8 +107,6 @@ public:
 		lcm_dpp = var.bits_per_pixel;
 		log_i("FrameBuffer Accept %d %d %d %d %d %d %d\r\n",u32Width,u32Height,lcm_dpp,var.xres_virtual,var.yres_virtual,var.xoffset,var.yoffset);
 		SrcSize = u32Width * u32Height * (lcm_dpp / 8);
-		//log_i("$$$luo$$$ SrcSize is %d \r\n",SrcSize);
-
 		pSrcBuffer = mmap(NULL, SrcSize, PROT_READ | PROT_WRITE, MAP_SHARED, lcm_fd, 0);
 		if (pSrcBuffer == MAP_FAILED)
 		{
@@ -199,7 +134,6 @@ public:
 		lock();
     	from_img=img;
     	unlock();
-    	//sem_post(&sem);
     	postSem();
     //	log_i("RenderImageToFrameBuffer out!!!!\n");
     }
