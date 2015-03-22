@@ -1,0 +1,5 @@
+config  CONTROL_TOUCH_WHEEL 
+        depends on USING_FONT 
+        bool "touch wheel Control" 
+        help 
+			path=$AUTOPATH
