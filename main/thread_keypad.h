@@ -22,7 +22,7 @@ class KeypadThread:public thread, public Mutex
 	{
 		while (go)
 		{
-				getKeyEvent(this);
+			getKeyEvent(this,&KeypadThread::getKey);
 		}
 		log_i("touch thread exit\r\n");
 	}

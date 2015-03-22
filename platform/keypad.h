@@ -1,13 +1,13 @@
 #ifndef __KEYPAD_LW_H__
 #define __KEYPAD_LW_H__
-//#include "screenHandler.h"
 
 
 extern int getKyes(struct input_event ev_key);
 extern int keypadInit();
 extern  int keyFd;
-template<class T>
-inline void  getKeyEvent(T *t)
+
+template <typename  T>
+ void  getKeyEvent( T *pClass,void (T::*pfun)(int))
 {
 	static struct input_event ev_key;
 	int key;
@@ -16,12 +16,10 @@ inline void  getKeyEvent(T *t)
 	{
 		key=getKyes(ev_key);
 		if(key!=0)
-			t->getKey(key);
+			(pClass->*pfun)(key);
 	}
 }
 
-
-//extern void  getKeyEvent(ScreenHandler *handler);
 extern int getKyes(struct input_event ev_key);
 
 
