@@ -103,9 +103,10 @@ class View:public BaseView,public touch_element, public timer_element{
 	}
 
 	 void onTouchDown(){
-		doTouchDown();
+		 doTouchDown();
 		if(listener!=NULL)
 			listener->onTouchDown(name.c_str());
+
 	}
 	 void onTouchUp(){
 		 doTouchUp();
@@ -116,11 +117,13 @@ class View:public BaseView,public touch_element, public timer_element{
 		 doTouchActive();
 		if(listener!=NULL)
 			listener->onTouchActive(name.c_str());
+
 	}
 	 int onTimer(int tm){
 		 doTimer(tm);
 		if(listener!=NULL)
 			listener->onTimer(name.c_str(),tm);
+
 	}
 
 	 virtual void doTouchDown()=0;

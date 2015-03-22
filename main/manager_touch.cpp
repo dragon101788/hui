@@ -44,14 +44,14 @@ int touch_manager::touch_proc_event(touch_sample * samp)
 					&& cur_samp.pressure != 0)
 			{
 				toe->touch_area();
-				toe->isdn = 1;
+				//toe->isdn = 1;
 			}
 			else
 			{
 				if (toe->isdn == 1)
 				{
 					toe->free_area();
-					toe->isdn = 0;
+				//	toe->isdn = 0;
 				}
 			}
 		}

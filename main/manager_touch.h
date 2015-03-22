@@ -146,12 +146,14 @@ public:
 		lock();
 		origin_in();
 		onTouchDown();
+		isdn = 1;
 		unlock();
 	}
 	void free_area()
 	{
 		lock();
 		onTouchUp();
+		isdn = 0;
 		origin_out();
 		if (GetTouchP() == 0 && isArea(GetTouchX(), GetTouchY()))
 		{
