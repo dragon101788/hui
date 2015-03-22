@@ -12,7 +12,7 @@ public:
 };
 
 class element_manager;
-class schedule_draw :virtual public semphore
+class schedule_draw
 {
 public:
 

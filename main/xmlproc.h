@@ -65,7 +65,8 @@ class xmlproc: public element_manager,
 		public schedule_draw,
 		public thread,
 		public ProcTimer::HUTimerContainer,
-		virtual public Mutex
+		virtual public Mutex,
+		virtual public Sem
 {
 private:
 	class xmlout: public image

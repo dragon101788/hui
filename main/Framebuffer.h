@@ -27,7 +27,7 @@ extern int go;
 //static pthread_mutex_t mutex;
 
 #define RGB565(r,g,b)  ( ((r>>3)&(1<<5)-1)<<11 | ((g>>2)&(1<<6)-1)<<5 | ((b>>3)&(1<<5)-1)<<0 )
-class framebuffer: public Mutex, public thread,public semphore
+class framebuffer: public Mutex, public thread,public Sem
 {
 
 public:
@@ -196,9 +196,9 @@ public:
 
 	void NotifyRenderFrameBuffer(image * img){
 		//log_i("RenderImageToFrameBuffer in!!!\n");
-		img->lock();
+		lock();
     	from_img=img;
-    	img->unlock();
+    	unlock();
     	//sem_post(&sem);
     	postSem();
     //	log_i("RenderImageToFrameBuffer out!!!!\n");
