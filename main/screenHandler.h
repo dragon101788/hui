@@ -69,9 +69,9 @@ class ScreenHandler{
 	/******************
 	 * 切换到前台
 	 */
-	 void coming(){
+	 void coming(const char *lastFile){
 		 isRunning=0;
-		onComing();
+		onComing(lastFile);
 		//onResume();
 	}
 	/******************
@@ -97,7 +97,7 @@ class ScreenHandler{
 	/******************
 	 * 切换到前台，页面必须实现
 	 */
-	virtual void onComing()=0;
+	virtual void onComing(const char * lastFile)=0;
 	/******************
 	 * 切换到后台，页面必须实现
 	 */

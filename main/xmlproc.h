@@ -151,7 +151,7 @@ public:
 
 
 
-	void ForeProc(); //将页面切换前台
+	void ForeProc(const char * lastfile); //将页面切换前台
 	void UnForeProc(); //将页面切换后台
 	void DoneProc()
 	{

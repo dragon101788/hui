@@ -72,9 +72,10 @@ void JumpToFile(const char * jump, const char * snap)
 {
 
 	//pXmlproc tmp = g_cur_xml;
-
+	hustr lastFileName=NULL;
 	if (!g_cur_xml.isNULL())
 	{
+		lastFileName=g_cur_xml->filename.c_str();
 		g_cur_xml->UnForeProc();//这个函数应该具有使当前页线程暂停的功能
 
 	}
@@ -96,7 +97,7 @@ void JumpToFile(const char * jump, const char * snap)
 //
 //				}
 				g_cur_xml = g_xml_proc[jump];
-				g_cur_xml->ForeProc();
+				g_cur_xml->ForeProc(lastFileName.c_str());
 			//	RefreshPage(g_cur_xml);
 
 			}
@@ -131,7 +132,7 @@ void JumpToFile(const char * jump, const char * snap)
 				//g_cur_xml = new xmlproc(jump);
 				g_cur_xml=g_xml_proc[jump];
 				g_cur_xml->doLoader();
-				g_cur_xml->ForeProc();
+				g_cur_xml->ForeProc(lastFileName.c_str());
 			}
 	}
 
@@ -277,12 +278,12 @@ void ParseControl(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 				xml->UnDoneProc();
 			}
 		}
-		if (xmlmp.exist("fore"))
+		if (xmlmp.exist("fore"))  //可以缓存后切前后台意义不大，直接用跳转
 		{
 			int fore = xmlmp["fore"]->getvalue_int();
 			if (fore)
 			{
-				xml->ForeProc();
+				xml->ForeProc(NULL);
 			}
 			else
 			{

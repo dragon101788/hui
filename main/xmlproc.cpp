@@ -38,7 +38,7 @@ void xmlproc::switchProcs(){
  * 执行完这个函数，页面就前台了，可以考虑在后头添加过场动画
  */
 
-void xmlproc::ForeProc()
+void xmlproc::ForeProc(const char * lastfile)
 {
 	log_i("%s ForeProc fore=%d!!!\n",filename.c_str(),fore);
 	if(fore==0){
@@ -49,7 +49,7 @@ void xmlproc::ForeProc()
 		fore = 1;
 		isDraw++;//切换前台后自动刷新一次屏幕
 		if(windCtl!=NULL){
-			windCtl->coming();
+			windCtl->coming(lastfile);
 		}
 		postSem();
 	}
@@ -72,14 +72,5 @@ void xmlproc::UnForeProc()
 	}
 }
 
-//void xmlproc::DoneProc()
-//{
-//	done = 1;
-//
-//}
-//void xmlproc::UnDoneProc()
-//{
-//	done = 0;
-//
-//}
+
 
