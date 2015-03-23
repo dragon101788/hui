@@ -1,5 +1,5 @@
-#ifndef __STATIC_IMAGE_H__
-#define __STATIC_IMAGE_H__
+#ifndef __CARTOON_H__
+#define __CARTOON_H__
 
 #include "XMLInstal.h"
 #include "view.h"

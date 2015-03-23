@@ -1,5 +1,5 @@
-#ifndef __WHEEL_IMAGE_H__
-#define __WHEEL_IMAGE_H__
+#ifndef __TOUCH_WHEEL_H__
+#define __TOUCH_WHEEL_H__
 
 #include "XMLInstal.h"
 #include "view.h"
@@ -29,7 +29,7 @@ public:
 	}
 
 
-	class node: public element
+	class node: public BaseView
 	{
 	public:
 
@@ -83,6 +83,9 @@ public:
 			render_width=width;
 			render_height=height;
 			hide = boss->hide|m_mp["hide"]->getvalue_int();
+			if(boss->hasParent()){
+				hide |=	boss->parent->hide;
+			}
 
 			if (m_mp.exist("hide_lay"))
 			{
@@ -347,6 +350,21 @@ int abs(int a){
 	{
 
 	}
+	 void setHide(int hide){
+		this->hide=hide;
+		map<int, node *> ::iterator it;
+			node *ele;
+			for (it = nodemp.begin(); it != nodemp.end(); ++it)
+			{
+				 ele=it->second;
+				if(ele!=NULL)
+					ele->setHide(hide);
+			}
+	}
+
+	 void onParentHideChanged(int hide){
+		 	 setHide( hide);
+	 	}
 private:
 	int num_min,num_max;
 	int step;

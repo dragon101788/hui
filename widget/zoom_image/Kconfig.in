@@ -1,0 +1,4 @@
+config  CONTROL_ZOOM_IMAGE 
+        bool "zoom_image Control" 
+        help 
+			path=$AUTOPATH

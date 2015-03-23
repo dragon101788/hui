@@ -3,11 +3,11 @@ CC:=$(CROSS_COMPILE)g++
 TOPDIR:=../../
 CFLAG:=-I$(TOPDIR)/ -I$(TOPDIR)/include -DHUMODULE
 OUTDIR:=./
-TAG=$(OUTDIR)radio_bottons.so
-SRC=radio_bottons.cpp
+TAG=$(OUTDIR)simple_fragment.so
+SRC=simple_fragment.cpp
 
-
-all:built-in.o
+sinclude built-in.d
+all:built-in.d built-in.o
 	$(CC) $(CFLAG) -fPIC $< -shared -o $(TAG)
 
 clean:
@@ -15,7 +15,6 @@ clean:
 	-@rm *.o
 	-@rm *.so
 
-sinclude built-in.d
 built-in.d : $(SRC)
 	@mkdir -p `dirname $@`
 	@set -e; rm -f $@

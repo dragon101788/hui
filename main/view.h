@@ -16,10 +16,24 @@ class BaseView:public element{
 
 	}
 
-	void setHide(int hide){
+	virtual void setHide(int hide){
 		this->hide=hide;
+		if(isParent()){
+			iterator it;
+			BaseView *ele;
+			for (it = elem.begin(); it != elem.end(); ++it)
+			{
+				 ele=(BaseView *)it->second;
+				if(ele!=NULL)
+					ele->onParentHideChanged(hide);
+			}
+		}
 		Flush();
 	}
+	virtual void onParentHideChanged(int hide){
+	}
+
+
 	void setXY(int x,int y){
 		if(this->x!=x||this->y!=y){
 			cleanLastPos();

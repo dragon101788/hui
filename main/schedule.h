@@ -10,13 +10,13 @@ class schedule_ele
 public:
 	 virtual void onSchedule()=0;
 	inline int schedule(){
-		isRendering=1;
+		is_rendering=1;
 		onSchedule();
-		isRendering=0;
+		is_rendering=0;
 	}
-	int isRendering;
-	inline int getState()const{
-		return isRendering;
+	int is_rendering;
+	inline int isRendering()const{
+		return is_rendering;
 	}
 	virtual ~schedule_ele(){};
 };
@@ -49,7 +49,7 @@ public:
 				//schedule_ele * tele = *it;
 				if (ele == *it)
 				{
-					if(ele->getState()&&dup==0){
+					if(ele->isRendering()&&dup==0){
 						dup++;     //队列中最多允许两个相同的元素
 						continue;
 					}

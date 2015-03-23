@@ -1,0 +1,4 @@
+config  CONTROL_SIMPLE_FRAGMENT 
+        bool "simple_fragment Control" 
+        help 
+			path=$AUTOPATH

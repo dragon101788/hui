@@ -99,7 +99,10 @@ public:
 			height = m_mp["height"]->getvalue_int();
 			render_width=width;
 			render_height=height;
-			hide = m_mp["hide"]->getvalue_int();
+			hide = boss->hide|m_mp["hide"]->getvalue_int();
+			if(boss->hasParent()){
+				hide |=	boss->parent->hide;
+			}
 
 			if (m_mp.exist("hide_lay"))
 			{

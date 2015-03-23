@@ -1,5 +1,5 @@
-#ifndef __STATIC_IMAGE_H__
-#define __STATIC_IMAGE_H__
+#ifndef __RADIO_BUTTONS_H__
+#define __RADIO_BUTTONS_H__
 
 #include "XMLInstal.h"
 #include "view.h"
@@ -8,7 +8,7 @@
 class Radio_buttons: public BaseView
 {
 public:
-	class node: public element, public touch_element
+	class node:public TouchView
 	{
 	public:
 		void doTouchDown()

@@ -68,9 +68,10 @@ public:
 	}
 	switch_button()
 	{
-		select,select_old;
+		select=0;
+		select_old=0;
 	}
-	int getSelect() const{
+	bool isSelect() const{
 		return select;
 	}
 

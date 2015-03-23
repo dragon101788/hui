@@ -48,7 +48,7 @@
 		if(hasParent()){
 		abs_x=x+parent->abs_x-parent->scroll_x;
 		abs_y=y+parent->abs_y-parent->scroll_y;
-		hide|=parent->hide;
+		//hide|=parent->hide;
 		}else{
 			abs_x=x;
 			abs_y=y;

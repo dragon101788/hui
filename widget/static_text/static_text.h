@@ -1,5 +1,5 @@
-#ifndef __STATIC_IMAGE_H__
-#define __STATIC_IMAGE_H__
+#ifndef __STATIC_TEXT_H__
+#define __STATIC_TEXT_H__
 
 #include "XMLInstal.h"
 //#include "layer.h"
