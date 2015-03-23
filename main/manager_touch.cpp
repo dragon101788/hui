@@ -36,9 +36,9 @@ int touch_manager::touch_proc_event(touch_sample * samp)
 		if(toe->hasParent()){
 /***********
  * children_touch_lock在父控件里面经常动态改变，比如滑动时锁定，所以lock得动态赋值，不能在解析时赋值
- * 父控件隐藏时屏蔽子空间触摸
+ * 自己或父控件隐藏时屏蔽子空间触摸
  */
-			lock=toe->touch_lock |toe->parent->children_touch_lock|toe->parent->hide;
+			lock=toe->touch_lock|toe->hide|toe->parent->children_touch_lock|toe->parent->hide;
 		}
 		if (lock==0)
 		//if (toe->touch_lock == 0)

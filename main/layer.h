@@ -167,9 +167,11 @@ public:
 	int y;
 	int width;
 	int height;
+	int hide;
 	window(){
 		x = 0;
 		y = 0;
+		hide=0;
 		height = 0;
 		width = 0;
 	}
@@ -465,7 +467,6 @@ public:
 
 	 element()
 	{
-		hide = 0;
 		lay = 0;
 		mgr = NULL;
 		//cur_res=NULL;//默认没有资源需要绘制
@@ -487,7 +488,6 @@ public:
 	}
 
 	hustr name;
-	int hide;
 	int lay;
 	int hide_lay;//向对此元素此层隐藏
 	HUMap m_mp;
