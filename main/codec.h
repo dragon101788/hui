@@ -128,13 +128,13 @@ public:
     }
 
     //填充颜色
-    void fillColor(const Color32 color)const ;
+    void fillColor(const Color32 color);
 
-	int GetWidth()
+    inline int GetWidth() const
 	{
 		return u32Width;
 	}
-	int GetHeight()
+    inline int GetHeight() const
 	{
 		return u32Height;
 	}

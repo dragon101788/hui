@@ -143,12 +143,16 @@
 					if (ele->x < x+render_offset_x)
 					{
 						s_ofx = x+render_offset_x - ele->x;
+						if(s_ofx>ele->width)
+							continue;
 						//d_ofx = render_offset_x;
 					}
 					else if (ele->x > x+render_offset_x)
 					{
 						s_ofx = 0;
 						d_ofx = ele->x - x;
+						if(d_ofx>render_offset_x+render_width)
+							continue;
 					}
 
 					 s_ofy = 0; //源x
@@ -156,34 +160,41 @@
 					if (ele->y < y+render_offset_y)
 					{
 						s_ofy = y +render_offset_y- ele->y;
+						if(s_ofy>ele->height)
+							continue;
 						//d_ofy = 0;
 					}
 					else if (ele->y > y+render_offset_y)
 					{
 						s_ofy = 0;
 						d_ofy = ele->y - y;
+						if(d_ofy>render_offset_y+render_height)
+							continue;
+
 					}
+					//log_i("%s render_offset_x=%d,render_offset_y=%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",name.c_str(),render_offset_x,render_offset_y);
+					//log_i("%s -%s s_ofx=%d, s_ofy=%d, d_ofx=%d, d_ofy=%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",name.c_str(),ele->name.c_str(),s_ofx,s_ofy,d_ofx,d_ofy);
 					if(cnt==0){//最底的元素直接复制
 						for (itp = ele->prender_res.begin();itp != ele->prender_res.end(); itp++)
 						{
 							//log_i("itp->first=%d\n",itp->first);
 							if(itp == ele->prender_res.begin())
-								AreaCopy(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
+								AreaCopy(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 							else
-								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
+								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 						if(ele->isParent()){
-							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
+							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 					}
 					else{
 							//log_i("itp->first=%d!!!\n",itp->first);
 							for (itp = ele->prender_res.begin(); itp != ele->prender_res.end(); itp++)
 							{
-								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
+								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 							}
 							if(ele->isParent()){
-								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
+								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 							}
 					}
 					cnt++;

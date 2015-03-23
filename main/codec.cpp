@@ -700,7 +700,7 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 	dst_img->unlock();
 	src_img->unlock();
 }
-void base_image::fillColor(const Color32 color)const{
+void base_image::fillColor(const Color32 color){
     Color32* pDstLine=(Color32*)pSrcBuffer;
     for (long y=0;y<u32Height;++y){
         for (long x=0;x<u32Width;++x){
