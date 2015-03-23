@@ -1,4 +1,4 @@
-#include "../codec.h"
+#include "main/codec.h"
 
 
 #define MAX_ALPHA 255

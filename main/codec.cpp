@@ -591,11 +591,11 @@ int image_read_from_snap(image * img, const char * rawpath)
 //
 //}
 
-void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y)
+int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y)
 {
 	if (cp_width == 0 || cp_height == 0)
 	{
-		return;
+		return 1;
 	}
 	if (cp_width < 0 || cp_height < 0)
 	{
@@ -627,7 +627,7 @@ void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 		cp_height = rsc_img->GetHeight() - src_y;
 		if (cp_height <= 0)
 		{
-			return;
+			return 1;
 		}
 	}
 	if (src_x + cp_width > rsc_img->GetWidth())
@@ -636,7 +636,7 @@ void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 		cp_width = rsc_img->GetWidth() - src_x;
 		if (cp_width <= 0)
 		{
-			return;
+			return 1;
 		}
 	}
 	if (dst_y + cp_height > dst_img->GetHeight())
@@ -647,6 +647,7 @@ void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	{
 		cp_width = dst_img->GetWidth() - dst_x;
 	}
+	return 0;
 }
 
 //void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
@@ -681,7 +682,8 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 		}
 	dst_img->lock();
 	src_img->lock();
-	ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
+	if(ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y))
+		return ;
 	int line_byte=cp_width<<2;
 //	unsigned int dst_step= dst_img->u32Width;
 //	unsigned int src_step= src_img->u32Width;

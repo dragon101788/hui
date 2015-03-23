@@ -30,7 +30,7 @@ int codec_to_Image(image * enode, const char * filename);
 
 
 void Render_img_to_buf(void * buf, image * img, int width, int height);
-void ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y);
+int ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y);
 void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
 
 int fill_image(image * img, int a = 255, int r = 128, int g = 128, int b = 128);
@@ -423,7 +423,8 @@ public:
 	void Render(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 	{
 		src_img->LoadResource();
-		ProcArea(this, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
+		if(ProcArea(this, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y))
+			return;
 		Render_img_to_img(this, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	}
 
