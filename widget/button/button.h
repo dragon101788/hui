@@ -57,7 +57,7 @@ public:
 	{
 		//image::Render(&res[isdn], 0, 0);
 		res[isdn].LoadResource();
-		cur_res=&res[isdn];
+		prender_res[0]=&res[isdn];
 	}
 	void onAbsPosChanged(){
 		touch_init_area(abs_x, abs_y, width, height);

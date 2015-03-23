@@ -4,7 +4,7 @@
 #include "XMLInstal.h"
 #include "view.h"
 
-class rotate_image: TimerView
+class rotate_image: public TimerView
 {
 public:
 	rotate_image()
@@ -109,7 +109,8 @@ public:
 		center_rotate( rotated, res[id],angle,zoomX,zoomY);
 		else
 		rotate( rotated, res[id],angle,zoomX,zoomY,0,0);
-		cur_res=&rotated;
+		prender_res[0]=&rotated;
+
 		//scroll_x=tan(angle*3.1415/180)*height;
 		//scroll_y=tan(angle*3.1415/180)*width;
 	}

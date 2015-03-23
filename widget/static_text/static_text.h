@@ -118,7 +118,7 @@ public:
 	void doRender()
 	{
 		//image::Render(&ttf, 0, 0);
-		cur_res=&ttf;
+		prender_res[0]=&ttf;
 		//	image::Render(&img, 0, 0, width, height, 0, 0);
 	}
 	void setText(const char * t){

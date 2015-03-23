@@ -104,7 +104,7 @@ public:
 		{
 
 		       // image::Render(&this->parent->img[isdn], x+this->parent->cx-this->parent->mx-this->parent->x, y-this->parent->y,width,height,0,0);
-		        cur_res=&parent->img[isdn];
+				prender_res[0]=&parent->img[isdn];
 		        scroll_x=x+parent->cx-parent->mx-parent->x;
 		        scroll_y= y-parent->y;
 		}

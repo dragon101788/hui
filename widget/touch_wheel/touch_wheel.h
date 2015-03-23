@@ -121,7 +121,7 @@ public:
 
 		void doRender()
 		{
-			cur_res=&ttf;
+			prender_res[0]=&ttf;
 		}
 		map<hustr, text>::iterator font_it;
 		unsigned int color;

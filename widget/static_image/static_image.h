@@ -60,7 +60,7 @@ public:
 	{
 		//image::Render(&res[id], xpos, ypos, width, height, 0, 0);
 		res[id].LoadResource();
-		cur_res=&res[id];
+		prender_res[0]=&res[id];
 	}
 //	int xpos;
 //	int ypos;

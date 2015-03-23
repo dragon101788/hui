@@ -123,7 +123,9 @@
 		if (!layers.empty())
 		{
 			list<element *>::iterator it;
+			map<int, image*>::iterator itp;
 			element * ele;
+			//image * img;
 			int s_ofx ; //源x
 			int d_ofx ; //目标x
 			int s_ofy ; //源x
@@ -132,6 +134,7 @@
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
+
 				if (ele->hide == 0&&ele->lay!=hide_lay)
 				{
 					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
@@ -162,16 +165,23 @@
 						d_ofy = ele->y - y;
 					}
 					if(cnt==0){//最底的元素直接复制
-						if(ele->cur_res!=NULL){ //当前有资源
-							AreaCopy(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+						for (itp = ele->prender_res.begin();itp != ele->prender_res.end(); itp++)
+						{
+							//log_i("itp->first=%d\n",itp->first);
+							if(itp == ele->prender_res.begin())
+								AreaCopy(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+							else
+								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 						if(ele->isParent()){
 							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 					}
 					else{
-							if(ele->cur_res!=NULL) {//当前有资源
-								Render(ele->cur_res, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+							//log_i("itp->first=%d!!!\n",itp->first);
+							for (itp = ele->prender_res.begin(); itp != ele->prender_res.end(); itp++)
+							{
+								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 							}
 							if(ele->isParent()){
 								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);

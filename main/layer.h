@@ -471,9 +471,9 @@ public:
 		hide = 0;
 		lay = 0;
 		mgr = NULL;
-		cur_res=NULL;//默认没有资源需要绘制
+		//cur_res=NULL;//默认没有资源需要绘制
 		hide_lay=-1;
-
+		//prender_res.clear();
 	}
 
 	virtual ~element()
@@ -481,8 +481,8 @@ public:
 		log_i("###HU### distroy element %s\r\n", name.c_str());
 		//backstack();
 		ResetLayers();
+		prender_res.clear();
 		map<int, image>::iterator it;
-
 		for (it = res.begin(); it != res.end(); ++it)
 		{
 			it->second.destroy();
@@ -496,7 +496,8 @@ public:
 	HUMap m_mp;
 	xmlproc * xml_mgr;
 	map<int, image> res;
-	image * cur_res;
+	//image * cur_res;
+	map<int, image*> prender_res;//由原来的单一指针改为指针map，可以在doRender里面同时绘制几层图
 	schedule_draw * mgr;
 	list<element *> layers;     //底顶合一队列
 
