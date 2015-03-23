@@ -138,7 +138,6 @@
 				if (ele->hide == 0&&ele->lay!=hide_lay)
 				{
 					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
-
 					 s_ofx = 0; //源偏移x
 					 d_ofx = render_offset_x; //目标偏移x
 					if (ele->x < x+render_offset_x)
@@ -159,7 +158,7 @@
 						s_ofy = y +render_offset_y- ele->y;
 						//d_ofy = 0;
 					}
-					else if (ele->y > y)
+					else if (ele->y > y+render_offset_y)
 					{
 						s_ofy = 0;
 						d_ofy = ele->y - y;
@@ -169,22 +168,22 @@
 						{
 							//log_i("itp->first=%d\n",itp->first);
 							if(itp == ele->prender_res.begin())
-								AreaCopy(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								AreaCopy(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
 							else
-								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
 						}
 						if(ele->isParent()){
-							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
 						}
 					}
 					else{
 							//log_i("itp->first=%d!!!\n",itp->first);
 							for (itp = ele->prender_res.begin(); itp != ele->prender_res.end(); itp++)
 							{
-								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
 							}
 							if(ele->isParent()){
-								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, ele->render_width,ele->render_height, d_ofx, d_ofy);
 							}
 					}
 					cnt++;

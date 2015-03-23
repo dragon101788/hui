@@ -42,7 +42,7 @@ public:
 		PraseElement();
 		exec.parse(m_mp);
 		TouchParaseXml(m_mp);
-
+		alpha_mode=m_mp["alpha_mode"]->getvalue_int();
 		touch_init_area(abs_x, abs_y, width, height);
 
 		SetRes(0, m_mp["up"]->getvalue());
@@ -51,12 +51,21 @@ public:
 		xml_mgr->AddEleArea(this);
 
 		ParseModifRes();
+		res[0].LoadResource();
+		res[1].LoadResource();
 		Flush();
 	}
 	void doRender()
 	{
 		//image::Render(&res[isdn], 0, 0);
-		res[isdn].LoadResource();
+		if(alpha_mode){
+			prender_res[0]=&res[0];
+			if(isdn)
+			prender_res[1]=&res[1];
+			else
+			prender_res.erase(1);
+		}
+		else
 		prender_res[0]=&res[isdn];
 	}
 	void onAbsPosChanged(){
@@ -64,8 +73,9 @@ public:
 	}
 	button()
 	{
+		alpha_mode=0;
 	}
-
+	int alpha_mode;
 	HuExec exec;
 	//hustr cmd;
 };

@@ -70,8 +70,8 @@ public:
 		XMLinstan[name] = fun;
 	}
 };
-#define InstallXMLinstanPageCtl(a,b) static InstallXMLinstan install##_##b(a,install_page_control<b>);
-#define InstallXMLinstanWidget(a,b) static InstallXMLinstan install##_##b(a,Install_Element<b>);
+#define InstallXMLinstanPageCtl(a,b) static InstallXMLinstan install##_##b(a,install_page_control<b>)
+#define InstallXMLinstanWidget(a,b) static InstallXMLinstan install##_##b(a,Install_Element<b>)
 #ifdef HUMODULE
 #define hucall extern "C"
 #else
