@@ -19,7 +19,6 @@ int schedule_draw::ScheduleProc()
 {
 	if (stop)
 		return 0;
-
 	int ret = 0;
 	schedule_ele * ele;
       list<schedule_ele *>::iterator it;
@@ -32,7 +31,9 @@ int schedule_draw::ScheduleProc()
 				que.clean();  //队列在最后清除，是防止绘制一个删掉后又会被重复添加
 				break;
 			}
-			ele->onSchedule();
+
+			ele->schedule();
+
 			ret++;
 		}
 

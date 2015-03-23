@@ -290,7 +290,6 @@ void element::RenderOut()
 		}
 		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
 		parent->RenderOut();
-
 	}else{
 		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
 		if(xml_mgr->directDraw){ //一级父容器直接输出到fb

@@ -322,10 +322,7 @@ public:
 	void onSchedule()
 	{
 		log_i("$$$HU$$$ Render_layer::[%s]\r\n", name.c_str());
-		//if(parent!=NULL)
-		//log_i(" parent is %s !!!!!!!!!!1\n",parent->name.c_str());
 		RenderOut();
-		//log_i("$$$HU$$$ Render_layer::[%s]OK\r\n", name.c_str());
 	}
 
 
