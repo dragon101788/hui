@@ -80,7 +80,46 @@ public:
 		}
 		void doFlushConfig()
 		{
-			PraseElement();
+			name = m_mp["name"]->getvalue();
+			int tmpX = father->x+m_mp["x"]->getvalue_int();
+			int tmpY = father->y+ m_mp["y"]->getvalue_int();
+
+			width = m_mp["width"]->getvalue_int();
+			height = m_mp["height"]->getvalue_int();
+			render_width=width;
+			render_height=height;
+			hide = m_mp["hide"]->getvalue_int();
+
+			if (m_mp.exist("hide_lay"))
+			{
+				hide_lay= m_mp["hide_lay"]->getvalue_int();
+			}
+			//控件被移动
+			if (tmpX != x || tmpY != y)
+			{
+				cleanLastPos();
+				x = tmpX;
+				y = tmpY;
+			}
+			abs_x=x;
+			abs_y=y;
+
+			if (m_mp.exist("lay"))
+			{
+				lay = m_mp["lay"]->getvalue_int();
+			}
+			else
+			{
+				lay = 5;
+			}
+			if (pSrcBuffer == NULL)
+			{
+				//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+				SetBuffer(width, height);
+				path.format("ele-%s %dx%d", name.c_str(), width, height);
+			}
+			initstack();
+
 			exec.parse(m_mp);
 			touch_init_area(abs_x, abs_y, width, height);
 			xml_mgr->AddEleArea( this);
@@ -102,8 +141,8 @@ public:
 			else{
            	       // image::Render(&this->father->img[select], x-this->father->x, y-this->father->y,width,height,0,0);
 				cur_res=&father->img[select];
-				scroll_x=x-father->x;
-				scroll_y=y-father->y;
+		        scroll_x=x-father->x;
+		        scroll_y=y-father->y;
 			}
 		}
 
@@ -129,54 +168,54 @@ public:
 		}
 		for(j=0;j<2;j++)
        		 {
-		if(j==0)
-		{
-		pic_sc="up";
-		}
-		else
-		{
-		pic_sc="dn";
-		}
-		if (img[j].isNULL())
-	   	  {
-			node_num=m_mp.count("node");
-		   if(use_small==0)//使用大图
-		   {
-			img[j].SetResource(m_mp[pic_sc.c_str()]->getvalue());//设置全局图片
-			img[j].LoadResource();
-		   }
-	       	  else //使用小图片
-	      	   {
-			log_i("use small pic!!!!!!!!!!!!!!!!!!!\n");
-			hustr filename("%s_%d.png", name.c_str(),j);
-			if (access_Image(filename))
-			{
-				img[j].SetResource(filename);
-				img[j].LoadResource();
-			}
-			else
-			{
-
-				map<int, dm_image> tmp;
-
-				for (int i = 0; i < node_num; i++)
+				if(j==0)
 				{
-					HUMap & mp = m_mp["node"][i];
-					tmp[i].dx=mp["x"]->getvalue_int();
-					tmp[i].dy=mp["y"]->getvalue_int();
-					tmp[i].SetResource(mp[pic_sc.c_str()]->getvalue());
-					tmp[i].LoadResource();
+				pic_sc="up";
 				}
-				img[j].path.format("slip_menu-%s output", name.c_str());
-				img[j].SetBuffer(width, height);
-				for (int i = 0; i < tmp.size(); i++)
+				else
 				{
-					img[j].Render(&tmp[i], tmp[i].dx,tmp[i].dy);
+				pic_sc="dn";
 				}
-				img[j].SaveResource(filename);
-			}
-		   }
-		  }
+				if (img[j].isNULL())
+				  {
+					node_num=m_mp.count("node");
+				   if(use_small==0)//使用大图
+				   {
+					img[j].SetResource(m_mp[pic_sc.c_str()]->getvalue());//设置全局图片
+					img[j].LoadResource();
+				   }
+				  else //使用小图片
+				   {
+					log_i("use small pic!!!!!!!!!!!!!!!!!!!\n");
+					hustr filename("%s_%d.png", name.c_str(),j);
+					if (access_Image(filename))
+					{
+						img[j].SetResource(filename);
+						img[j].LoadResource();
+					}
+					else
+					{
+
+						map<int, dm_image> tmp;
+
+						for (int i = 0; i < node_num; i++)
+						{
+							HUMap & mp = m_mp["node"][i];
+							tmp[i].dx=mp["x"]->getvalue_int();
+							tmp[i].dy=mp["y"]->getvalue_int();
+							tmp[i].SetResource(mp[pic_sc.c_str()]->getvalue());
+							tmp[i].LoadResource();
+						}
+						img[j].path.format("slip_menu-%s output", name.c_str());
+						img[j].SetBuffer(width, height);
+						for (int i = 0; i < tmp.size(); i++)
+						{
+							img[j].Render(&tmp[i], tmp[i].dx,tmp[i].dy);
+						}
+						img[j].SaveResource(filename);
+					}
+				   }
+				  }
 	       	 }
 
 		int touch_lock = m_mp["lock"]->getvalue_int();
@@ -195,7 +234,7 @@ public:
 				nodemp[i]->FlushConfig();
 
 		}
-			Flush();
+		Flush();
 
 	}
 	void doFlushConfigReduced()
@@ -220,7 +259,7 @@ public:
 
 	void doRender()
 	{
-		img[0].LoadResource();
+		//img[0].LoadResource();
 		cur_res=&img[0];
 
 	}
