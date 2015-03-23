@@ -52,12 +52,12 @@ public:
 
 		void doTouchActive()
 		{
-			if(father->mode=="radio")
+			if(boss->mode=="radio")
 			{
-				father->cleanSelect();
+				boss->cleanSelect();
 				select = 1;
 		        }
-			else if(father->mode=="multi")
+			else if(boss->mode=="multi")
 			{
 				if(select_old)//双击取消
 				select=0;
@@ -81,9 +81,12 @@ public:
 		void doFlushConfig()
 		{
 			name = m_mp["name"]->getvalue();
-			int tmpX = father->x+m_mp["x"]->getvalue_int();
-			int tmpY = father->y+ m_mp["y"]->getvalue_int();
-
+			int tmpX = boss->x+m_mp["x"]->getvalue_int();
+			int tmpY = boss->y+ m_mp["y"]->getvalue_int();
+			if(boss->hasParent()){
+				tmpX=boss->parent->abs_x+tmpX;
+				tmpY=boss->parent->abs_y+tmpY;
+			}
 			width = m_mp["width"]->getvalue_int();
 			height = m_mp["height"]->getvalue_int();
 			render_width=width;
@@ -103,15 +106,14 @@ public:
 			}
 			abs_x=x;
 			abs_y=y;
-
 			if (m_mp.exist("lay"))
 			{
 				lay = m_mp["lay"]->getvalue_int();
 			}
 			else
-			{
-				lay = 5;
-			}
+				{
+					lay=boss->lay;
+				}
 			if (pSrcBuffer == NULL)
 			{
 				//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
@@ -132,24 +134,24 @@ public:
 //		}
 		void doRender()
 		{
-			if(this->father->mode=="def"){
-		       // image::Render(&this->father->img[isdn], x-this->father->x, y-this->father->y,width,height,0,0);
-				prender_res[0]=&father->img[isdn];
-		        scroll_x=x-father->x;
-		        scroll_y=y-father->y;
+			if(this->boss->mode=="def"){
+		       // image::Render(&this->boss->img[isdn], x-this->boss->x, y-this->boss->y,width,height,0,0);
+				prender_res[0]=&boss->img[isdn];
+		        scroll_x=x-boss->x;
+		        scroll_y=y-boss->y;
 			}
 			else{
-           	       // image::Render(&this->father->img[select], x-this->father->x, y-this->father->y,width,height,0,0);
-				prender_res[0]=&father->img[select];
-		        scroll_x=x-father->x;
-		        scroll_y=y-father->y;
+           	       // image::Render(&this->boss->img[select], x-this->boss->x, y-this->boss->y,width,height,0,0);
+				prender_res[0]=&boss->img[select];
+		        scroll_x=x-boss->x;
+		        scroll_y=y-boss->y;
 			}
 		}
 
 		int select;
 		int select_old;
 		HuExec exec;
-		button_group * father;
+		button_group * boss;
 	};
 	void doFlushConfig()
 	{
@@ -225,7 +227,7 @@ public:
 			{
 				nodemp[i] = new node;
 				nodemp[i]->m_mp.fetch(m_mp["node"][i]);
-				nodemp[i]->father = this;
+				nodemp[i]->boss = this;
 				nodemp[i]->xml_mgr = xml_mgr;
 				nodemp[i]->mgr = mgr;
 			}

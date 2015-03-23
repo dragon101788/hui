@@ -69,7 +69,51 @@ public:
 		}
 		void doFlushConfig()
 		{
-			PraseElement();
+			name = m_mp["name"]->getvalue();
+			int tmpX = boss->x+m_mp["x"]->getvalue_int();
+			int tmpY = boss->y+ m_mp["y"]->getvalue_int();
+
+			if(boss->hasParent()){
+				tmpX=boss->parent->abs_x+tmpX;
+				tmpY=boss->parent->abs_y+tmpY;
+			}
+
+			width = m_mp["width"]->getvalue_int();
+			height = m_mp["height"]->getvalue_int();
+			render_width=width;
+			render_height=height;
+			hide = boss->hide|m_mp["hide"]->getvalue_int();
+
+			if (m_mp.exist("hide_lay"))
+			{
+				hide_lay= m_mp["hide_lay"]->getvalue_int();
+			}
+			//控件被移动
+			if (tmpX != x || tmpY != y)
+			{
+				cleanLastPos();
+				x = tmpX;
+				y = tmpY;
+			}
+				abs_x=x;
+				abs_y=y;
+			if (m_mp.exist("lay"))
+			{
+				lay = m_mp["lay"]->getvalue_int();
+			}
+			else
+			{
+				lay = boss->lay;
+			}
+
+			if (pSrcBuffer == NULL)
+			{
+				//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+				SetBuffer(width, height);
+				path.format("ele-%s %dx%d", name.c_str(), width, height);
+			}
+
+			initstack();
 
 			font = m_mp["font"]->getvalue();
 			style = (unsigned char) m_mp["style"]->getvalue_int();
@@ -93,7 +137,7 @@ public:
 		}
 		void doFlushConfigCom()
 		{
-			hide=father->hide;
+			hide=boss->hide;
 			int red = m_mp["red"]->getvalue_int();
 			int green = m_mp["green"]->getvalue_int();
 			int blue = m_mp["blue"]->getvalue_int();
@@ -105,10 +149,10 @@ public:
 			padding_left>0?padding_left:0;
 			int padding_top=(height-size)/2;
 			padding_top>0?padding_top:0;
-			if(father->edge_fading){
+			if(boss->edge_fading){
 				if(id==0){
 					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
-				}else if(id==father->node_num-1){
+				}else if(id==boss->node_num-1){
 					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
 				}else
 					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
@@ -133,7 +177,7 @@ public:
 		int lenth;
 		int buf_len;
 		int id;
-		touch_wheel * father;
+		touch_wheel * boss;
 	};
 
 
@@ -167,7 +211,7 @@ public:
 					//nodemp[i]->name=hustr("%s-%d",name.c_str(),i);
 					nodemp[i]->m_mp.fetch(m_mp["node"][i]);
 					nodemp[i]->id=i;
-					nodemp[i]->father = this;
+					nodemp[i]->boss = this;
 					nodemp[i]->xml_mgr = xml_mgr;
 					nodemp[i]->mgr = mgr;
 				}
@@ -266,8 +310,6 @@ int abs(int a){
 }
 	void doTouchDown()
 	{
-		log_i("doTouchDown!!\n");
-
 		my = move_y();
 		step_my=my/step_h;
 		if ((abs(step_my) < step_cnt))//在去抖范围内，响应为点击事件
