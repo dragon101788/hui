@@ -365,6 +365,28 @@ int abs(int a){
 	 void onParentHideChanged(int hide){
 		 	 setHide( hide);
 	 	}
+
+	 void setNum(int num){
+		 set_num=num;
+		 if(set_num>num_max){
+			set_num%=num_max;
+		}
+		else if(set_num<num_min){
+			set_num+=num_max;
+		}
+
+		FlushConfigCom();
+		xml_mgr->UnDoneProc();//统一刷新
+		for (int i = 0; i < node_num; i++)
+			{
+			nodemp[i]->FlushConfigReduced();
+			}
+		xml_mgr->DoneProc();
+	 }
+
+	 bool getNum(){
+		 return set_num;
+	 }
 private:
 	int num_min,num_max;
 	int step;

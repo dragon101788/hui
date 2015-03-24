@@ -74,7 +74,14 @@ public:
 	bool isSelect() const{
 		return select;
 	}
-
+	void  setSelect(int sel) {
+		if(select==sel){
+			return ;
+		}
+		select=sel;
+		select_old=sel;
+		 Flush();
+	}
 	int select,select_old;
 	HuExec exec;
 	//hustr cmd;
