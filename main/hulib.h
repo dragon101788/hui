@@ -394,14 +394,11 @@ public:
 		thread * is = (thread *) arg;
 
 		prctl(PR_SET_NAME, is->name.c_str());
-		pthread_cleanup_push(cleanup,is)
-			;
-			pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-			pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-
-			is->run();
-
-			pthread_cleanup_pop(0);
+		pthread_cleanup_push(cleanup,is);
+		pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+		pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+		is->run();
+		pthread_cleanup_pop(0);
 		pthread_detach(pthread_self());
 		pthread_exit(NULL);
 	}
@@ -454,6 +451,9 @@ public:
 		cancel();
 	}
 	pthread_t tid;
+	bool isRuning(){
+		return tid==-1?false:true;
+	}
 	hustr name;
 };
 

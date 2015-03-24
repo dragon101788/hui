@@ -21,8 +21,6 @@ public:
 		if (isdn == 0)
 			return;
 		//printf("%s free\r\n", name.c_str());
-
-
 		//Flush();
 	}
 
