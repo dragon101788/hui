@@ -15,6 +15,7 @@
 #include "widget/zoom_image/zoom_image.h"
 #include "widget/static_text/static_text.h"
 #include "widget/static_image/static_image.h"
+#include "widget/screen_lock/screen_lock.h"
 
 
 #endif
