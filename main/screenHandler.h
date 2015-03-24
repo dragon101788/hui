@@ -11,7 +11,7 @@
 #include <deque>
 #include <set>
 
-
+class ScreenTimerThread;
 
 class DirectExe
 {
@@ -118,7 +118,6 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer
 		 isRunning=1;
 		 unSetProcs();
 		onLeaving();
-
 	}
 
 
@@ -176,15 +175,26 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer
 //	virtual void onTouchUp(){
 //
 //	}
+/****************************
+ * 页面级别的定时器
+ */
+	virtual void onTimer(){
+	}
+
+
+
+	/***********************
+	 * 设置定时器
+	 */
+	void setTimer(ScreenTimerThread *thread,unsigned int period);
+
 
 
 	virtual void doFlushConfig(){
 		//name = m_mp["name"]->getvalue();
 	}
 	void FlushConfig(){
-
 		doFlushConfig();
-
 	}
 
 	void AddExecDirect(int ptimer, DirectExe c)
