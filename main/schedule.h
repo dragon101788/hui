@@ -83,6 +83,9 @@ public:
 			unlock();
 		}
 
+//		int getSize(){
+//			return m_list.size();
+//		}
 		list<schedule_ele *> m_list;
 	};
 
