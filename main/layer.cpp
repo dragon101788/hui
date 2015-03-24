@@ -12,7 +12,6 @@
 		name = m_mp["name"]->getvalue();
 		int tmpX = m_mp["x"]->getvalue_int();
 		int tmpY = m_mp["y"]->getvalue_int();
-
 		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
 		{
 			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
@@ -178,6 +177,7 @@
 					if(cnt==0){//最底的元素直接复制
 						for (itp = ele->prender_res.begin();itp != ele->prender_res.end(); itp++)
 						{
+							cnt++;
 							//log_i("itp->first=%d\n",itp->first);
 							if(itp == ele->prender_res.begin())
 								AreaCopy(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
@@ -185,6 +185,9 @@
 								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 						if(ele->isParent()){
+							if(cnt==0){
+								AreaCopy(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+							}else
 							Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
 						}
 					}
@@ -290,7 +293,10 @@ void element::RenderOut()
 			parent->tobeParent(name,this);
 		}
 		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
-		parent->RenderOut();
+		if(render_cached)
+			parent->Flush();
+		else
+			parent->RenderOut();
 	}else{
 		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
 		if(xml_mgr->directDraw){ //一级父容器直接输出到fb

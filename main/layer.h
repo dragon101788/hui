@@ -200,6 +200,7 @@ public:
 		//children_x_lock = 0;
 		//children_y_lock = 0;
 		children_touch_lock=0;
+		render_cached=0;
 		isDraw=0;
 	}
 	~ele_nest_extend(){
@@ -266,6 +267,7 @@ public:
 	//int children_y_lock;
 	int children_touch_lock;
 	int isDraw;
+	int render_cached;  //输出到父元素后，父元素不立即render
 	element * parent;
 
 	image top_image;//元素的最高一层，专门用来绘制子空间
