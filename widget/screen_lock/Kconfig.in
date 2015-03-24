@@ -1,0 +1,4 @@
+config  CONTROL_SCREEN_LOCK 
+        bool "screen_lock Control" 
+        help 
+		path=$AUTOPATH
