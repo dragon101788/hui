@@ -13,12 +13,7 @@ public:
 		if (isdn == 1)
 			return;
 		//printf("%s touch\r\n", name.c_str());
-		if(select_old)//双击取消
-		select=0;
-		else
-		select=1;
-		select_old=select;
-		Flush();
+
 	}
 
 	void doTouchUp()
@@ -33,6 +28,12 @@ public:
 
 	void doTouchActive()
 	{
+		if(select_old)//双击取消
+		select=0;
+		else
+		select=1;
+		select_old=select;
+		Flush();
 		xml_mgr->AddExec(0, exec);
 	}
 

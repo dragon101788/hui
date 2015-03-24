@@ -40,40 +40,42 @@ public:
 			//debug("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
 			if (isdn == 1)
 				return;
-			if(boss->mode=="radio")
-				{
-					boss->cleanSelect(this);
-					//select = 1;
-
-					if(select_old)//双击取消
-					select=0;
-					else
-					select=1;
-					select_old=select;
-			     }
-				else if(boss->mode=="multi")
-				{
-					if(select_old)//双击取消
-					select=0;
-					else
-					select=1;
-					select_old=select;
-				}
-
-			Flush();
+			if(boss->mode=="def")
+				Flush();
 		}
 
 		void doTouchUp()
 		{
 			if (isdn == 0)
 				return;
-			//Flush();
+			if(boss->mode=="def")
+				Flush();
 		}
 
 		void doTouchActive()
 		{
 
-			
+			if(boss->mode=="radio")
+			{
+				boss->cleanSelect(this);
+				//select = 1;
+
+				if(select_old)//双击取消
+				select=0;
+				else
+				select=1;
+				select_old=select;
+				Flush();
+			 }
+			else if(boss->mode=="multi")
+			{
+				if(select_old)//双击取消
+				select=0;
+				else
+				select=1;
+				select_old=select;
+				Flush();
+			}
 		//	exec.start();
 		 xml_mgr->AddExec(0, exec);//new added
 
