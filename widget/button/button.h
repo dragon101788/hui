@@ -51,22 +51,26 @@ public:
 		xml_mgr->AddEleArea(this);
 
 		ParseModifRes();
-		res[0].LoadResource();
-		res[1].LoadResource();
 		Flush();
 	}
 	void doRender()
 	{
-		//image::Render(&res[isdn], 0, 0);
+		//image::Render(&res[isdn], 0, 0)
+
 		if(alpha_mode){
+			res[0].LoadResource();
 			prender_res[0]=&res[0];
-			if(isdn)
+			if(isdn){
+			res[1].LoadResource();
 			prender_res[1]=&res[1];
+			}
 			else
 			prender_res.erase(1);
 		}
-		else
+		else{
+		res[isdn].LoadResource();
 		prender_res[0]=&res[isdn];
+		}
 	}
 	void onAbsPosChanged(){
 		touch_init_area(abs_x, abs_y, width, height);

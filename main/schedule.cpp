@@ -22,7 +22,7 @@ int schedule_draw::ScheduleProc()
 	int ret = 0;
 	schedule_ele * ele;
       list<schedule_ele *>::iterator it;
-      for (it = que.m_list.begin();; ++it)
+      for (it = que.m_list.begin();; it++)
 		{
 			 ele = *it;
 			if (ele == NULL)
