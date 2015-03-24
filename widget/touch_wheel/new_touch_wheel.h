@@ -158,9 +158,9 @@ public:
 					nodemp[i] = new node;
 					nodemp[i]->m_mp.fetch(m_mp["node"][i]);
 					nodemp[i]->id=i;
-					nodemp[i]->parent = this;
 					nodemp[i]->xml_mgr = xml_mgr;
 					nodemp[i]->mgr = mgr;
+					nodemp[i]->parent = this;
 				}
 
 	    	}
@@ -296,19 +296,19 @@ int abs(int a){
 	}
 	 void setHide(int hide){
 		this->hide=hide;
-		map<int, node *> ::iterator it;
-			node *ele;
-			for (it = nodemp.begin(); it != nodemp.end(); ++it)
-			{
-				 ele=it->second;
-				if(ele!=NULL)
-					ele->setHide(hide);
-			}
+//		map<int, node *> ::iterator it;
+//			node *ele;
+//			for (it = nodemp.begin(); it != nodemp.end(); ++it)
+//			{
+//				 ele=it->second;
+//				if(ele!=NULL)
+//					ele->setHide(hide);
+//			}
 	}
-
-	 void onParentHideChanged(int hide){
-		 	// setHide( hide);
-	 	}
+//
+//	 void onParentHideChanged(int hide){
+//		 	// setHide( hide);
+//	 	}
 
 	 void setNum(int num){
 		 set_num=num;
