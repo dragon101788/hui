@@ -1,4 +1,4 @@
-#include "screen_lock.h"
+#include "new_screen_lock.h"
 
 
 static InstallXMLinstan install("screen_lock", Install_Element<screen_lock>);

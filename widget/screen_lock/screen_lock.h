@@ -44,7 +44,7 @@ public:
 		int right;
 		//hustr cmd;
 		HuExec exec;
-		lj_lock * boss;
+		screen_lock * boss;
 		int active;
 		//list<set_config *> scfg;
 	};
@@ -126,8 +126,8 @@ public:
 	void doRender()
 	{
 		//image::Render(&img, move_x(), move_y());
-		scroll_x=move_x();
-		scroll_y=move_y();
+		scroll_x=-move_x();
+		scroll_y=-move_y();
 		prender_res[0]=&img;
 
 	}

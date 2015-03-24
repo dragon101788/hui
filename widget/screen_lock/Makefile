@@ -3,8 +3,8 @@ CC:=$(CROSS_COMPILE)g++
 TOPDIR:=../../src
 CFLAG:=-I$(TOPDIR)/ -I$(TOPDIR)/include -DHUMODULE
 OUTDIR:=./
-TAG=$(OUTDIR)lj_lock.so
-SRC=lj_lock.cpp
+TAG=$(OUTDIR)screen_lock.so
+SRC=screen_lock.cpp
 
 all:built-in.o
 	$(CC) $(CFLAG) -fPIC $< -shared -o $(TAG)
