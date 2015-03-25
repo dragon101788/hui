@@ -10,23 +10,7 @@ class touch_wheel:public TouchView{
 
 
 public:
-	int node_num;
 
-	touch_wheel(){
-		node_num=0;
-		step=1;
-		num_min=0;
-		num_max=1;
-		set_num=1;
-		step_cnt=1;
-		edge_fading=0;
-	}
-	~touch_wheel(){
-
-//		log_i("~wheel_text()!!!!!!!!!!!!!!!!!!!\n");
-
-		nodemp.clear();
-	}
 
 
 	class node: public BaseView
@@ -38,13 +22,13 @@ public:
 		node()
 		{
 			color = 0;
-	//		bkcolor=0;
 			font = NULL;
 			style = FONT_NORMAL;
 			size = 16;
 			hide = 0;
 			lenth = 0;
 			txt="no value";
+			boss=NULL;
 		}
 		~node()
 		{
@@ -53,9 +37,6 @@ public:
 			//xml_mgr->DelElement(name);
 		}
 
-		void test(const char * abc)
-		{
-		}
 		void doDelete()
 		{
 
@@ -69,55 +50,10 @@ public:
 		}
 		void doFlushConfig()
 		{
-			name = m_mp["name"]->getvalue();
-			int tmpX = boss->x+m_mp["x"]->getvalue_int();
-			int tmpY = boss->y+ m_mp["y"]->getvalue_int();
-
-			if(boss->hasParent()){
-				tmpX=boss->parent->abs_x+tmpX;
-				tmpY=boss->parent->abs_y+tmpY;
-			}
-
-			width = m_mp["width"]->getvalue_int();
-			height = m_mp["height"]->getvalue_int();
-			render_width=width;
-			render_height=height;
-			hide = boss->hide|m_mp["hide"]->getvalue_int();
-			if(boss->hasParent()){
-				hide |=	boss->parent->hide;
-			}
-
-			if (m_mp.exist("hide_lay"))
-			{
-				hide_lay= m_mp["hide_lay"]->getvalue_int();
-			}
-			//控件被移动
-			if (tmpX != x || tmpY != y)
-			{
-				cleanLastPos();
-				x = tmpX;
-				y = tmpY;
-			}
-				abs_x=x;
-				abs_y=y;
-			if (m_mp.exist("lay"))
-			{
-				lay = m_mp["lay"]->getvalue_int();
-			}
-			else
-			{
-				lay = boss->lay;
-			}
-
-			if (pSrcBuffer == NULL)
-			{
-				//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
-				SetBuffer(width, height);
-				path.format("ele-%s %dx%d", name.c_str(), width, height);
-			}
-
-			initstack();
-
+			PraseElement();
+			parent->tobeParent(name.c_str(),this);
+			boss=(touch_wheel *)parent;
+			render_cached=1;
 			font = m_mp["font"]->getvalue();
 			style = (unsigned char) m_mp["style"]->getvalue_int();
 			size = m_mp["size"]->getvalue_int();
@@ -140,7 +76,6 @@ public:
 		}
 		void doFlushConfigCom()
 		{
-			hide=boss->hide;
 			int red = m_mp["red"]->getvalue_int();
 			int green = m_mp["green"]->getvalue_int();
 			int blue = m_mp["blue"]->getvalue_int();
@@ -191,11 +126,6 @@ public:
 	void doDelete()
 	{
 
-		for (int i = 0; i < node_num; i++)
-		{
-			nodemp[i]->xml_mgr->element_manager::DelElement(nodemp[i]->name);
-    	}
-
 	}
 	void doFlushConfig()
 		{
@@ -210,13 +140,11 @@ public:
 				if (nodemp[i] == NULL)
 				{
 					nodemp[i] = new node;
-
-					//nodemp[i]->name=hustr("%s-%d",name.c_str(),i);
 					nodemp[i]->m_mp.fetch(m_mp["node"][i]);
 					nodemp[i]->id=i;
-					nodemp[i]->boss = this;
 					nodemp[i]->xml_mgr = xml_mgr;
 					nodemp[i]->mgr = mgr;
+					nodemp[i]->parent = this;
 				}
 
 	    	}
@@ -338,6 +266,10 @@ int abs(int a){
 				nodemp[i]->FlushConfigReduced();
 				}
 			xml_mgr->DoneProc();
+			if(listener!=NULL){
+				listener->onNumChanged(set_num);
+			}
+
 		}
 	}
 
@@ -352,19 +284,19 @@ int abs(int a){
 	}
 	 void setHide(int hide){
 		this->hide=hide;
-		map<int, node *> ::iterator it;
-			node *ele;
-			for (it = nodemp.begin(); it != nodemp.end(); ++it)
-			{
-				 ele=it->second;
-				if(ele!=NULL)
-					ele->setHide(hide);
-			}
+//		map<int, node *> ::iterator it;
+//			node *ele;
+//			for (it = nodemp.begin(); it != nodemp.end(); ++it)
+//			{
+//				 ele=it->second;
+//				if(ele!=NULL)
+//					ele->setHide(hide);
+//			}
 	}
-
-	 void onParentHideChanged(int hide){
-		 	 setHide( hide);
-	 	}
+//
+//	 void onParentHideChanged(int hide){
+//		 	// setHide( hide);
+//	 	}
 
 	 void setNum(int num){
 		 set_num=num;
@@ -387,7 +319,34 @@ int abs(int a){
 	 bool getNum(){
 		 return set_num;
 	 }
-private:
+
+	 class NumChangedListener{
+	 public:
+		 virtual void onNumChanged(int num){}
+	 };
+
+	 void setOnNumChangedListener(NumChangedListener *L){
+		 listener=L;
+	 }
+
+
+
+		touch_wheel(){
+			node_num=0;
+			step=1;
+			num_min=0;
+			num_max=1;
+			set_num=1;
+			step_cnt=1;
+			edge_fading=0;
+			listener=NULL;
+		}
+		~touch_wheel(){
+			nodemp.clear();
+		}
+
+	protected:
+	int node_num;
 	int num_min,num_max;
 	int step;
 	int set_num;
@@ -395,6 +354,7 @@ private:
 	int step_h;
 	int step_cnt;
 	int edge_fading;
+	NumChangedListener *listener;
 	map<int, node *> nodemp;
 
 };

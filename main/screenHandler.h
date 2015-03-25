@@ -49,12 +49,12 @@ extern  void JumpToFile(const char * jump, const char * snap);
 class BaseView;
 class xmlproc;
 
-class EventListener{
+class OnTouchListener{
 public:
-	 EventListener(){
+	OnTouchListener(){
 
 	}
-	virtual ~EventListener(){
+	virtual ~OnTouchListener(){
 
 	}
 
@@ -75,6 +75,18 @@ public:
 	}
 };
 
+class OnTimerListener{
+public:
+	OnTimerListener(){
+
+	}
+	virtual ~OnTimerListener(){
+
+	}
+	virtual void onTimer(hustr ele_name,int time){
+
+	}
+};
 
 class ScreenHandler:public DirectProcTimer::HUTimerContainer
 {
