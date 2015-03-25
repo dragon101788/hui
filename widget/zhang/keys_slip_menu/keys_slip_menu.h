@@ -278,7 +278,7 @@ int hu_abs(int number)
 	{
 	//	printf("%s,doRender\n",name.c_str());
 		//image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);
-		cur_res=&img[0];
+		render_res[0].img=&img[0];
 		scroll_x=cx;
 		scroll_y=cy;
 		if(!isFlip)
@@ -424,6 +424,10 @@ int hu_abs(int number)
 		hide = m_mp["hide"]->getvalue_int();
 		select_id=m_mp["select"]->getvalue_int();
 		//noAnimation=m_mp["noAnim"]->getvalue_int();
+		changeView();
+	}
+
+	void changeView(){
 		changePage();
 		for (int i = 0; i < node_num; i++)
 		{
@@ -438,6 +442,36 @@ int hu_abs(int number)
 		if(noAnimation)
 			noAnimation=false;
 	}
+
+	void setSelect(int select){
+		select_id=select;
+		changeView();
+	}
+	void down(){
+		if(select_id<node_num-1){
+			select_id++;
+			changeView();
+		}
+	}
+	void up(){
+		if(select_id>0){
+			select_id--;
+			changeView();
+		}
+	}
+	void flipForward(){
+		if(select_id+page_node_num<node_num){
+			select_id+=page_node_num;
+			changeView();
+		}
+	}
+	void flipBack(){
+		if(select_id-page_node_num>=0){
+			select_id-=page_node_num;
+			changeView();
+		}
+	}
+
 
 
 	keys_slip_menu()

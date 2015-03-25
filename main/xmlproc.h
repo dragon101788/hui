@@ -283,8 +283,8 @@ public:
 		ParaseTinyXmlFile(filename, this);
 		//dbg.debug_timer("ParaseTinyXmlFile3");
 		if(windCtl!=NULL){
-			log_s("%s windCtl!=NULL!!!!!!!!!\n",filename.c_str());
-			windCtl->loadDone();
+			//log_s("%s windCtl!=NULL!!!!!!!!!\n",filename.c_str());
+			windCtl->onLoadDone();
 		}
 		DoneProc();
 		log_i("+++++++++++++%s++++++++++++++OK\r\n", filename.c_str());
@@ -293,7 +293,9 @@ public:
 	{
 
 		ParaseTinyXmlFile(file, this);
-
+		if(windCtl!=NULL){
+			windCtl->onIncludeDone(file);
+		}
 	}
 
 	virtual ~xmlproc()

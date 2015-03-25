@@ -27,7 +27,7 @@
 		hide = m_mp["hide"]->getvalue_int();
 		if (m_mp.exist("x_page_num"))
 		{
-			x_page_num = m_mp["x_page_num"]->getvalue_int();
+			x_page_num = m_mp["x_page_num"]->getvalue_int(); //start from 1
 		}
 		if (m_mp.exist("y_page_num"))
 		{

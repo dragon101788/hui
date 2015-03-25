@@ -13,6 +13,8 @@
 
 class ScreenTimerThread;
 
+
+
 class DirectExe
 {
 public:
@@ -46,6 +48,7 @@ public:
 typedef HUTimer<DirectExe> DirectProcTimer;
 extern DirectProcTimer g_dirctExec;
 extern  void JumpToFile(const char * jump, const char * snap);
+extern  void IncludeXml(const char * include, const char * snap);
 class BaseView;
 class xmlproc;
 
@@ -83,12 +86,21 @@ public:
 	virtual ~OnTimerListener(){
 
 	}
-	virtual void onTimer(hustr ele_name,int time){
-
-	}
+	virtual void onTimer(hustr ele_name,int time)=0;
 };
 
-class ScreenHandler:public DirectProcTimer::HUTimerContainer
+
+class KeypadListener{
+public:
+
+	virtual ~KeypadListener(){}
+	//按键回调函数
+	virtual void onKeyPressed(int key){
+		log_i("keypressed key=%d !!!\n",key);
+	};
+};
+
+class ScreenHandler:public DirectProcTimer::HUTimerContainer,public KeypadListener
 {
 	public:
 
@@ -96,23 +108,23 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer
 		isRunning=0;
 	}
 	virtual ~ScreenHandler(){
-		deleteThis();
-	}
-
-	void getKeyValue(int key_value){
-		onKeyPressed(key_value);
+		//deleteThis();
+		onDelete();
 	}
 
 
-	/******************
-	 * 加载完成
-	 */
-	 void loadDone(){
-		 onLoadDone();
-	}
-	 void deleteThis(){
-		 onDelete();
-	}
+//	/******************
+//	 * 加载完成
+//	 */
+//	 void loadDone(){
+//		 onLoadDone();
+//	}
+//	 void includeDone(){
+//		 onIncludeDone();
+//	}
+//	 void deleteThis(){
+//		 onDelete();
+//	}
 	/******************
 	 * 切换到前台
 	 */
@@ -142,6 +154,12 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer
 	 * 加载完成，页面必须实现
 	 */
 	virtual void onLoadDone()=0;
+
+	/***********************
+	 *
+	 * include完成
+	 */
+	virtual  void onIncludeDone(hustr file_name){}
 	/******************
 	 * 切换到前台，页面必须实现
 	 */
@@ -150,10 +168,7 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer
 	 * 切换到后台，页面必须实现
 	 */
 	virtual void onLeaving()=0;
-	//按键回调函数
-	virtual void onKeyPressed(int key){
-		log_s("key_pressed value=%d!!!\n",key);
-	}
+
 //	/******************
 //	 * 暂停
 //	 */
@@ -222,6 +237,13 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer
 		AddExecDirect(0,myExec);
 		//JumpToFile(xml,NULL);//不能直接调用此函数
 	}
+	void includeXml(const char * xml){
+		DirectExe myExec;
+		myExec.setExec(xml,IncludeXml);
+		AddExecDirect(0,myExec);
+		//JumpToFile(xml,NULL);//不能直接调用此函数
+	}
+
 	bool isRun() const{
 		return isRunning;
 	}

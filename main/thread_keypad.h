@@ -27,7 +27,7 @@ class KeypadThread:public thread, public Mutex
 		log_i("touch thread exit\r\n");
 	}
 
-	ScreenHandler * m_scrhandler;
+	KeypadListener * m_scrhandler;
 public:
 
 	void init()
@@ -42,7 +42,7 @@ public:
 
 
 
-	void SwitchProc(ScreenHandler * handler)
+	void SwitchProc(KeypadListener * handler)
 	{
 		lock();
 		m_scrhandler = handler;
@@ -58,7 +58,7 @@ public:
   void getKey(int key){
 	  lock();
 	  if(m_scrhandler!=NULL)
-		  m_scrhandler->getKeyValue(key);
+		  m_scrhandler->onKeyPressed(key);
 	  unlock();
   }
 

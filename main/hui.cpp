@@ -68,6 +68,12 @@ void huErrExit(const char * str)
 	exit(-1);
 }
 
+void IncludeXml(const char * include, const char * snap)
+{
+	g_cur_xml->ParseXMLElementFile(include);
+}
+
+
 void JumpToFile(const char * jump, const char * snap)
 {
 
