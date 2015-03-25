@@ -96,12 +96,12 @@ public:
 		{
 			if(this->father->mode=="def"){
 				res[isdn].LoadResource();
-				prender_res[0]=&res[isdn];
+				render_res[0].img=&res[isdn];
 			}
 			else{
            	       // image::Render(&this->parent->img[select], x-this->parent->x, y-this->parent->y,width,height,0,0);
 				res[select].LoadResource();
-				prender_res[0]=&res[select];
+				render_res[0].img=&res[select];
 			}
 		}
 
@@ -134,7 +134,7 @@ public:
 				nodemp[i]->mgr = mgr;
 			}
 			nodemp[i]->FlushConfig();
-			nodemp[i]->touch_lock = touch_lock;
+		//	nodemp[i]->touch_lock = touch_lock;
 
 		}
 

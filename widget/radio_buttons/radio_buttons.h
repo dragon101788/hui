@@ -66,7 +66,7 @@ public:
 		{
 			img[on].LoadResource();
 			//cur_res=&img[on];
-			prender_res[0]=&img[on];
+			render_res[0].img=&img[on];
 			//image::Render(&img[on], 0, 0);
 
 		}

@@ -39,7 +39,7 @@ public:
 		{
 			//image::Render(&res[isdn], 0, 0);
 //			Render_img_to_img(this, &ttf, 0, 0, width, height,0,0);//将文字复制到图片上
-		prender_res[0]=&res[isdn];
+		render_res[0].img=&res[isdn];
 		}
 
 

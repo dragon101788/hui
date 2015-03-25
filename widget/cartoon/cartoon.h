@@ -138,12 +138,12 @@ public:
 		{
 			//Draw(&images[id], x, y);
 			//image::Render(&images[id], 0, 0);
-			prender_res[0]=&images[id];
+			render_res[0].img=&images[id];
 			//cur_res=&images[id];
 			if (release)
 			{
 				images[id].Free();
-				prender_res[0]=&images[id];
+				render_res[0].img=&images[id];
 				//cur_res=NULL;
 			}
 		}

@@ -119,7 +119,7 @@ public:
 
 		void doRender()
 		{
-			prender_res[0]=&ttf;
+			render_res[0].img=&ttf;
 		}
 		map<hustr, text>::iterator font_it;
 		unsigned int color;

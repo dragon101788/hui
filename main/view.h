@@ -18,6 +18,7 @@ class BaseView:public element{
 
 	virtual void setHide(int hide){
 		this->hide=hide;
+		log_i("%s set hide=%d!!\n",name.c_str(),hide);
 		if(isParent()){
 			iterator it;
 			BaseView *ele;

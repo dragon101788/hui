@@ -2,7 +2,7 @@
 #define __SCREEN_LOCK__
 #include "XMLInstal.h"
 #include "view.h"
-
+#include"widget/static_image/static_image.h"
 
 class screen_lock: public TouchView
 {
@@ -16,14 +16,25 @@ public:
 		if (GetTouchX() > slider_abs_x && GetTouchX() < slider_abs_x+slider_width&& GetTouchY() > slider_abs_y&& GetTouchY() < slider_abs_y+slider_height)
 		{
 
-
 			mx=move_x();
 			//if(mx<0){
-
-			if(mx>0&&slider_x+mx<dst_x+slider_width){
-			scroll_x=-(slider_x+mx);
-			slider_abs_x=-scroll_x+abs_x;
-			Flush();
+			if(mx>0&&slider_x+mx<dst_x){
+				offset_x=(slider_x+mx);
+				slider_abs_x=offset_x+abs_x;
+				if(slider_x+mx>dst_x-slider_width){//已经达到解锁区域
+					for (int i = 0; i <node_num; i++)
+					{
+						if(nodemp[i]->id!=1)
+						nodemp[i]->setImageID(1);
+					}
+				}else{
+					for (int i = 0; i <node_num; i++)
+					{
+						if(nodemp[i]->id!=0)
+						nodemp[i]->setImageID(0);
+					}
+				}
+				Flush();
 			}
 		}
 
@@ -32,23 +43,29 @@ public:
 	void doTouchUp()
 	{
 //判断是否达到目的地，否则滑块返回
-		if(scroll_x>-dst_x){
-			scroll_x=-slider_x;
+		if(offset_x<dst_x-slider_width){
+			checked=0;
+			offset_x=slider_x;
 			slider_abs_x=slider_x+abs_x;
 			Flush();
 		}else{
-			onTouchActive();
+			checked=1;
 			//复原参数防止重复触发
 			slider_abs_x=slider_x+abs_x;
-			scroll_x=-slider_x;
+			offset_x=slider_x;
+			for (int i = 0; i <node_num; i++)
+			{
+				if(nodemp[i]->id!=0)
+				nodemp[i]->setImageID(0);
+			}
 			log_i("arrived!!!!!!\n");
 		}
 	}
 
 	void doTouchActive()
 	{
-		log_i("doTouchActive!!!!!!\n");
-		xml_mgr->AddExec(0, exec);
+	//	log_i("doTouchActive!!!!!!\n");
+	//	xml_mgr->AddExec(0, exec);
 	}
 	void doDelete()
 	{
@@ -67,6 +84,22 @@ public:
 		img.LoadResource();
 		slider_width=img.GetWidth();
 		slider_height=img.GetHeight();
+
+		node_num=m_mp.count("state_image");
+		for (int i = 0; i <node_num; i++)
+		{
+			if (nodemp[i] == NULL)
+			{
+				nodemp[i] = new static_image;
+				nodemp[i]->m_mp.fetch(m_mp["state_image"][i]);
+				nodemp[i]->parent = this;
+				nodemp[i]->xml_mgr = xml_mgr;
+				nodemp[i]->mgr = mgr;
+			}
+			nodemp[i]->FlushConfig();
+		}
+
+
 		TouchParaseXml(m_mp);
 		touch_init_area(abs_x,abs_y,width,height);
 
@@ -77,12 +110,13 @@ public:
 	void doRender()
 	{
 		//image::Render(&img, move_x(), move_y());
-		prender_res[0]=&img;
+		render_res[0].dst_x=offset_x;
+		render_res[0].img=&img;
 
 	}
 	screen_lock(){
-		select=0;
 		mx=0;
+		checked=0;
 	}
 	bool isSelect(){
 
@@ -90,18 +124,30 @@ public:
 	void reset(){
 		slider_abs_x=slider_x+abs_x;
 	//	slider_abs_y=slider_y+abs_y;
-		scroll_x=-slider_x;
+		offset_x=slider_x;
+		for (int i = 0; i <node_num; i++)
+		{
+			if(nodemp[i]->id!=0)
+			nodemp[i]->setImageID(0);
+		}
 		Flush();
 	}
+	bool isChecked(){
+		return checked;
+	}
+
 	image img;
 	HuExec exec;
-	int select; //滑块是否选中
+	map<int, static_image *> nodemp;
+	int offset_x;
+	int node_num;
 	int slider_x;
+	int slider_y;
 	int slider_abs_x;
 	int slider_abs_y;
-	int slider_y;
 	int slider_width;
 	int slider_height;
+	bool checked;
 	int mx;
 	int dst_x;
 };

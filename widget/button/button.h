@@ -59,17 +59,17 @@ public:
 
 		if(alpha_mode){
 			res[0].LoadResource();
-			prender_res[0]=&res[0];
+			render_res[0].img=&res[0];
 			if(isdn){
 			res[1].LoadResource();
-			prender_res[1]=&res[1];
+			render_res[1].img=&res[1];
 			}
 			else
-			prender_res.erase(1);
+			render_res.erase(1);
 		}
 		else{
 		res[isdn].LoadResource();
-		prender_res[0]=&res[isdn];
+		render_res[0].img=&res[isdn];
 		}
 	}
 	void onAbsPosChanged(){

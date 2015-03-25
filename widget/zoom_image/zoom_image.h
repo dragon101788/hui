@@ -111,7 +111,7 @@ public:
 
 	void doRender()
 	{
-		prender_res[0]=&zoom_img;
+		render_res[0].img=&zoom_img;
 
 	}
 

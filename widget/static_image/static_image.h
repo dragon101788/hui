@@ -54,13 +54,16 @@ public:
 
 		Flush();
 	}
-
+	void setImageID(int id){
+		this->id=id;
+		Flush();
+	}
 
 	void doRender()
 	{
 		//image::Render(&res[id], xpos, ypos, width, height, 0, 0);
 		res[id].LoadResource();
-		prender_res[0]=&res[id];
+		render_res[0].img=&res[id];
 	}
 //	int xpos;
 //	int ypos;

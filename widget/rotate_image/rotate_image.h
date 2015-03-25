@@ -109,7 +109,7 @@ public:
 		center_rotate( rotated, res[id],angle,zoomX,zoomY);
 		else
 		rotate( rotated, res[id],angle,zoomX,zoomY,0,0);
-		prender_res[0]=&rotated;
+		render_res[0].img=&rotated;
 
 		//scroll_x=tan(angle*3.1415/180)*height;
 		//scroll_y=tan(angle*3.1415/180)*width;

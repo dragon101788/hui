@@ -110,7 +110,7 @@ int hu_abs(int number)
 		      //image::Render(&parent->img[1], x+parent->cx-parent->x,
 		    	//	  	  	  	  	  	  	  	   y+parent->cy-parent->y,width,height,0,0);
 
-			  prender_res[0]=&parent->img[1];
+			  render_res[0].img=&parent->img[1];
 		      scroll_x=x+parent->cx-parent->x;
 		      scroll_y= y+parent->cy-parent->y;
 			 }

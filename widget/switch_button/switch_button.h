@@ -59,7 +59,7 @@ public:
 	void doRender()
 	{
 
-		prender_res[0]=&res[select];
+		render_res[0].img=&res[select];
 
 	}
 	void onAbsPosChanged(){

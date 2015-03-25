@@ -149,13 +149,13 @@ public:
 		{
 			if(this->boss->mode=="def"){
 		       // image::Render(&this->boss->img[isdn], x-this->boss->x, y-this->boss->y,width,height,0,0);
-				prender_res[0]=&boss->img[isdn];
+				render_res[0].img=&boss->img[isdn];
 		        scroll_x=x-boss->x;
 		        scroll_y=y-boss->y;
 			}
 			else{
            	       // image::Render(&this->boss->img[select], x-this->boss->x, y-this->boss->y,width,height,0,0);
-				prender_res[0]=&boss->img[select];
+				render_res[0].img=&boss->img[select];
 		        scroll_x=x-boss->x;
 		        scroll_y=y-boss->y;
 			}
@@ -275,7 +275,7 @@ public:
 	void doRender()
 	{
 		//img[0].LoadResource();
-		prender_res[0]=&img[0];
+		render_res[0].img=&img[0];
 
 	}
 

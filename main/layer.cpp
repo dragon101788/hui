@@ -123,8 +123,9 @@
 		if (!layers.empty())
 		{
 			list<element *>::iterator it;
-			map<int, image*>::iterator itp;
+			map<int,layer_res>::iterator itp;
 			element * ele;
+			layer_res *lay_res;
 			//image * img;
 			int s_ofx ; //源x
 			int d_ofx ; //目标x
@@ -175,14 +176,15 @@
 					//log_i("%s render_offset_x=%d,render_offset_y=%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",name.c_str(),render_offset_x,render_offset_y);
 					//log_i("%s -%s s_ofx=%d, s_ofy=%d, d_ofx=%d, d_ofy=%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",name.c_str(),ele->name.c_str(),s_ofx,s_ofy,d_ofx,d_ofy);
 					if(cnt==0){//最底的元素直接复制
-						for (itp = ele->prender_res.begin();itp != ele->prender_res.end(); itp++)
+						for (itp = ele->render_res.begin();itp != ele->render_res.end(); itp++)
 						{
 							cnt++;
+							lay_res=&itp->second;
 							//log_i("itp->first=%d\n",itp->first);
-							if(itp == ele->prender_res.begin())
-								AreaCopy(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+							if(itp == ele->render_res.begin())
+								AreaCopy(lay_res->img, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx+lay_res->dst_x, d_ofy+lay_res->dst_y);
 							else
-								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								Render(lay_res->img, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height,  d_ofx+lay_res->dst_x, d_ofy+lay_res->dst_y);
 						}
 						if(ele->isParent()){
 							if(cnt==0){
@@ -193,24 +195,25 @@
 					}
 					else{
 							//log_i("itp->first=%d!!!\n",itp->first);
-							for (itp = ele->prender_res.begin(); itp != ele->prender_res.end(); itp++)
+							for (itp = ele->render_res.begin(); itp != ele->render_res.end(); itp++)
 							{
-								Render(itp->second, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								lay_res=&itp->second;
+								Render(lay_res->img, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height,  d_ofx+lay_res->dst_x, d_ofy+lay_res->dst_y);
 							}
-							if(ele->isParent()){
+								if(ele->isParent()){
 								Render(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+
 							}
-					}
+
+						}
 					cnt++;
 				}
-
+			}
+			if(!cnt){ //没有队列，为了清除原状态。否则会显示上一次的状态
+				cleanBuf();
 			}
 		}
-		if(!cnt){ //没有队列，为了清除原状态。如果底队列不能完全覆盖元素，会导致元素部分不能清除
-			cleanBuf();
-		}
 	}
-
 
 
 
