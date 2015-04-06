@@ -1,7 +1,7 @@
-#include "trueType/ft2build.h"
-#include "trueType/freetype.h"
-#include "trueType/ftoutln.h"
-#include "trueType/ftsynth.h"
+//#include "trueType/ft2build.h"
+//#include "trueType/freetype.h"
+//#include "trueType/ftoutln.h"
+//#include "trueType/ftsynth.h"
 
 #include "ttf_font.h"
 //#include "gb_unicode.h"

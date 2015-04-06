@@ -6,9 +6,12 @@ CC=$(CROSS_COMPILE)g++
 STRIP=$(CROSS_COMPILE)strip
 TOPDIR=$(PWD)/
 MAIN=$(PWD)/main/
+FREETYPE=$(PWD)/freetype/include
 CFLAG+=-I$(TOPDIR)
 CFLAG+=-I$(MAIN)
 CFLAG+=-I$(TOPDIR)include
+CFLAG+=-I$(FREETYPE)
+
 #CFLAG+=-g -O1
 LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt
 OUTPUT =../output/
@@ -52,7 +55,7 @@ obj-$(CONFIG_KEYPAD_LITTLESWAN) += platform/keypad_littleSwan.o
 obj-$(CONFIG_KEYPAD_NONE) += platform/keypad_none.o
 ifeq ($(CONFIG_USING_FONT),y) 
 	#LDFLAG+=-liconv 
-	obj-y += $(patsubst %.c,%.o,$(wildcard trueType/*.c))
+	#obj-y += $(patsubst %.c,%.o,$(wildcard trueType/*.c))
 	obj-$(CONFIG_USING_FONT) += main/ttf_font.o
 else
 endif 
@@ -79,9 +82,9 @@ OBJS_MK=$(CC) $(CFLAG) -c $< -o $@
 	$(CC) $(CFLAG) -c $< -o $@
 
 
-all: .config lib/libz.a lib/libpng.a lib/libiconv.a dragon_auto $(DEPS) $(OBJS) dirobjs
+all: .config lib/libz.a lib/libpng.a lib/libiconv.a lib/libfreetype.a dragon_auto $(DEPS) $(OBJS) dirobjs
 	@echo built-in module: $(patsubst $(TOPDIR)%,%,$(dir-y))
-	@$(CC)  $(OBJS) $(SRCS) lib/libpng.a lib/libz.a lib/libiconv.a $(dir-objs) -o $(TARGET) $(LDFLAG)
+	@$(CC)  $(OBJS) $(SRCS) lib/libpng.a lib/libz.a lib/libiconv.a  lib/libfreetype.a $(dir-objs) -o $(TARGET) $(LDFLAG)
 	@#rm $(dir-objs)
 	@#$(STRIP) $(TARGET) 
 	@echo build done 	
@@ -89,6 +92,11 @@ all: .config lib/libz.a lib/libpng.a lib/libiconv.a dragon_auto $(DEPS) $(OBJS) 
 dragon_auto:
 	@$(DRAGON_AUTO)
 
+lib/libfreetype.a:
+	@mkdir -p `dirname $@`
+	CROSS_COMPILE=$(CROSS_COMPILE) $(MKZLIB)
+	rm $(TOPDIR)/bin -rf
+	rm $(TOPDIR)/share -rf
 
 lib/libz.a:
 	@mkdir -p `dirname $@`

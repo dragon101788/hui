@@ -2,10 +2,15 @@
 #define  __TTF_FONT_H__
 
 #include "codec.h"
-#include "trueType/ft2build.h"
-#include "trueType/freetype.h"
-#include "trueType/ftoutln.h"
-#include "trueType/ftsynth.h"
+//#include "trueType/ft2build.h"
+//#include "trueType/freetype.h"
+//#include "trueType/ftoutln.h"
+//#include "trueType/ftsynth.h"
+
+#include "ft2build.h"
+#include FT_FREETYPE_H
+ #include FT_OUTLINE_H
+ #include FT_SYNTHESIS_H
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
