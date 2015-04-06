@@ -203,7 +203,6 @@ void FontDev::DrawText(text * ptext, const char *encode, char * showtxt,int buff
 		huErrExit("DrawText:: malloc failed!\n");
 	}
 	memset(mytxt, 0, buf_len);
-
 	final_len = convert("wchar_t", encode, (char *) showtxt, txt_len, (char *) mytxt, buf_len);
 	final_len /= 4; //byte to wchar_t
 
@@ -347,7 +346,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 		if ((x + slot->bitmap_left+ (word_w) ) > buff_width)
 		//if ((x + (word_w)*1.1 ) > buff_width)
 		{
-			if ((y + Font_H * 2*1.2) < buff_height)//换行
+			if ((y + Font_H *  2.4) < buff_height)//换行
 			{
 				x = 0;
 				//y +=Font_H*1.2;
@@ -414,7 +413,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 		if ((x + slot->bitmap_left+ (word_w) ) > buff_width)
 		{
-			if ((y + (Font_H) * 2*1.2) < buff_height)//换行
+			if ((y + (Font_H) * 2.4) < buff_height)//换行
 			{
 				x = padding_left;
 				//y +=Font_H*1.2;
@@ -482,7 +481,7 @@ int FontDev::TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsi
 
 		if ((x + slot->bitmap_left+ word_w ) > buff_width)
 		{
-			if ((y + (Font_H) * 2*1.2) < buff_height)//换行
+			if ((y + (Font_H) *  2.4) < buff_height)//换行
 			{
 				x = padding_left;
 				//y +=Font_H*1.2;

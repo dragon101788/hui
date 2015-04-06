@@ -45,17 +45,29 @@ public:
 	void doFlushConfig()
 	{
 		PraseElement();
-		ttf.SetBuffer(width, height);
+
 		if(hide==0)
 		{
-			int red = m_mp["red"]->getvalue_int();
-			int green = m_mp["green"]->getvalue_int();
-			int blue = m_mp["blue"]->getvalue_int();
+
+			if (m_mp.exist("color"))  //新接口
+			 color=m_mp["color"]->getvalue_hex();
+			else{  //兼容老方式
+				int red = m_mp["red"]->getvalue_int();
+				int green = m_mp["green"]->getvalue_int();
+				int blue = m_mp["blue"]->getvalue_int();
+				color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
+			}
+			if(m_mp.exist("bg_color")){
+				unsigned int bg_color=m_mp["bg_color"]->getvalue_hex();
+				ttf.SetBuffer(width, height,bg_color);
+			}else{
+				ttf.SetBuffer(width, height);
+			}
 			int padding_left=m_mp["padding_left"]->getvalue_int();
 			int padding_top=m_mp["padding_top"]->getvalue_int();
 			if (m_mp.exist("align_center"))
 			align_center=m_mp["align_center"]->getvalue_int();
-			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
+
 			font = m_mp["font"]->getvalue();
 
 			txt = m_mp["txt"]->getvalue();
@@ -67,6 +79,7 @@ public:
 			ttf.fontHeight = size;
 			ttf.color = color;
 			ttf.style = style;
+			log_i("bkcolor=%d!!!!!!!!!!!!\n",bk_color);
 
 			/*
 			if(align_center)
@@ -154,6 +167,7 @@ public:
 	text ttf;
 	map<hustr, text>::iterator font_it;
 	unsigned int color;
+	unsigned int bk_color;
 	hustr font;	//保存路径
 	hustr txt;	//
 

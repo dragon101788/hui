@@ -2,11 +2,6 @@
 #define  __TTF_FONT_H__
 
 #include "codec.h"
-//#include "trueType/ft2build.h"
-//#include "trueType/freetype.h"
-//#include "trueType/ftoutln.h"
-//#include "trueType/ftsynth.h"
-
 #include "ft2build.h"
 #include FT_FREETYPE_H
  #include FT_OUTLINE_H
@@ -156,12 +151,9 @@ public:
 			unsigned char gray)
 	{
 
-		((Color32 *) pSrcBuffer + y * u32Width + x)->r = color >> 16
-				& 0xff;
-		((Color32 *) pSrcBuffer + y * u32Width + x)->g = color >> 8
-				& 0xff;
-		((Color32 *) pSrcBuffer + y * u32Width + x)->b = color
-				& 0xff;
+		((Color32 *) pSrcBuffer + y * u32Width + x)->r = color >> 16& 0xff;
+		((Color32 *) pSrcBuffer + y * u32Width + x)->g = color >> 8& 0xff;
+		((Color32 *) pSrcBuffer + y * u32Width + x)->b = color&0xff;
 		((Color32 *) pSrcBuffer + y * u32Width + x)->a = gray;
 	}
 	void ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,unsigned int color);

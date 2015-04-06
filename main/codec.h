@@ -280,7 +280,7 @@ public:
 		path = file;
 		pngEndec_to_image(file, this);
 	}
-
+	int SetBuffer(int width, int height,unsigned int color);
 	int SetBuffer(int width, int height);
 
 //	void ProcArea(image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y)
@@ -404,6 +404,17 @@ public:
 	{
 		if (pSrcBuffer)
 			memset(pSrcBuffer, 0, SrcSize);
+	}
+	void cleanBuf(unsigned int color)
+	{
+		if (pSrcBuffer)
+			memset_int((unsigned int *)pSrcBuffer, color, SrcSize>>2);
+	}
+
+	inline void memset_int(unsigned int *start,unsigned int value,unsigned int len){
+		for(unsigned int i=0;i<len;i++){
+			*start++=value;
+		}
 	}
 
 	void debug_info()

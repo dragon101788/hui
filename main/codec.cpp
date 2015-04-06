@@ -793,7 +793,32 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 	}
 
 
-
+int image::SetBuffer(int width, int height,unsigned int color)
+{
+	//path.format("SetBuffer-%dx%d",width,height);
+	lock();
+	static int dep = 4;
+	int tmpsize = width * height * dep;
+	if (tmpsize > SrcSize)
+	{
+		destroy();
+	}
+	if (pSrcBuffer == NULL)
+	{
+		pSrcBuffer = malloc(tmpsize);
+		if (pSrcBuffer == NULL)
+		{
+			errexitf("image malloc failed: width=%d height=%d\n", width, height);
+		}
+	}
+	SrcSize = tmpsize;
+	u32Width = width;
+	u32Height = height;
+	u32Stride = width * dep;
+	cleanBuf(color);
+	unlock();
+	return 0;
+}
 
 int image::SetBuffer(int width, int height)
 {
