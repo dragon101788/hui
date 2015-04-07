@@ -691,10 +691,12 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 		//	log_w("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
 			return;
 		}
+
+	if(ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y)){
+		return ;
+	}
 	dst_img->lock();
 	src_img->lock();
-	if(ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y))
-		return ;
 	int line_byte=cp_width<<2;
 //	unsigned int dst_step= dst_img->u32Width;
 //	unsigned int src_step= src_img->u32Width;
@@ -739,24 +741,6 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 		int cp_w=src_w;
 		int cp_h=src_h;
 		unsigned int * dst_start;
-		lock();
-
-//		if (dst_x < 0)
-//		{
-//			src_x -=dst_x;
-//			dst_x = 0;
-//		}
-//		if (dst_y < 0)
-//		{
-//			src_y -= dst_y;
-//			dst_y = 0;
-//		}
-//		if(dst_x+cp_w>dst_w){
-//			cp_w=dst_w-dst_x;
-//		}
-//		if(dst_y+cp_h>dst_h){
-//			cp_h=dst_h-dst_y;
-//		}
 
 		if (cp_h <= 0 || cp_w <= 0)
 		{
@@ -811,7 +795,7 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 		}
 
 
-
+		lock();
 		int line_byte=cp_w * 4;
 		unsigned int dst_step= dst_w;
 		unsigned int src_step= u32Width;

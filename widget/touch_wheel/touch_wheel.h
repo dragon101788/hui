@@ -329,7 +329,6 @@ int abs(int a){
 void setDirect(int d){
 	xml_mgr->directDraw=d;
 }
-
 	 void setNum(int num){
 		 set_num=num;
 		 if(set_num>num_max){
