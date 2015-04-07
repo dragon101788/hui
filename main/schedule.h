@@ -10,15 +10,18 @@ class schedule_ele
 public:
 	 virtual void onSchedule()=0;
 	inline int schedule(){
-		is_rendering=1;
+		wait_to_render=0;
 		onSchedule();
-		is_rendering=0;
 	}
-	int is_rendering;
-	inline int isRendering()const{
-		return is_rendering;
+
+	inline int waitRender()const{
+		return wait_to_render;
 	}
+	schedule_ele(){
+		wait_to_render=0;
+	};
 	virtual ~schedule_ele(){};
+	int wait_to_render;
 };
 
 class element_manager;
@@ -41,25 +44,26 @@ public:
 
 		void addele(schedule_ele * ele)
 		{
-			int dup=0;
 			lock();
 			list<schedule_ele *>::iterator it;
 			for (it = m_list.begin(); it != m_list.end(); ++it)
 			{
-				//schedule_ele * tele = *it;
 				if (ele == *it)
 				{
-					if(ele->isRendering()&&dup==0){
-						dup++;     //队列中最多允许两个相同的元素
+					if(ele->waitRender()){
+						unlock();
+						return;
+					}
+					else{
 						continue;
 					}
-					else
-						break;
 				}
 			}
 			if (it == m_list.end())
 			{
+				ele->wait_to_render++;
 				m_list.push_back(ele);
+
 			}
 			unlock();
 		}
@@ -83,9 +87,9 @@ public:
 			unlock();
 		}
 
-//		int getSize(){
-//			return m_list.size();
-//		}
+		int getSize(){
+			return m_list.size();
+		}
 		list<schedule_ele *> m_list;
 	};
 
