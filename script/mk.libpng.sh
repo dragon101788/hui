@@ -10,7 +10,7 @@ make install
 make distclean
 
 cd ${TOPDIR}/lib/
-ln -s libpng.so libpng16.so
+ln -s libpng16.so libpng12.so
 
 
 

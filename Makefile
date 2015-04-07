@@ -1,12 +1,14 @@
 sinclude .config
 #CROSS_COMPILE:=$(HOME)/usr/arm/4.3.3/bin/arm-linux-
+
+
 CROSS_COMPILE:=arm-linux-
 #CROSS_COMPILE:=
 CC=$(CROSS_COMPILE)g++
 STRIP=$(CROSS_COMPILE)strip
 TOPDIR=$(PWD)/
 MAIN=$(PWD)/main/
-FREETYPE=$(PWD)/freetype/include
+FREETYPE=$(TOPDIR)/include/freetype2
 CFLAG+=-I$(TOPDIR)
 CFLAG+=-I$(MAIN)
 CFLAG+=-I$(TOPDIR)include
@@ -23,7 +25,7 @@ CONF = $(TOPDIR)/script/conf
 MKZLIB = $(TOPDIR)/script/mk.zlib.sh
 MKPNGLIB = $(TOPDIR)/script/mk.libpng.sh
 MKICONVLIB = $(TOPDIR)/script/mk.iconv.sh
-MKFREETYPELIB = $(TOPDIR)/freetype/mk.freetype.sh
+MKFREETYPELIB = $(TOPDIR)/script/mk.freetype.sh
 MKAUTO=Makefile.auto
 
 MAKE=make CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CC) CFLAG="$(CFLAG)" TOPDIR=$(TOPDIR)
@@ -93,11 +95,7 @@ all: .config lib/libz.a lib/libpng.a lib/libiconv.a lib/libfreetype.a dragon_aut
 dragon_auto:
 	@$(DRAGON_AUTO)
 
-lib/libfreetype.a:
-	@mkdir -p `dirname $@`
-	CROSS_COMPILE=$(CROSS_COMPILE) $(MKZLIB)
-	rm $(TOPDIR)/bin -rf
-	rm $(TOPDIR)/share -rf
+
 
 lib/libz.a:
 	@mkdir -p `dirname $@`

@@ -12,11 +12,11 @@
 LC_ALL=C
 export LC_ALL
 
-prefix="/home/tt/works/hui/hui/freetype/_install"
-exec_prefix="/home/tt/works/hui/hui/freetype/_install"
+prefix="/home/tt/works/hui/hui/libsrc/freetype/_install"
+exec_prefix="/home/tt/works/hui/hui/libsrc/freetype/_install"
 exec_prefix_set="no"
-includedir="/home/tt/works/hui/hui/freetype/_install/include"
-libdir="/home/tt/works/hui/hui/freetype/_install/lib"
+includedir="/home/tt/works/hui/hui/libsrc/freetype/_install/include"
+libdir="/home/tt/works/hui/hui/libsrc/freetype/_install/lib"
 enable_shared=""
 
 usage()

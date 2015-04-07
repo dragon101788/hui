@@ -4,8 +4,8 @@
 #include "codec.h"
 #include "ft2build.h"
 #include FT_FREETYPE_H
- #include FT_OUTLINE_H
- #include FT_SYNTHESIS_H
+#include FT_OUTLINE_H
+#include FT_SYNTHESIS_H
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
