@@ -71,6 +71,12 @@ public:
 			font = m_mp["font"]->getvalue();
 
 			txt = m_mp["txt"]->getvalue();
+/*********************
+ * style:
+*#define   FONT_NORMAL    0
+*#define   FONT_ITALIC    1
+*#define   FONT_BOLD      2
+ */
 			style = (unsigned char) m_mp["style"]->getvalue_int();
 			size = m_mp["size"]->getvalue_int();
 
@@ -80,7 +86,6 @@ public:
 			ttf.color = color;
 			ttf.style = style;
 			log_i("bkcolor=%d!!!!!!!!!!!!\n",bk_color);
-
 			/*
 			if(align_center)
 			x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值

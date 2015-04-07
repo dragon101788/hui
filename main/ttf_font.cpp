@@ -603,6 +603,6 @@ void ParseFont(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 	font_mp[name].TTF_Init(path, FT_LOAD_NO_BITMAP | FT_LOAD_RENDER);
 	//log_i("get font_mp %x %x\r\n",font_mp[name].face,font_mp[name].ft_Lib);
 }
-//XMLinstan["font"] = ParseFont;
+
 static InstallXMLinstan install2("font",ParseFont);
 
