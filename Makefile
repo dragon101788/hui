@@ -23,6 +23,7 @@ CONF = $(TOPDIR)/script/conf
 MKZLIB = $(TOPDIR)/script/mk.zlib.sh
 MKPNGLIB = $(TOPDIR)/script/mk.libpng.sh
 MKICONVLIB = $(TOPDIR)/script/mk.iconv.sh
+MKFREETYPELIB = $(TOPDIR)/freetype/mk.freetype.sh
 MKAUTO=Makefile.auto
 
 MAKE=make CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CC) CFLAG="$(CFLAG)" TOPDIR=$(TOPDIR)
@@ -111,6 +112,11 @@ lib/libpng.a:
 
 lib/libiconv.a:
 	TOPDIR=$(TOPDIR) CC=$(CROSS_COMPILE)gcc $(MKICONVLIB)
+	rm $(TOPDIR)/bin -rf
+	rm $(TOPDIR)/share -rf
+
+lib/libfreetype.a:
+	TOPDIR=$(TOPDIR) CC=$(CROSS_COMPILE)gcc $(MKFREETYPELIB)
 	rm $(TOPDIR)/bin -rf
 	rm $(TOPDIR)/share -rf
 
