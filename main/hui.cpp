@@ -299,26 +299,26 @@ void ParseControl(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 //		log_i("%s done=%d fore=%d\r\n", xml->filename.c_str(), xml->done,
 //				xml->fore);
 	}
-	else if (event == "snap")
-	{
-		log_i("event = snap\r\n");
-		hustr file = xmlmp["file"]->getvalue();
-		int force = xmlmp["force"]->getvalue_int();
-		if (file.empty())
-		{
-			file.format("%s.png", xml->filename.c_str());
-			log_i("save default snap\r\n");
-		}
-		else
-		{
-			log_i("save snap to file %s\r\n", file.c_str());
-		}
-		if (force)
-		{
-			remove(file);
-		}
-		xml->ScheduleSaveSnap(file);
-	}
+//	else if (event == "snap")
+//	{
+//		log_i("event = snap\r\n");
+//		hustr file = xmlmp["file"]->getvalue();
+//		int force = xmlmp["force"]->getvalue_int();
+//		if (file.empty())
+//		{
+//			file.format("%s.png", xml->filename.c_str());
+//			log_i("save default snap\r\n");
+//		}
+//		else
+//		{
+//			log_i("save snap to file %s\r\n", file.c_str());
+//		}
+//		if (force)
+//		{
+//			remove(file);
+//		}
+//		xml->ScheduleSaveSnap(file);
+//	}
 	else if (event == "cs")
 	{
 		hustr cont = xmlmp["cont"]->getvalue();
@@ -582,10 +582,10 @@ void ParseSet(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 }
 
 
-void parseDirectDraw(hustr parentName,HUMap & xmlmp, xmlproc * xml)
-{
-	xml->directDraw = xmlmp["direct"]->getvalue_int();
-}
+//void parseDirectDraw(hustr parentName,HUMap & xmlmp, xmlproc * xml)
+//{
+//	xml->directDraw = xmlmp["direct"]->getvalue_int();
+//}
 //HUTMap<XMLinstan_tf> XMLinstan;
 void init_xml_instan()
 {
@@ -605,7 +605,7 @@ void init_xml_instan()
 	XMLinstan["set"] = ParseSet;
 	XMLinstan["reDrawPage"] = ParseRefreshPage;
 	XMLinstan["reDrawElement"] = ParseRefreshElement;
-	XMLinstan["directDraw"] = parseDirectDraw;
+//	XMLinstan["directDraw"] = parseDirectDraw;
 
 }
 //int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)

@@ -99,41 +99,41 @@ private:
 //		executable exec;
 //		int tm;
 //	};
-	class save_snap: public schedule_ele
-	{
-	public:
-		xmlproc * m_xml;
-		hustr name;
-		save_snap(xmlproc * xml, const char * path)
-		{
-			m_xml = xml;
-			name = path;
-		}
-		~save_snap()
-		{
-			log_i("~snap\r\n");
-		}
-		int SaveSnap(const char * file)
-		{
-			if (!access_Image(file))
-			{
-				log_i("%s no exist , save Snap !!!\r\n", file);
-				m_xml->out.SaveResource(file);
-				return 1;
-
-			}
-			else
-			{
-				log_i("%s exist , no save Snap !!!\r\n", file);
-				return 0;
-			}
-		}
-		void onSchedule()
-		{
-			SaveSnap(name);
-			delete this;
-		}
-	};
+//	class save_snap: public schedule_ele
+//	{
+//	public:
+//		xmlproc * m_xml;
+//		hustr name;
+//		save_snap(xmlproc * xml, const char * path)
+//		{
+//			m_xml = xml;
+//			name = path;
+//		}
+//		~save_snap()
+//		{
+//			log_i("~snap\r\n");
+//		}
+//		int SaveSnap(const char * file)
+//		{
+//			if (!access_Image(file))
+//			{
+//				log_i("%s no exist , save Snap !!!\r\n", file);
+//				m_xml->out.SaveResource(file);
+//				return 1;
+//
+//			}
+//			else
+//			{
+//				log_i("%s exist , no save Snap !!!\r\n", file);
+//				return 0;
+//			}
+//		}
+//		void onSchedule()
+//		{
+//			SaveSnap(name);
+//			delete this;
+//		}
+//	};
 	int fore; //前台
 	int done; //完成解析
 	int m_exit; //线程退出
@@ -182,10 +182,10 @@ public:
 		HUTimerAdd(filename, g_exec.GetUpTimer() + ptimer, HuExec::_exec, c);
 	}
 
-	int ScheduleSaveSnap(const char * file)
-	{
-		que.addele(new save_snap(this, file));
-	}
+//	int ScheduleSaveSnap(const char * file)
+//	{
+//		que.addele(new save_snap(this, file));
+//	}
 	int run()
 	{
 		while (go && m_exit)
@@ -211,7 +211,7 @@ public:
 		//lock();
 		if (isDraw != 0 && fore == 1 && done == 1)
 		{
-			log_i("%s RenderFromBuffer\r\n",filename.c_str());
+			log_i("%s RenderToBuffer\r\n",filename.c_str());
 			out.RenderToFramebuffer(&fb);
 			fps.debug_timer("<fps>");
 			isDraw = 0;

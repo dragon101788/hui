@@ -269,7 +269,6 @@ public:
 	int isDraw;
 	int render_cached;  //输出到父元素后，父元素不立即render
 	element * parent;
-
 	image top_image;//元素的最高一层，专门用来绘制子空间
 
 

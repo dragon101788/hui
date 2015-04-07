@@ -741,22 +741,76 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 		unsigned int * dst_start;
 		lock();
 
-		if (dst_x < 0)
+//		if (dst_x < 0)
+//		{
+//			src_x -=dst_x;
+//			dst_x = 0;
+//		}
+//		if (dst_y < 0)
+//		{
+//			src_y -= dst_y;
+//			dst_y = 0;
+//		}
+//		if(dst_x+cp_w>dst_w){
+//			cp_w=dst_w-dst_x;
+//		}
+//		if(dst_y+cp_h>dst_h){
+//			cp_h=dst_h-dst_y;
+//		}
+
+		if (cp_h <= 0 || cp_w <= 0)
 		{
-			src_x -=dst_x;
-			dst_x = 0;
+			return ;
 		}
-		if (dst_y < 0)
+
+
+		if (src_x < 0)
 		{
-			src_y -= dst_y;
-			dst_y = 0;
+			dst_x -= src_x;
+			src_x = 0;
 		}
-		if(dst_x+cp_w>dst_w){
-			cp_w=dst_w-dst_x;
+		if (src_y < 0)
+		{
+			dst_y -= src_y;
+			src_y = 0;
 		}
-		if(dst_y+cp_h>dst_h){
-			cp_h=dst_h-dst_y;
+
+		if (src_y + cp_h > GetHeight())
+		{
+			//printf("AreaCopy src_y=%d cp_height=%d rsc_img->get_height()=%d\r\n", src_y, cp_height, rsc_img->get_height());
+			cp_h = GetHeight() - src_y;
+			if (cp_h <= 0)
+			{
+				return ;
+			}
 		}
+		if (src_x + cp_w > GetWidth())
+		{
+			//printf("AreaCopy src_x=%d cp_width=%d rsc_img->get_width()=%d\r\n", src_x, cp_width, rsc_img->get_width());
+			cp_w =GetWidth() - src_x;
+			if (cp_w <= 0)
+			{
+				return ;
+			}
+		}
+		if (dst_y + cp_h > dst_h)
+		{
+			cp_h = dst_h - dst_y;
+			if (cp_h <= 0)
+			{
+				return ;
+			}
+		}
+		if (dst_x + cp_w > dst_w)
+		{
+			cp_w = dst_w - dst_x;
+			if (cp_w <= 0)
+			{
+				return ;
+			}
+		}
+
+
 
 		int line_byte=cp_w * 4;
 		unsigned int dst_step= dst_w;

@@ -38,19 +38,18 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 
  void framebuffer::RenderImageToFrameBuffer_part(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y)
 {
-if (img == NULL ||img->isNULL())
-{
-	huErrExit("RenderFromBuffer Image invalid\r\n");
-}
+	if (img == NULL ||img->isNULL())
+	{
+		huErrExit("RenderFromBuffer Image invalid\r\n");
+	}
 
-ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
+	ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
 
- if (lcm_dpp == 32)
-{
-	img-> dump_to_buf_part(pSrcBuffer,src_x,src_y,src_w,src_h,u32Width,u32Height,dst_x, dst_y);
-}
-//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);
+	 if (lcm_dpp == 32)
+	{
+		img-> dump_to_buf_part(pSrcBuffer,src_x,src_y,src_w,src_h,u32Width,u32Height,dst_x, dst_y);
+	}
 
-ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
+	ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
 
 }
