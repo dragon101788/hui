@@ -33,15 +33,12 @@ public:
 	{
 		GetElementInfo(info);
 		info.AddInfo("id", id);
-		info.AddInfo("scroll_x", scroll_x);
-		info.AddInfo("scroll_y", scroll_y);
+
 	}
 	void doFlushConfig()
 	{
 		PraseElement();
 		id = m_mp["id"]->getvalue_int();
-		scroll_x = m_mp["scroll_x"]->getvalue_int();
-		scroll_y = m_mp["scroll_y"]->getvalue_int();
 		smooth=m_mp["smooth"]->getvalue_int();
 		fitWindow= m_mp["fitWindow"]->getvalue_int();
 		if(fitWindow){
@@ -53,11 +50,11 @@ public:
 		}
 		center=m_mp["center"]->getvalue_int();
 		if(center){
-			scroll_x = (zoom_x-width)>>1;
-			scroll_y = (zoom_y-height)>>1;
+			render_res[0].dst_x = (width-zoom_x)>>1;
+			render_res[0].dst_y = (height-zoom_y)>>1;
 		}else{
-			scroll_x = m_mp["scroll_x"]->getvalue_int();
-			scroll_y = m_mp["scroll_y"]->getvalue_int();
+			render_res[0].dst_x = m_mp["offset_x"]->getvalue_int();
+			render_res[0].dst_y = m_mp["offset_y"]->getvalue_int();
 		}
 		for (int i = 0; i < m_mp.count("node"); i++)
 		{
@@ -74,38 +71,6 @@ public:
 		if(!m_mp["cached"]->getvalue_int()){//如果cached=1标志就不绘制，等待下一次动态参数调整后统一绘制
 			Flush();
 		}
-	}
-	void doFlushConfigReduced()
-	{
-		hide = m_mp["hide"]->getvalue_int();
-
-		id = m_mp["id"]->getvalue_int();
-
-
-		smooth=m_mp["smooth"]->getvalue_int();
-		fitWindow= m_mp["fitWindow"]->getvalue_int();
-		res[id].LoadResource();
-		if(fitWindow){
-			zoom_x=width;
-			zoom_y=height;
-		}else{
-			zoom_x = m_mp["zoom_x"]->getvalue_int();
-			zoom_y = m_mp["zoom_y"]->getvalue_int();
-		}
-		center=m_mp["center"]->getvalue_int();
-		if(center){
-			scroll_x = (zoom_x-width)>>1;
-			scroll_y = (zoom_y-height)>>1;
-		}else{
-			scroll_x = m_mp["scroll_x"]->getvalue_int();
-			scroll_y = m_mp["scroll_y"]->getvalue_int();
-		}
-		zoom_img.SetBuffer(zoom_x,zoom_y);
-		 if(smooth)
-			 ImageTransform::zoom_bilinear(zoom_img,res[id]);
-		 else
-			 ImageTransform::zoom_no_bilinear(zoom_img,res[id]);
-		Flush();
 	}
 
 
