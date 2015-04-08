@@ -6,7 +6,7 @@
 #include"main/screen_handler.h"
 
 extern int go;
-#define DELAY 1000//1ms
+#define DELAY 10000//1ms
 class ScreenHandler;
 class ScreenTimerThread: public thread,private Mutex
 {
@@ -24,14 +24,15 @@ public:
 
 		while (go)
 		{
-			lock();
 			if(handler!=NULL){
+			lock();
 			handler->onTimer();
+			unlock();
 			usleep(delay);
 			}else{
 				usleep(DELAY);
 			}
-			unlock();
+
 
 		}
 		log_i("timer thread exit\r\n");
@@ -39,14 +40,17 @@ public:
 
 	void SwitchProc(ScreenHandler * hlr,unsigned int period)
 	{
+		if(handler==hlr)
+			return;
 		lock();//锁是必须的，不然run（）会崩溃
-		handler=hlr;
 		delay=period;
+		handler=hlr;
+		unlock();
 		if(handler!=NULL){
 			if(!isRuning())
 				create();
 		}
-		unlock();
+
 	}
 
 };

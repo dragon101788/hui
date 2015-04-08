@@ -3,10 +3,12 @@
 #include "xmlproc.h"
 
 DirectProcTimer g_dirctExec;
-void ScreenHandler::setTimer(ScreenTimerThread *thread,unsigned int period){
-	thread->SwitchProc(this,period);
+void ScreenHandler::setTimer(ScreenTimerThread *thread,unsigned int us){
+		thread->SwitchProc(this,us);
 }
-
+void ScreenHandler::stopTimer(ScreenTimerThread *thread){
+		thread->SwitchProc(NULL,0);
+}
 	BaseView * ScreenHandler::findViewByName(const char *name){
 		BaseView * view=(BaseView *)viewManager->GetElementByName(name);
 		if(view==NULL){

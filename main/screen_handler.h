@@ -212,9 +212,9 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer,public KeypadListen
 	/***********************
 	 * 设置定时器
 	 */
-	void setTimer(ScreenTimerThread *thread,unsigned int period);
+	void setTimer(ScreenTimerThread *thread,unsigned int us);
 
-
+	void stopTimer(ScreenTimerThread *thread);
 
 	virtual void doFlushConfig(){
 		//name = m_mp["name"]->getvalue();
