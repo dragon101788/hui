@@ -22,6 +22,8 @@ public:
 		hide = 0;
 		lenth = 0;
 		align_center=0;
+		padding_left=0;
+		padding_top=0;
 
 	}
 	~static_text()
@@ -122,14 +124,15 @@ public:
 			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
 			txt = m_mp["txt"]->getvalue();
 			ttf.color = color;
-
+			int pl=padding_left;
+			int pt=padding_top;
 			if(align_center){
-				padding_left+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
-				padding_left>0?padding_left:0;
-				padding_top+=(height-size)/2;
-				padding_top>0?padding_top:0;
+				pl+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+				pl>0?pl:0;
+				pt+=(height-size)/2;
+				pt>0?pt:0;
 				}
-			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
 	}
 		Flush();
 	}
@@ -140,33 +143,59 @@ public:
 		//	image::Render(&img, 0, 0, width, height, 0, 0);
 	}
 	void setText(const char * t){
-		this->txt =t;
+		int pl=padding_left;
+		int pt=padding_top;
+		txt =t;
 		ttf.cleanBuf();
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		if(align_center){
+			pl+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			pl>0?pl:0;
+			pt+=(height-size)/2;
+			pt>0?pt:0;
+			}
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
-	void setText(hustr t,unsigned int color){
-		this->txt =t;
+	void setText(const char * t,unsigned int color){
+		int pl=padding_left;
+		int pt=padding_top;
+		txt =t;
 		ttf.color = color;
 		ttf.cleanBuf();
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		if(align_center){
+			pl+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			pl>0?pl:0;
+			pt+=(height-size)/2;
+			pt>0?pt:0;
+			}
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
 	void setColor(unsigned int color){
 		ttf.color = color;
 		ttf.cleanBuf();
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		int pl=padding_left;
+		int pt=padding_top;
+		if(align_center){
+			pl+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			pl>0?pl:0;
+			pt+=(height-size)/2;
+			pt>0?pt:0;
+			}
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
 	void setSize( int size){
+		int pl=padding_left;
+		int pt=padding_top;
 		ttf.fontHeight = size;
 		if(align_center){
-			padding_left+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
-			padding_left>0?padding_left:0;
-			padding_top+=(height-size)/2;
-			padding_top>0?padding_top:0;
+			pl+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			pl>0?pl:0;
+			pt+=(height-size)/2;
+			pt>0?pt:0;
 			}
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
 	text ttf;
