@@ -4,8 +4,8 @@
 #include "manager_touch.h"
 #include "manager_timer.h"
 #include "manager_cs.h"
-#include "Framebuffer.h"
-#include "screenHandler.h"
+#include "framebuffer.h"
+#include "screen_handler.h"
 class xmlproc;
 typedef SmartPtr<xmlproc> pXmlproc;
 extern pXmlproc g_cur_xml;

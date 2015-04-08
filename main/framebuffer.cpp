@@ -1,4 +1,4 @@
-#include "Framebuffer.h"
+#include "framebuffer.h"
 
 framebuffer fb;
 void framebuffer::RenderImageToFrameBuffer(image * img)

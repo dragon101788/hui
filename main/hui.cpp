@@ -17,7 +17,7 @@
 #include "thread_touch.h"
 #include "thread_keypad.h"
 #include "XMLInstal.h"
-#include "Framebuffer.h"
+#include "framebuffer.h"
 #include "loaderDL.h"
 #include "dlproc.h"
 #include <sys/sysinfo.h>

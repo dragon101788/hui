@@ -1,5 +1,5 @@
-#ifndef __PAGE_CONTROL_H__
-#define __PAGE_CONTROL_H__
+#ifndef __SCREEN_HANDLER_H__
+#define __SCREEN_HANDLER_H__
 
 
 

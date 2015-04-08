@@ -2,7 +2,7 @@
 #define __VIEW_H__
 
 #include"layer.h"
-#include"screenHandler.h"
+#include"screen_handler.h"
 #include "image_transform.h"
 
 
