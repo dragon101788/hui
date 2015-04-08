@@ -17,10 +17,10 @@ public:
 	static void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,double move_x,double move_y){
 		::rotate(dstPic,srcPic, angle,ZoomX,ZoomY, move_x, move_y);
 	}
-	static void zoom_no_bilinear(const base_image& Dst,const base_image& Src){
+	static void zoom_no_bilinear(const BaseImage& Dst,const BaseImage& Src){
 		::PicZoom_no_Bilinear(Dst,Src);
 	}
-	static void zoom_bilinear(const base_image& Dst,const base_image& Src){
+	static void zoom_bilinear(const BaseImage& Dst,const BaseImage& Src){
 		::PicZoom_ftBilinear(Dst,Src);
 	}
 };

@@ -32,7 +32,7 @@
 
 
 
-void PicZoom_no_Bilinear(const base_image& Dst,const base_image& Src)
+void PicZoom_no_Bilinear(const BaseImage& Dst,const BaseImage& Src)
 {
     if (  (0==Dst.u32Width)||(0==Dst.u32Height)
         ||(0==Src.u32Width)||(0==Src.u32Height)) return;
@@ -106,7 +106,7 @@ void CreateZoomTable_OpMul(const long SrcLength,const long DstLength,long* ZoomT
 }
 
 //����汾�ڳ����ͳ˷��Ƚϰ����CPU�Ͽ���Ч������ ����ʵ���ԼӸĶ��������������κγ˳���ָ��
-void PicZoom3_Table_OpMul(const base_image& Dst,const base_image& Src)
+void PicZoom3_Table_OpMul(const BaseImage& Dst,const BaseImage& Src)
 {
     if (  (0==Dst.u32Width)||(0==Dst.u32Height)
         ||(0==Src.u32Width)||(0==Src.u32Height)) return;
@@ -162,7 +162,7 @@ void PicZoom3_Table_OpMul(const base_image& Dst,const base_image& Src)
         *(unsigned long*)(result)=(GA & 0xFF00FF00)|((BR & 0xFF00FF00)>>8);
     }
 
-    inline void Bilinear_Border_Common(const base_image& pic,const long x_16,const long y_16,Color32* result)
+    inline void Bilinear_Border_Common(const BaseImage& pic,const long x_16,const long y_16,Color32* result)
     {
         long x=(x_16>>16);
         long y=(y_16>>16);
@@ -178,7 +178,7 @@ void PicZoom3_Table_OpMul(const base_image& Dst,const base_image& Src)
         Bilinear_Fast_Common(&pixel[0],&pixel[2],u_16>>8,v_16>>8,result);
     }
 
-void PicZoom_Bilinear(const base_image& Dst,const base_image& Src)
+void PicZoom_Bilinear(const BaseImage& Dst,const BaseImage& Src)
 {
     if (  (0==Dst.u32Width)||(0==Dst.u32Height)
         ||(0==Src.u32Width)||(0==Src.u32Height)) return;
@@ -261,7 +261,7 @@ void PicZoom_Bilinear(const base_image& Dst,const base_image& Src)
 
 //===============================================================================================================================
 
-void PicZoom_ftBilinear(const base_image& Dst,const base_image& Src)
+void PicZoom_ftBilinear(const BaseImage& Dst,const BaseImage& Src)
 {
     if (  (0==Dst.u32Width)||(0==Dst.u32Height)
         ||(2>Src.u32Width)||(2>Src.u32Height)) return;
