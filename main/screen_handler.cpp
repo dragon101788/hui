@@ -1,5 +1,5 @@
 #include "screen_handler.h"
-#include "screenHandler/timer_thread.h"
+#include "screen_timer_thread.h"
 #include "xmlproc.h"
 
 DirectProcTimer g_dirctExec;

@@ -7,7 +7,6 @@
 #include "codec.h"
 #include "schedule.h"
 #include "hulib.h"
-//#include "thread_keypad.h"
 #include <deque>
 #include <set>
 
