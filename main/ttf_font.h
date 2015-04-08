@@ -75,7 +75,6 @@ public:
 	}
 	int setPixelSize(int fontWidth, int fontHeight)
 	{
-		Font_H = fontHeight;
 		ft_error = FT_Set_Pixel_Sizes(face, fontWidth, fontHeight);
 		if (ft_error)
 		{
@@ -91,20 +90,16 @@ public:
          ssize_t convert(const char *tocode, const char *fromcode, char *inbufp, size_t inbytesleft, char *outbufp,
                 size_t outbytesleft);
 
-	void DrawText(text * ptext, const char *encode, char * showtxt,int buff_width,int buff_height,
-			unsigned int txt_len);
-	void DrawText(text * ptext, const char *encode, char * showtxt,int buff_width,int buff_height,
-				unsigned int txt_len,int padding_left,int padding_top);
-	void DrawText(text * ptext, const char *encode, char * showtxt,int buff_width,
-			int buff_height, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd);
-	int TTF_DisplayAscii(text * ptext, const unsigned char *text, int num,
-			unsigned int color, unsigned char style);
-	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num,
-			unsigned int color, unsigned char style,int buff_width,int buff_height);
+	void DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len);
+	void DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len,int padding_left,int padding_top);
+	void DrawText(text * ptext, const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd);
+//	int TTF_DisplayAscii(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
+//			int buff_width,int buff_height ,int padding_left,int padding_top);
+	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num,unsigned int color, unsigned char style);
 	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
-			int buff_width,int buff_height ,int padding_left,int padding_top);
+			int padding_left,int padding_top);
 	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
-			int buff_width,int buff_height ,int padding_left,int padding_top,float alphaStart,float alphaEnd);
+			int padding_left,int padding_top,float alphaStart,float alphaEnd);
 	FT_Library ft_Lib;
 	FT_Face face;
 	FT_UInt glyph_index;
@@ -112,7 +107,6 @@ public:
 	FT_Matrix matrix;
 	FT_Error ft_error;
 	unsigned char TTF_bitmap_type;
-	unsigned int Font_H;
 };
 class text: public image
 {
@@ -171,13 +165,7 @@ public:
 	{
 		if (m_font != NULL)
 		{
-//			if (fontHeight > u32Height)
-//			{
-//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
-//						fontHeight, u32Height);
-//			}
-			m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len);
-
+			m_font->DrawText(this, encode, showtxt,txt_len);
 		}
 	}
 
@@ -190,7 +178,7 @@ public:
 	//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
 	//						fontHeight, u32Height);
 	//			}
-				m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len,padding_left,padding_top);
+				m_font->DrawText(this, encode, showtxt,txt_len,padding_left,padding_top);
 
 			}
 		}
@@ -203,7 +191,7 @@ public:
 	//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
 	//						fontHeight, u32Height);
 	//			}
-				m_font->DrawText(this, encode, showtxt, u32Width,u32Height,txt_len,padding_left,padding_top,alphaStart, alphaEnd);
+				m_font->DrawText(this, encode, showtxt, txt_len,padding_left,padding_top,alphaStart, alphaEnd);
 
 			}
 		}
@@ -216,7 +204,7 @@ public:
 //				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
 //						fontHeight, u32Height);
 //			}
-			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style,u32Width,u32Height);
+			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style);
 
 		}
 	}
@@ -224,7 +212,7 @@ public:
 	{
 		if (m_font != NULL)
 		{
-			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style,u32Width,u32Height, padding_left,padding_top);
+			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style, padding_left,padding_top);
 		}
 	}
 //format convert 
