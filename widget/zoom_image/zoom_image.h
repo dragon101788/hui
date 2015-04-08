@@ -4,7 +4,7 @@
 #include "XMLInstal.h"
 #include "view.h"
 
-class zoom_image: public View
+class zoom_image: public BaseView
 {
 public:
 	zoom_image()
@@ -68,9 +68,9 @@ public:
 		res[id].LoadResource();
 		zoom_img.SetBuffer(zoom_x,zoom_y);
 		 if(smooth)
-			 PicZoom_ftBilinear(zoom_img,res[id]);
+			 ImageTransform::zoom_bilinear(zoom_img,res[id]);
 		 else
-			 PicZoom_no_Bilinear(zoom_img,res[id]);
+			 ImageTransform::zoom_no_bilinear(zoom_img,res[id]);
 		if(!m_mp["cached"]->getvalue_int()){//如果cached=1标志就不绘制，等待下一次动态参数调整后统一绘制
 			Flush();
 		}
@@ -102,9 +102,9 @@ public:
 		}
 		zoom_img.SetBuffer(zoom_x,zoom_y);
 		 if(smooth)
-			 PicZoom_ftBilinear(zoom_img,res[id]);
+			 ImageTransform::zoom_bilinear(zoom_img,res[id]);
 		 else
-			 PicZoom_no_Bilinear(zoom_img,res[id]);
+			 ImageTransform::zoom_no_bilinear(zoom_img,res[id]);
 		Flush();
 	}
 

@@ -3,6 +3,7 @@
 
 #include"layer.h"
 #include"screenHandler.h"
+#include "image_transform.h"
 
 
 

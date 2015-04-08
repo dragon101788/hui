@@ -102,13 +102,11 @@ public:
 
 	void doRender()
 	{
-		//image::Render(&res[id], xpos, ypos, width, height, 0, 0);
 		res[id].LoadResource();
-		//rotate(&res[id],&rotated,angle);
 		if(center)
-		center_rotate( rotated, res[id],angle,zoomX,zoomY);
+			ImageTransform::rotete_center( rotated, res[id],angle,zoomX,zoomY);
 		else
-		rotate( rotated, res[id],angle,zoomX,zoomY,0,0);
+			ImageTransform::rotate( rotated, res[id],angle,zoomX,zoomY,0,0);
 		render_res[0].img=&rotated;
 
 		//scroll_x=tan(angle*3.1415/180)*height;
