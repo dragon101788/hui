@@ -487,13 +487,13 @@ public:
 		}
 	}
 
-	class layer_res
+	class LayerRes
 	{
 	public:
 		int dst_x;
 		int dst_y;
 		image *img;
-		layer_res(){
+		LayerRes(){
 			dst_x=0;  //复制到目标图片的位置
 			dst_y=0;
 			img=NULL;
@@ -507,7 +507,7 @@ public:
 	xmlproc * xml_mgr;
 	map<int, image> res; //从外面加载的图片资源
 	//image * cur_res;
-	map<int, layer_res> render_res;//由原来的单一指针改为指针map，可以在doRender里面同时绘制几层图
+	map<int, LayerRes> render_res;//由原来的单一指针改为指针map，可以在doRender里面同时绘制几层图
 	schedule_draw * mgr;
 	list<element *> layers;     //底顶合一队列
 

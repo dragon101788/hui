@@ -123,9 +123,9 @@
 		if (!layers.empty())
 		{
 			list<element *>::iterator it;
-			map<int,layer_res>::iterator itp;
+			map<int,LayerRes>::iterator itp;
 			element * ele;
-			layer_res *lay_res;
+			LayerRes *lay_res;
 			//image * img;
 			int s_ofx ; //源x
 			int d_ofx ; //目标x
