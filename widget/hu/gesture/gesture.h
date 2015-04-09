@@ -182,7 +182,7 @@ public:
 		list<area> are;
 		HUMap * mp;
 		gesture * parent;
-		HuExec exec;
+		ElementExec exec;
 		//hustr cmd;
 	};
 

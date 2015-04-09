@@ -132,7 +132,7 @@ public:
 
 
 	map<hustr, text>::iterator font_it;
-	HuExec exec;
+	ElementExec exec;
 	//hustr cmd;
 	text ttf;
 

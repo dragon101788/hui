@@ -10,7 +10,7 @@ map<hustr, pXmlproc> g_xml_proc;
 
 ProcTimer g_exec;
 
-int HuExec::doStart()
+int ElementExec::doStart()
 {
 	if (have)
 	{
@@ -66,6 +66,7 @@ void xmlproc::UnForeProc()
 		g_th_touch.SwitchProc(NULL);
 		g_th_timer.SwitchProc(NULL);
 		g_exec.ChangeContainer(NULL);
+		g_th_keypad.SwitchProc(NULL);
 		if(windCtl!=NULL){
 			windCtl->leaving();
 		}

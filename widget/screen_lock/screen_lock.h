@@ -155,7 +155,7 @@ public:
 protected:
 	UnlockedListener *listener;
 	image img;
-	HuExec exec;
+	ElementExec exec;
 	map<int, static_image *> nodemp;
 	int offset_x;
 	int node_num;

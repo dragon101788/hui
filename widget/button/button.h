@@ -14,8 +14,6 @@ public:
 		//printf("$$$HU$$$ %s %s tx=%d ty=%d t%d b%d l%d r%d\r\n",name,__FUNCTION__,tx,ty,top,bottom,left,right);
 		if (isdn == 1)
 			return;
-		//printf("%s touch\r\n", name.c_str());
-
 		Flush();
 	}
 
@@ -80,7 +78,7 @@ public:
 		alpha_mode=0;
 	}
 	int alpha_mode;
-	HuExec exec;
+	ElementExec exec;
 	//hustr cmd;
 };
 

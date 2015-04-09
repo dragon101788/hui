@@ -28,7 +28,7 @@
 using namespace std;
 
 #define DEFAULT_XMLFILE "start.xml"
-#define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
+#define MIN_MEN_PERCENT 60  //当剩余内存小于20%时开始清楚多余的页面
 
 void RefreshPage(xmlproc * xml);
 

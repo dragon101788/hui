@@ -14,7 +14,7 @@ public:
 	{
 	public:
 		int ntime;
-		HuExec exec;
+		ElementExec exec;
 		ca_image()
 		{
 			ntime = 0;

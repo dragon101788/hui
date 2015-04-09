@@ -185,12 +185,12 @@ void dumpstack()
 		status = dladdr(pcur, &info);
 		if (status && info.dli_fname && info.dli_fname[0] != '\0')
 		{
-			log_i("0x%08x 0x%08x %-20s <  %s+%p  >\r\n", pcur, info.dli_saddr, info.dli_fname, info.dli_sname,
+			log_e("0x%08x 0x%08x %-20s <  %s+%p  >\r\n", pcur, info.dli_saddr, info.dli_fname, info.dli_sname,
 					(unsigned long) ((unsigned int) pcur - (unsigned int) info.dli_saddr));
 		}
 		else
 		{
-			log_i("[%p]", (void *) *(next_fp - 1));
+			log_e("[%p]", (void *) *(next_fp - 1));
 		}
 
 		//array[cnt++] = (void *)*(next_fp - 1);
@@ -198,7 +198,7 @@ void dumpstack()
 		cnt++;
 	}
 
-	log_i("Backstrace (%d deep)\n", cnt);
+	log_e("Backstrace (%d deep)\n", cnt);
 
 }
 

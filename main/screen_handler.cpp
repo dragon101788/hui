@@ -2,7 +2,7 @@
 #include "screen_timer_thread.h"
 #include "xmlproc.h"
 
-DirectProcTimer g_dirctExec;
+ScreenExecProc g_screenExec;
 void ScreenHandler::setTimer(ScreenTimerThread *thread,unsigned int us){
 		thread->SwitchProc(this,us);
 }

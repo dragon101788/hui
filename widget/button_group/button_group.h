@@ -108,7 +108,7 @@ public:
 		int select;
 		int select_old;
 		int alpha_mode;
-		HuExec exec;
+		ElementExec exec;
 		button_group * father;
 	};
 

@@ -14,7 +14,7 @@ class schedule_draw;
 class element_manager;
 class element;
 class xmlproc;
-
+extern Mutex del_lock;
 class info: public hustr
 {
 public:
@@ -478,6 +478,7 @@ public:
 	{
 		log_i("###HU### distroy element %s\r\n", name.c_str());
 		//backstack();
+		del_lock.lock();
 		ResetLayers();
 		render_res.clear();
 		map<int, image>::iterator it;
@@ -485,6 +486,7 @@ public:
 		{
 			it->second.destroy();
 		}
+		del_lock.unlock();
 	}
 
 	class LayerRes

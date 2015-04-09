@@ -72,7 +72,7 @@ public:
 		}
 		int on;
 		image img[2];
-		HuExec exec;
+		ElementExec exec;
 		Radio_buttons * parent;
 	};
 	void doDelete()

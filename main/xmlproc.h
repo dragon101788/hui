@@ -18,18 +18,18 @@ void hui_exit(const char * cmd);
 
 extern DebugTimer fps;
 
-
-class HuExec
+extern Mutex del_lock;
+class ElementExec
 {
 public:
 	hustr run;
 	hustr cs;
 	int have;
-	HuExec()
+	ElementExec()
 	{
 		have = 0;
 	}
-	HuExec(HUMap & mp)
+	ElementExec(HUMap & mp)
 	{
 		have = 0;
 		parse(mp);
@@ -50,14 +50,14 @@ public:
 		}
 	}
 	virtual int doStart();
-	static int _exec(int tm, HuExec is)
+	static int _exec(int tm, ElementExec is)
 	{
 		is.doStart();
 	}
 
 };
 
-typedef HUTimer<HuExec> ProcTimer;
+typedef ExecThread<ElementExec> ProcTimer;
 extern ProcTimer g_exec;
 class xmlproc: public element_manager,
 		public CS_manager,
@@ -65,7 +65,7 @@ class xmlproc: public element_manager,
 		public touch_manager,
 		public schedule_draw,
 		public thread,
-		public ProcTimer::HUTimerContainer,
+		public ProcTimer::Container,
 		virtual public Mutex,
 		virtual public Sem
 {
@@ -176,16 +176,13 @@ public:
 //		g_cur_xml->PostCS(cs);
 //	}
 
-	void AddExec(int ptimer, HuExec c)
+	void AddExec(int ptimer, ElementExec c)
 	{
 		log_i("$$$HU$$$ exec %s %s\r\n", c.run.nstr(), c.cs.nstr());
-		HUTimerAdd(filename, g_exec.GetUpTimer() + ptimer, HuExec::_exec, c);
+		ExecAdd(filename, g_exec.GetUpTimer() + ptimer, ElementExec::_exec, c);
 	}
 
-//	int ScheduleSaveSnap(const char * file)
-//	{
-//		que.addele(new save_snap(this, file));
-//	}
+
 	int run()
 	{
 		while (go && m_exit)
@@ -195,7 +192,9 @@ public:
 				waitSem();
 			}
 			//int ret = ScheduleProc();
+			del_lock.lock();
 			 ScheduleProc();
+			del_lock.unlock();
 			if(directDraw)
 				printFps();
 			else

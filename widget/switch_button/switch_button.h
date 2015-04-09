@@ -82,7 +82,7 @@ public:
 		 Flush();
 	}
 	int select,select_old;
-	HuExec exec;
+	ElementExec exec;
 	//hustr cmd;
 };
 

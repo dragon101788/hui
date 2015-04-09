@@ -21,7 +21,7 @@ public:
 			dx = 0;
 			dy = 0;
 		}
-		HuExec exec;
+		ElementExec exec;
 		int dx;
 		int dy;
 	};

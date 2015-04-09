@@ -14,18 +14,24 @@ class ScreenTimerThread;
 
 
 
-class DirectExe
+class ScreenExec
 {
 public:
 	hustr xml;
 	typedef void (*pfunc)(const char *, const char *);
 	pfunc p;
-	DirectExe()
+	ScreenExec()
 	{
 		xml=NULL;
 		p=NULL;
 	}
-	DirectExe(const char *file,pfunc func)
+	 ~ScreenExec()
+	{
+		xml=NULL;
+		p=NULL;
+	}
+
+	 ScreenExec(const char *file,pfunc func)
 	{
 		xml=file;
 		p=func;
@@ -35,17 +41,17 @@ public:
 		xml=file;
 		p=func;
 	}
-	virtual int doStart(){
+	void doStart(){
 		p(xml.c_str(),NULL);
 	}
-	static int _exec(int tm, DirectExe is)
+	static int _exec(int tm, ScreenExec is)
 	{
 		is.doStart();
 	}
 
 };
-typedef HUTimer<DirectExe> DirectProcTimer;
-extern DirectProcTimer g_dirctExec;
+typedef ExecThread<ScreenExec> ScreenExecProc;
+extern ScreenExecProc g_screenExec;
 extern  void JumpToFile(const char * jump, const char * snap);
 extern  void IncludeXml(const char * include, const char * snap);
 class BaseView;
@@ -99,7 +105,7 @@ public:
 	};
 };
 
-class ScreenHandler:public DirectProcTimer::HUTimerContainer,public KeypadListener
+class ScreenHandler:public ScreenExecProc::Container,public KeypadListener
 {
 	public:
 
@@ -129,7 +135,7 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer,public KeypadListen
 	 */
 	 void coming(const char *lastFile){
 		 isRunning=0;
-		 setProcs();
+		 setExeProc();
 		onComing(lastFile);
 		//onResume();
 	}
@@ -139,7 +145,7 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer,public KeypadListen
 	 void leaving(){
 		// onPause();
 		 isRunning=1;
-		 unSetProcs();
+		 unsetExeProc();
 		onLeaving();
 	}
 
@@ -223,35 +229,39 @@ class ScreenHandler:public DirectProcTimer::HUTimerContainer,public KeypadListen
 		doFlushConfig();
 	}
 
-	void AddExecDirect(int ptimer, DirectExe c)
+	void AddExec(int ptimer, ScreenExec c)
 	{
 		log_i("%s DitectExe.xml=%s",name.c_str(),c.xml.c_str());
-		HUTimerAdd(name,g_dirctExec.GetUpTimer() + ptimer, DirectExe::_exec,c);
+		ExecAdd(name,g_screenExec.GetUpTimer() + ptimer, ScreenExec::_exec,c);
 
 	}
 
 	void gotoScreen(const char * xml){
-		DirectExe myExec;
+		ScreenExec myExec;
 		myExec.setExec(xml,JumpToFile);
-		AddExecDirect(0,myExec);
+		AddExec(0,myExec);
 		//JumpToFile(xml,NULL);//不能直接调用此函数
 	}
 	void includeXml(const char * xml){
-		DirectExe myExec;
+		ScreenExec myExec;
 		myExec.setExec(xml,IncludeXml);
-		AddExecDirect(0,myExec);
+		AddExec(0,myExec);
 		//JumpToFile(xml,NULL);//不能直接调用此函数
 	}
 
 	bool isRun() const{
 		return isRunning;
 	}
+//	typedef void (*pfunc)(const char *, const char *);
+//	void loadFile(pfunc pf,const char * file){
+//		pfunc(file,NULL);
+//	}
 
-	void setProcs(){
-		g_dirctExec.ChangeContainer(this);
+	void setExeProc(){
+		g_screenExec.ChangeContainer(this);
 	 }
-	void unSetProcs(){
-		g_dirctExec.ChangeContainer(NULL);
+	void unsetExeProc(){
+		g_screenExec.ChangeContainer(NULL);
 	 }
 	BaseView * findViewByName(const char *name);
 

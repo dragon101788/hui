@@ -5,7 +5,7 @@
 
 
 
-
+  Mutex del_lock;
 
 	void element::PraseElement()
 	{
