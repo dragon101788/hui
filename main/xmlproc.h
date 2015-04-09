@@ -57,15 +57,18 @@ public:
 
 };
 
-typedef ExecThread<ElementExec> ProcTimer;
-extern ProcTimer g_exec;
+
+
+
+typedef ExecThread<ElementExec> ElementExecProc;
+extern ElementExecProc g_elementExec;
 class xmlproc: public element_manager,
 		public CS_manager,
 		public timer_manager,
 		public touch_manager,
 		public schedule_draw,
 		public thread,
-		public ProcTimer::Container,
+		public ElementExecProc::Container,
 		virtual public Mutex,
 		virtual public Sem
 {
@@ -179,7 +182,7 @@ public:
 	void AddExec(int ptimer, ElementExec c)
 	{
 		log_i("$$$HU$$$ exec %s %s\r\n", c.run.nstr(), c.cs.nstr());
-		ExecAdd(filename, g_exec.GetUpTimer() + ptimer, ElementExec::_exec, c);
+		ExecAdd(filename, g_elementExec.GetUpTimer() + ptimer, ElementExec::_exec, c);
 	}
 
 

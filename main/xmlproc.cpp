@@ -8,7 +8,7 @@ DebugTimer fps;
 pXmlproc g_cur_xml;
 map<hustr, pXmlproc> g_xml_proc;
 
-ProcTimer g_exec;
+ElementExecProc g_elementExec;
 
 int ElementExec::doStart()
 {
@@ -30,7 +30,8 @@ void xmlproc::switchProcs(){
 		g_th_touch.SwitchProc(this);
 		g_th_timer.SwitchProc(this);
 		g_th_keypad.SwitchProc(windCtl);
-		g_exec.ChangeContainer(this);
+		g_elementExec.ChangeContainer(this);
+
  }
 
 
@@ -65,7 +66,7 @@ void xmlproc::UnForeProc()
 		fore = 0;
 		g_th_touch.SwitchProc(NULL);
 		g_th_timer.SwitchProc(NULL);
-		g_exec.ChangeContainer(NULL);
+		g_elementExec.ChangeContainer(NULL);
 		g_th_keypad.SwitchProc(NULL);
 		if(windCtl!=NULL){
 			windCtl->leaving();

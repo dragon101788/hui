@@ -19,3 +19,5 @@ void ScreenHandler::stopTimer(ScreenTimerThread *thread){
 		}
 		return view;
 	}
+
+

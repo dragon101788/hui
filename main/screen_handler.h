@@ -12,8 +12,6 @@
 
 class ScreenTimerThread;
 
-
-
 class ScreenExec
 {
 public:
@@ -44,19 +42,19 @@ public:
 	void doStart(){
 		p(xml.c_str(),NULL);
 	}
-	static int _exec(int tm, ScreenExec is)
+	static int _exec(ScreenExec is)
 	{
 		is.doStart();
 	}
 
 };
-typedef ExecThread<ScreenExec> ScreenExecProc;
+typedef DirectExecThread<ScreenExec> ScreenExecProc;
 extern ScreenExecProc g_screenExec;
+
 extern  void JumpToFile(const char * jump, const char * snap);
 extern  void IncludeXml(const char * include, const char * snap);
 class BaseView;
 class xmlproc;
-
 class OnTouchListener{
 public:
 	OnTouchListener(){
@@ -105,7 +103,7 @@ public:
 	};
 };
 
-class ScreenHandler:public ScreenExecProc::Container,public KeypadListener
+class ScreenHandler:public KeypadListener
 {
 	public:
 
@@ -135,7 +133,6 @@ class ScreenHandler:public ScreenExecProc::Container,public KeypadListener
 	 */
 	 void coming(const char *lastFile){
 		 isRunning=0;
-		 setExeProc();
 		onComing(lastFile);
 		//onResume();
 	}
@@ -143,9 +140,7 @@ class ScreenHandler:public ScreenExecProc::Container,public KeypadListener
 	 * 切换到后台
 	 */
 	 void leaving(){
-		// onPause();
 		 isRunning=1;
-		 unsetExeProc();
 		onLeaving();
 	}
 
@@ -229,40 +224,33 @@ class ScreenHandler:public ScreenExecProc::Container,public KeypadListener
 		doFlushConfig();
 	}
 
-	void AddExec(int ptimer, ScreenExec c)
-	{
-		log_i("%s DitectExe.xml=%s",name.c_str(),c.xml.c_str());
-		ExecAdd(name,g_screenExec.GetUpTimer() + ptimer, ScreenExec::_exec,c);
 
-	}
 
 	void gotoScreen(const char * xml){
 		ScreenExec myExec;
 		myExec.setExec(xml,JumpToFile);
-		AddExec(0,myExec);
-		//JumpToFile(xml,NULL);//不能直接调用此函数
+		screenAddExec(myExec);
 	}
 	void includeXml(const char * xml){
 		ScreenExec myExec;
 		myExec.setExec(xml,IncludeXml);
-		AddExec(0,myExec);
+		screenAddExec(myExec);
 		//JumpToFile(xml,NULL);//不能直接调用此函数
 	}
+	void screenAddExec( ScreenExec c)
+		{
+			log_i("%s DitectExe.xml=%s",name.c_str(),c.xml.c_str());
+			g_screenExec.execAdd(name,ScreenExec::_exec,c);
+
+		}
+
+
 
 	bool isRun() const{
 		return isRunning;
 	}
-//	typedef void (*pfunc)(const char *, const char *);
-//	void loadFile(pfunc pf,const char * file){
-//		pfunc(file,NULL);
-//	}
 
-	void setExeProc(){
-		g_screenExec.ChangeContainer(this);
-	 }
-	void unsetExeProc(){
-		g_screenExec.ChangeContainer(NULL);
-	 }
+
 	BaseView * findViewByName(const char *name);
 
 	bool isRunning;
