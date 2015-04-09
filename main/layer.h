@@ -53,6 +53,7 @@ public:
 	void ClearElement()
 	{
 		elem.clear();
+
 	}
 	 void DelElement(const char * name);
 //	virtual void DelElement(const char * name)
@@ -286,9 +287,9 @@ class element:virtual public window,public image,public schedule_ele, virtual pu
 public:
 
 
-	virtual void doFlushConfig()=0;
+	virtual void doFlushConfig(){};
 	virtual void doFlushConfigReduced(){};
-	virtual void doRender() = 0;
+	virtual void doRender(){};
 //	virtual void doRender(){
 //		if(!elem.empty())//有子元素，则需要输出子元素
 //		image::Render(&out, 0, 0, width, height, 0, 0);

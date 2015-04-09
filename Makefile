@@ -2,8 +2,8 @@ sinclude .config
 #CROSS_COMPILE:=$(HOME)/usr/arm/4.3.3/bin/arm-linux-
 
 
-CROSS_COMPILE:=arm-linux-
-#CROSS_COMPILE:=
+#CROSS_COMPILE:=arm-linux-
+CROSS_COMPILE:=/work/cortex-A8/buildroot/output/host/usr/bin/arm-linux-
 CC=$(CROSS_COMPILE)g++
 STRIP=$(CROSS_COMPILE)strip
 TOPDIR=$(PWD)/
@@ -25,7 +25,7 @@ CONF = $(TOPDIR)/script/conf
 MKZLIB = $(TOPDIR)/script/mk.zlib.sh
 MKPNGLIB = $(TOPDIR)/script/mk.libpng.sh
 MKICONVLIB = $(TOPDIR)/script/mk.iconv.sh
-MKFREETYPELIB = $(TOPDIR)/script/mk.freetype.sh
+MKFREETYPELIB = $(TOPDIR)/script/mk.freetype.sh 
 MKAUTO=Makefile.auto
 
 MAKE=make CROSS_COMPILE=$(CROSS_COMPILE) CC=$(CC) CFLAG="$(CFLAG)" TOPDIR=$(TOPDIR)

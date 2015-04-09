@@ -378,6 +378,7 @@ void element::Delete()
 	RenderOut();
 	//ResetLayers();
 	//debug("Delete after ResetLayers !!\n");
+
 	if(hasParent()){
 		parent->elem.erase(name);
 	}
