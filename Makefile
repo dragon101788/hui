@@ -2,8 +2,8 @@ sinclude .config
 #CROSS_COMPILE:=$(HOME)/usr/arm/4.3.3/bin/arm-linux-
 
 
-CROSS_COMPILE:=arm-linux-
-#CROSS_COMPILE:=
+#CROSS_COMPILE:=arm-linux-
+CROSS_COMPILE:=/usr/local/arm_linux_4.2/bin/arm-linux-
 CC=$(CROSS_COMPILE)g++
 STRIP=$(CROSS_COMPILE)strip
 TOPDIR=$(PWD)/
