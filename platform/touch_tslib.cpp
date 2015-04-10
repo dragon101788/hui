@@ -38,11 +38,8 @@ int GetTouchSample(touch_sample * samp)
 	struct ts_sample ts_samp;
 	int ret;
 	
-	while(1)
-	{
-		log_e("read----------\n");
+	while(1){
 		ret = ts_read(ts, &ts_samp, 1);
-		log_e("samp->x=%d----\n",samp->x);
 		if (ret < 0)
 		{
 			perror("ts_read");
