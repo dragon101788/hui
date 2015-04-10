@@ -61,12 +61,12 @@
 			lay = 5;
 		}
 
-		if (pSrcBuffer == NULL)
-		{
-			//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
-			SetBuffer(width, height);
-			path.format("ele-%s %dx%d", name.c_str(), width, height);
-		}
+//		if (pSrcBuffer == NULL)
+//		{
+//			//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+//			SetBuffer(width, height);
+//			path.format("ele-%s %dx%d", name.c_str(), width, height);
+//		}
 
 		initstack();
 
@@ -291,22 +291,46 @@ void element::RenderOut()
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 
 	if(parent!=NULL){
+		parent->isDraw++;
 		log_i("%s draw to parent!!!!!!!\n",name.c_str());
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
-		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
 		if(render_cached)
 			parent->Flush();
 		else
 			parent->RenderOut();
+
 	}else{
-		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
-		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
-			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
-		}else
-		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+		xml_mgr->addDraw();
 	}
+
+//	else{
+//		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
+//		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
+//			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
+//		}else
+//		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+//	}
+
+
+//	if(parent!=NULL){
+//		log_i("%s draw to parent!!!!!!!\n",name.c_str());
+//		if(!parent->isParent()){
+//			parent->tobeParent(name,this);
+//		}
+//		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
+//		if(render_cached)
+//			parent->Flush();
+//		else
+//			parent->RenderOut();
+//	}else{
+//		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
+//		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
+//			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
+//		}else
+//		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
+//	}
 
 }
 
@@ -322,15 +346,16 @@ void element::cleanLastPos()
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
-		parent->Draw(this,  0, 0, width, height, x, y);//控件输出到父控件
+		//parent->Draw(this,  0, 0, width, height, x, y);//控件输出到父控件
 		parent->RenderOut();
 
-	}else{
-		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
-			xml_mgr->drawDirect(this,  0, 0, width, height, x, y);
-		}else
-		xml_mgr->Draw(this,  0, 0, width, height, x, y);//控件局部输出到容器
 	}
+//	else{
+//		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
+//			xml_mgr->drawDirect(this,  0, 0, width, height, x, y);
+//		}else
+//		xml_mgr->Draw(this,  0, 0, width, height, x, y);//控件局部输出到容器
+//	}
 	unlock();
 
 }
@@ -394,6 +419,56 @@ void element::DeleteByParent()
 	revocation();
 	xml_mgr->elem.erase(name);
 }
+
+
+void element::AreaCopy(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
+{
+	if(hasParent()){
+		parent->top_image.AreaCopy( src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
+	}else{
+		xml_mgr->out.AreaCopy( src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
+	}
+}
+
+void element::Render(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
+{
+	src_img->LoadResource();
+	int _dst_x=dst_x+x;
+	int _dst_y=dst_y+y;
+
+	if(hasParent()){
+		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y))
+			return;
+		Render_img_to_img(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_y, _dst_y);
+
+	}else{
+		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y))
+			return;
+		Render_img_to_img(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
+	}
+}
+
+void element::cleanBuf()
+{
+	if (hasParent()){
+		int src_offset=y*parent->top_image.u32Stride+x<<2;
+		int cp_size=width<<2;
+		for(int i=0;i<height;i++){
+			memset(parent->top_image.pSrcBuffer+src_offset, 0, cp_size);
+		}
+	}else{
+		int src_offset=y*xml_mgr->out.u32Stride+x<<2;
+		int cp_size=width<<2;
+		for(int i=0;i<height;i++){
+			memset(parent->top_image.pSrcBuffer+src_offset, 0, cp_size);
+		}
+	}
+}
+
+
+
+
+
 /*
  * 在加载图片及文字，显示在同一层
  */

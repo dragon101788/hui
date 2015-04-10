@@ -281,7 +281,7 @@ private:
 
 
 
-class element:virtual public window,public image,public schedule_ele, virtual public ele_nest_extend, virtual public Mutex //元素本身也是元素管理者
+class element:virtual public window,public schedule_ele, virtual public ele_nest_extend, virtual public Mutex //元素本身也是元素管理者
 {
 public:
 
@@ -327,6 +327,12 @@ public:
 		RenderOut();
 	}
 
+	void cleanBuf();
+
+
+	void AreaCopy(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
+
+	void Render(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
 
 	void Flush()
 	{
