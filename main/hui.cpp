@@ -28,7 +28,7 @@
 using namespace std;
 
 #define DEFAULT_XMLFILE "start.xml"
-#define MIN_MEN_PERCENT 60  //当剩余内存小于20%时开始清楚多余的页面
+#define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
 
 void RefreshPage(xmlproc * xml);
 
@@ -758,7 +758,7 @@ int main(int argc, char *argv[])
 #endif
 	g_th_msg.create();
 	g_th_timer.create();
-	fb.create();
+	//fb.create();
 //	g_cur_xml = new xmlproc(xmlfile);
 //	//g_xml_proc[xmlfile] = g_cur_xml;
 //	g_cur_xml->ParseXMLFile();
@@ -780,7 +780,7 @@ int main(int argc, char *argv[])
 #endif
 	log_i("wait g_th_touch OK\r\n");
 	g_th_msg.cancel();
-	fb.wait();
+	//fb.wait();
 	log_i("wait g_th_msg OK\r\n");
 
 	log_i("demo exit %d\r\n", go);

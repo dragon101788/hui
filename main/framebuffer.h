@@ -23,7 +23,7 @@ using namespace std;
 
 extern int go;
 #define RGB565(r,g,b)  ( ((r>>3)&(1<<5)-1)<<11 | ((g>>2)&(1<<6)-1)<<5 | ((b>>3)&(1<<5)-1)<<0 )
-class framebuffer: public Mutex, public thread,public Sem
+class framebuffer: public Mutex//, public thread,public Sem
 {
 
 public:
@@ -35,49 +35,23 @@ public:
 	int lcm_dpp;
 	hustr snap;
 
-	image *from_img;
-	/*
-    pthread_cond_t cond;
-	int flag;
+//	image *from_img;
 
-	void pthread_init()
-	{
-	    pthread_cond_init(&cond,NULL);
-	}
-
-	void pthread_suspend()
-	{
-	    lock();
-	    flag--;
-	    unlock();
-	}
-
-
-	void pthread_resume()
-	{
-		lock();
-	    flag++;
-	    pthread_cond_signal(&cond);
-	    unlock();
-	}
-
-*/
-
-
-	int run()
-	{
-
-		while(go){
-			waitSem();
-			lock();
-			if(from_img!=NULL){
-				RenderImageToFrameBuffer(from_img);
-			}
-			unlock();
-
-		}
-
-	}
+//
+//	int run()
+//	{
+//
+//		while(go){
+//			waitSem();
+//			lock();
+//			if(from_img!=NULL){
+//				RenderImageToFrameBuffer(from_img);
+//			}
+//			unlock();
+//
+//		}
+//
+//	}
 
 	framebuffer()
 	{
@@ -129,14 +103,14 @@ public:
 		lcm_fd = -1;
 	}
 
-	void NotifyRenderFrameBuffer(image * img){
-		//log_i("RenderImageToFrameBuffer in!!!\n");
-		lock();
-    	from_img=img;
-    	unlock();
-    	postSem();
-    //	log_i("RenderImageToFrameBuffer out!!!!\n");
-    }
+//	void NotifyRenderFrameBuffer(image * img){
+//		//log_i("RenderImageToFrameBuffer in!!!\n");
+//		lock();
+//    	from_img=img;
+//    	unlock();
+//    	postSem();
+//    //	log_i("RenderImageToFrameBuffer out!!!!\n");
+//    }
 	void RenderImageToFrameBuffer(image * img);
 	void RenderImageToFrameBuffer_part(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y);
 
