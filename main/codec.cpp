@@ -17,10 +17,10 @@
 #include "codec.h"
 #include "hulib.h"
 #include <assert.h>
-int
-image_write_to_snap(image * img, const char * path);
-int
-image_read_from_snap(image * img, const char * path);
+
+typedef  unsigned int uint32_t;
+int image_write_to_snap(image * img, const char * path);
+int image_read_from_snap(image * img, const char * path);
 
 void MyMemMove(void *dst,const void *src,size_t count)
 {
