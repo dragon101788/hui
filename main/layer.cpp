@@ -403,10 +403,9 @@ void element::cleanBuf()
 	if (hasParent()){
 		unsigned long src_offset=(unsigned long)parent->top_image.pSrcBuffer+y*parent->top_image.u32Stride+x<<2;
 		int cp_size=width<<2;
-		for(int i=0;i<height;){
+		for(int i=0;i<height;i++){
 			src_offset+=cp_size*i;
 			memset((void*)src_offset, 0,cp_size);
-			i++;
 		}
 	}else{
 		unsigned long  src_offset=(unsigned long)parent->top_image.pSrcBuffer+y*xml_mgr->out.u32Stride+x<<2;
