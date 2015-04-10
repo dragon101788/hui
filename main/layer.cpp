@@ -370,13 +370,19 @@ void element::DeleteByParent()
 	xml_mgr->elem.erase(name);
 }
 
-
+extern int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y,int disp_w,int disp_h);
 void element::AreaCopy(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 {
+	int _dst_x=dst_x+x;
+	int _dst_y=dst_y+y;
 	if(hasParent()){
-		parent->top_image.AreaCopy( src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
+		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,width,height))
+			 return;
+		::AreaCopy_no_ProcArea(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
 	}else{
-		xml_mgr->out.AreaCopy( src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
+		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,width,height))
+			 return;
+		::AreaCopy_no_ProcArea(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
 	}
 }
 
@@ -387,12 +393,12 @@ void element::Render(image * src_img, int src_x, int src_y, int cp_width, int cp
 	int _dst_y=dst_y+y;
 
 	if(hasParent()){
-		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y))
+		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,width,height))
 			return;
 		Render_img_to_img(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 
 	}else{
-		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y))
+		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,width,height))
 			return;
 		Render_img_to_img(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 	}

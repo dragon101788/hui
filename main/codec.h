@@ -28,7 +28,7 @@ int pngCodec_to_image(image * sobj, const char *filepath);
 int pngEndec_to_image(const char *file_name, image * graph);
 int codec_to_Image(image * enode, const char * filename);
 
-
+void AreaCopy_no_ProcArea(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
 void Render_img_to_buf(void * buf, image * img, int width, int height);
 int ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y);
 void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);

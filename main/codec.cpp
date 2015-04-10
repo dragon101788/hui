@@ -616,15 +616,6 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	}
 
 
-
-//		if (dst_x < 0)
-//		{
-//			dst_x = 0;
-//		}
-//		if (dst_y < 0)
-//		{
-//			dst_y = 0;
-//		}
 	if (src_y + cp_height > rsc_img->GetHeight())
 	{
 		//printf("AreaCopy src_y=%d cp_height=%d rsc_img->get_height()=%d\r\n", src_y, cp_height, rsc_img->get_height());
@@ -662,6 +653,66 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	return 0;
 }
 
+int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y,int disp_w,int disp_h)
+{
+	if (cp_width == 0 || cp_height == 0)
+	{
+		return 1;
+	}
+	if (cp_width < 0 || cp_height < 0)
+	{
+		huErrExit("AreaCopy cp_windth or cp_height <0\r\n");
+	}
+	//printf("$$$HU$$$ src_x=%d\r\n", src_x);
+
+	if (src_x < 0)
+	{
+		dst_x -= src_x;
+		src_x = 0;
+	}
+	if (src_y < 0)
+	{
+		dst_y -= src_y;
+		src_y = 0;
+	}
+
+
+	if (src_y + cp_height > rsc_img->GetHeight())
+	{
+		//printf("AreaCopy src_y=%d cp_height=%d rsc_img->get_height()=%d\r\n", src_y, cp_height, rsc_img->get_height());
+		cp_height = rsc_img->GetHeight() - src_y;
+		if (cp_height <= 0)
+		{
+			return 1;
+		}
+	}
+	if (src_x + cp_width > rsc_img->GetWidth())
+	{
+		//printf("AreaCopy src_x=%d cp_width=%d rsc_img->get_width()=%d\r\n", src_x, cp_width, rsc_img->get_width());
+		cp_width = rsc_img->GetWidth() - src_x;
+		if (cp_width <= 0)
+		{
+			return 1;
+		}
+	}
+	if (dst_y + cp_height > disp_h)
+	{
+		cp_height = disp_h - dst_y;
+		if (cp_width <= 0)
+		{
+			return 1;
+		}
+	}
+	if (dst_x + cp_width > disp_w)
+	{
+		cp_width = disp_w - dst_x;
+		if (cp_width <= 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
 //void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 //{
 //	int y;
@@ -716,6 +767,44 @@ void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_wid
 	dst_img->unlock();
 	src_img->unlock();
 }
+
+
+void AreaCopy_no_ProcArea(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
+{
+	//int x;
+	int y;
+
+	if (dst_img->SrcGPUAddr() == 0 || src_img->SrcGPUAddr() == 0)
+		{
+		//	log_w("warning::Image source point is NULL dst=%#x src=%#x\r\n", dst_img->SrcGPUAddr(), src_img->SrcGPUAddr());
+			return;
+		}
+
+//	if(ProcArea(dst_img, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y)){
+//		return ;
+//	}
+	dst_img->lock();
+	src_img->lock();
+	int line_byte=cp_width<<2;
+//	unsigned int dst_step= dst_img->u32Width;
+//	unsigned int src_step= src_img->u32Width;
+	unsigned int * dst_start=(unsigned int *)dst_img->pSrcBuffer +  dst_y * dst_img->u32Width + dst_x;
+	unsigned int * src_start=(unsigned int *)src_img->pSrcBuffer +  src_y * src_img->u32Width + src_x;
+	unsigned int dst_offset=0;
+	unsigned int src_offset=0;
+	for (y = 0; y < cp_height; y++)
+	{
+		memcpy( dst_start+dst_offset,
+				 src_start+src_offset, line_byte);
+		dst_offset+=dst_img->u32Width;
+		src_offset+=src_img->u32Width;
+	}
+
+	dst_img->unlock();
+	src_img->unlock();
+}
+
+
 void BaseImage::fillColor(const Color32 color){
     Color32* pDstLine=(Color32*)pSrcBuffer;
     for (long y=0;y<u32Height;++y){
