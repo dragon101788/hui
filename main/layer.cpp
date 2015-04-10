@@ -451,16 +451,19 @@ void element::Render(image * src_img, int src_x, int src_y, int cp_width, int cp
 void element::cleanBuf()
 {
 	if (hasParent()){
-		int src_offset=y*parent->top_image.u32Stride+x<<2;
+		unsigned long src_offset=(unsigned long)parent->top_image.pSrcBuffer+y*parent->top_image.u32Stride+x<<2;
 		int cp_size=width<<2;
-		for(int i=0;i<height;i++){
-			memset(parent->top_image.pSrcBuffer+src_offset, 0, cp_size);
+		for(int i=0;i<height;){
+			src_offset+=cp_size*i;
+			memset((void*)src_offset, 0,cp_size);
+			i++;
 		}
 	}else{
-		int src_offset=y*xml_mgr->out.u32Stride+x<<2;
+		unsigned long  src_offset=(unsigned long)parent->top_image.pSrcBuffer+y*xml_mgr->out.u32Stride+x<<2;
 		int cp_size=width<<2;
 		for(int i=0;i<height;i++){
-			memset(parent->top_image.pSrcBuffer+src_offset, 0, cp_size);
+			src_offset+=cp_size*i;
+			memset((void*)src_offset, 0, cp_size);
 		}
 	}
 }
