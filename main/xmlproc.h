@@ -145,7 +145,8 @@ public:
 		{
 			//lock();
 		//	log_i("before fb->RenderImageToFrameBuffer(this);!!!!!!!!\r\n");
-			fb->NotifyRenderFrameBuffer(this);
+			fb->RenderImageToFrameBuffer(this);
+			//fb->NotifyRenderFrameBuffer(this);
 		//	unlock();
 		}
 	};
