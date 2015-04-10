@@ -39,6 +39,10 @@ config TOUCH_EKTF2K
         bool "ektf2k"
         help
 		2d Bltting
+config TOUCH_TSLIB
+        bool "tslib"
+        help
+		use tslib		
 endchoice
 choice 
         prompt "Keypad Device"

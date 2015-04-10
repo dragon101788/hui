@@ -13,7 +13,7 @@ CFLAG+=-I$(TOPDIR)include
 CFLAG+=-I$(FREETYPE)
 
 #CFLAG+=-g -O1
-LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt
+LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt -lts
 OUTPUT =../output/
 TARGET = $(OUTPUT)hui
 OBJS_DIR = $(TOPDIR)/objs/
@@ -51,6 +51,7 @@ obj-y +=main/hui.o
 obj-y +=platform/rotate_soft.o 
 obj-y +=platform/zoom_soft.o 
 obj-$(CONFIG_TOUCH_EKTF2K) += platform/touch_ektf2k.o
+obj-$(CONFIG_TOUCH_TSLIB) += platform/touch_tslib.o
 obj-$(CONFIG_TOUCH_NONE) += platform/touch_none.o
 obj-$(CONFIG_KEYPAD_LITTLESWAN) += platform/keypad_littleSwan.o
 obj-$(CONFIG_KEYPAD_NONE) += platform/keypad_none.o

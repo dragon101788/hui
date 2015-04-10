@@ -17,8 +17,9 @@
 #include "codec.h"
 #include "hulib.h"
 #include <assert.h>
-
-typedef  unsigned int uint32_t;
+#ifndef uint32_t
+#define uint32_t unsigned long
+#endif
 int image_write_to_snap(image * img, const char * path);
 int image_read_from_snap(image * img, const char * path);
 
