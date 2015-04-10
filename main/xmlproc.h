@@ -74,59 +74,14 @@ class xmlproc: public element_manager,
 {
 private:
 
-//	class tmexe
-//	{
-//	public:
-//		tmexe(HUMap &mp, xmlproc * xml)
-//		{
-//			exec.parase(mp, xml);
-//			tm = mp["tm"].getvalue_int();
-//		}
-//		executable exec;
-//		int tm;
-//	};
-//	class save_snap: public schedule_ele
-//	{
-//	public:
-//		xmlproc * m_xml;
-//		hustr name;
-//		save_snap(xmlproc * xml, const char * path)
-//		{
-//			m_xml = xml;
-//			name = path;
-//		}
-//		~save_snap()
-//		{
-//			log_i("~snap\r\n");
-//		}
-//		int SaveSnap(const char * file)
-//		{
-//			if (!access_Image(file))
-//			{
-//				log_i("%s no exist , save Snap !!!\r\n", file);
-//				m_xml->out.SaveResource(file);
-//				return 1;
-//
-//			}
-//			else
-//			{
-//				log_i("%s exist , no save Snap !!!\r\n", file);
-//				return 0;
-//			}
-//		}
-//		void onSchedule()
-//		{
-//			SaveSnap(name);
-//			delete this;
-//		}
-//	};
+
 	int fore; //前台
 	int done; //完成解析
 	int m_exit; //线程退出
 	int isDraw; //有改变图像
 	int switchProc;
 public:
-	int directDraw;
+//	int directDraw;
 	hustr filename;
 	ScreenHandler *windCtl;
 	void addDraw(){
@@ -209,9 +164,9 @@ public:
 			del_lock.lock();
 			 ScheduleProc();
 			del_lock.unlock();
-			if(directDraw)
-				printFps();
-			else
+//			if(directDraw)
+//				printFps();
+//			else
 			ProcDraw();
 			FPSWaitFPS(30);
 		}
@@ -325,7 +280,7 @@ public:
 		isDraw = 0; //默认无绘制图像
 		fore = 0; //默认为后台进程
 		done = 0; //默认非完成状态
-		directDraw=0;
+//		directDraw=0;
 
 		windCtl=NULL;
 		if (out.isNULL())

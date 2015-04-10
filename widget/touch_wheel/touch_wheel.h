@@ -133,7 +133,7 @@ public:
 			num_max = m_mp["max"]->getvalue_int();
 			num_min = m_mp["min"]->getvalue_int();
 			step = m_mp["step"]->getvalue_int();
-			direct =m_mp["direct"]->getvalue_int();
+//			direct =m_mp["direct"]->getvalue_int();
 			edge_fading=m_mp["edge_fading"]->getvalue_int();
 			node_num=m_mp.count("node");
 			for (int i = 0; i < node_num; i++)
@@ -244,8 +244,8 @@ int abs(int a){
 	void doTouchDown()
 	{
 		static int old_num=0;
-		if(direct)
-			setDirect(1);
+//		if(direct)
+//			setDirect(1);
 		my = move_y();
 		step_my=my/step_h;
 
@@ -310,11 +310,11 @@ int abs(int a){
 	{
 		effect_num=set_num;
 		step_cnt=1;
-		if(direct){ //设置直接输出
-			setDirect(0);
-			if(hasParent())
-				parent->Flush(); //刷新父亲以保证其他元素也能输出到xmlproc
-		}
+//		if(direct){ //设置直接输出
+//			setDirect(0);
+//			if(hasParent())
+//				parent->Flush(); //刷新父亲以保证其他元素也能输出到xmlproc
+//		}
 	}
 
 	void doTouchActive()
@@ -326,9 +326,9 @@ int abs(int a){
 
 	}
 
-void setDirect(int d){
-	xml_mgr->directDraw=d;
-}
+//void setDirect(int d){
+//	xml_mgr->directDraw=d;
+//}
 	 void setNum(int num){
 		 set_num=num;
 		 if(set_num>num_max){
@@ -385,7 +385,7 @@ void setDirect(int d){
 	int step_h;
 	int step_cnt;
 	int edge_fading;
-	int direct;
+//	int direct;
 	int effect_num;
 	NumChangedListener *listener;
 	map<int, node *> nodemp;

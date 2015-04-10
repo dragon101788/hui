@@ -244,7 +244,21 @@ public:
 		render_height=height;
 	}
 
-
+	void addDraw(){
+		isDraw++;
+	}
+/*************
+ * 配置是否部分刷新
+ */
+	void cfgPartRender(){
+		if(isDraw!=1){
+			render_offset_x=0;
+			render_offset_y=0;
+			render_width=width;
+			render_height=height;
+		}
+		isDraw=0;
+	}
 	void resetChildren();
 
 	void Destroy(){
@@ -271,10 +285,8 @@ public:
 	image top_image;//元素的最高一层，专门用来绘制子空间
 
 
-
-
-
 private:
+
 	bool is_parent;
 };
 

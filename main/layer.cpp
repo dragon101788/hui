@@ -269,17 +269,12 @@ void element::initstack()
 
 }
 
+
+
+
 void element::RenderOut()
 {
-	if(isDraw!=1){
-		render_offset_x=0;
-		render_offset_y=0;
-		render_width=width;
-		render_height=height;
-	}
-	isDraw=0;
-
-
+	cfgPartRender();
 	if (hide == 0)
 	{
 		doRender();
@@ -289,10 +284,8 @@ void element::RenderOut()
 		log_i("Render %s hide\r\n", name.c_str());
 	}
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
-
 	if(parent!=NULL){
-		parent->isDraw++;
-		log_i("%s draw to parent!!!!!!!\n",name.c_str());
+		parent->addDraw();
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}
@@ -305,32 +298,6 @@ void element::RenderOut()
 		xml_mgr->addDraw();
 	}
 
-//	else{
-//		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
-//		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
-//			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
-//		}else
-//		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
-//	}
-
-
-//	if(parent!=NULL){
-//		log_i("%s draw to parent!!!!!!!\n",name.c_str());
-//		if(!parent->isParent()){
-//			parent->tobeParent(name,this);
-//		}
-//		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
-//		if(render_cached)
-//			parent->Flush();
-//		else
-//			parent->RenderOut();
-//	}else{
-//		//log_i("%s draw to xmlout!!!!!!!\n",name.c_str());
-//		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
-//			xml_mgr->drawDirect(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);
-//		}else
-//		xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
-//	}
 
 }
 
@@ -359,24 +326,7 @@ void element::cleanLastPos()
 	unlock();
 
 }
-//void element::Back()
-//{
-//	lock();
-//	RenderEB();
-//	if(parent!=NULL){
-//		if(!parent->isParent()){
-//			parent->tobeParent(name,this);
-//		}
-//		parent->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件输出到父控件
-//		parent->Flush_for_Child();
-//
-//	}else
-//	xml_mgr->Draw(this, render_offset_x, render_offset_y, render_width, render_height, x+render_offset_x, y+render_offset_y);//控件局部输出到容器
-//
-//	RenderET();
-//	unlock();
-//
-//}
+
 void element::FlushConfig()
 {
 	lock();
