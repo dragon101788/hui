@@ -71,12 +71,12 @@ int hu_abs(int number)
                         lay = 5;
                 }       
 
-                if (isNULL())
-                {
-                        //log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
-                        SetBuffer(width, height);
-                        path.format("ele-%s %dx%d", name.c_str(), width, height);
-                }
+//                if (isNULL())
+//                {
+//                        //log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
+//                        SetBuffer(width, height);
+//                        path.format("ele-%s %dx%d", name.c_str(), width, height);
+//                }
 				int temp_x=x;
 				int temp_y=y;
 				hide=parent->hide;
