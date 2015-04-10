@@ -380,7 +380,7 @@ void element::AreaCopy(image * src_img, int src_x, int src_y, int cp_width, int 
 			 return;
 		::AreaCopy_no_ProcArea(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
 	}else{
-		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
+		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
 		::AreaCopy_no_ProcArea(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
 	}
@@ -398,7 +398,7 @@ void element::Render(image * src_img, int src_x, int src_y, int cp_width, int cp
 		Render_img_to_img(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 
 	}else{
-		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
+		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			return;
 		Render_img_to_img(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 	}
