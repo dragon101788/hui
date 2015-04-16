@@ -11,7 +11,7 @@ class simple_fragment: public BaseView
 
 public:
 
-	void doRender()
+	void doRenderConfig()
 	{
 
 	}

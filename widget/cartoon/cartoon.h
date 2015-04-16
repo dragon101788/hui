@@ -131,7 +131,7 @@ public:
 	{
 	}
 
-	void doRender()
+	void doRenderConfig()
 	{
 		//rob.roll_back_render();
 		if (images[id].LoadResource() == 0)

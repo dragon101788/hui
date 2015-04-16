@@ -121,7 +121,7 @@ public:
 		Flush();
 
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		image::Render(&img, move_x(), move_y());
 	}

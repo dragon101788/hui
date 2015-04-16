@@ -59,7 +59,7 @@ public:
 		Flush();
 	}
 
-	void doRender()
+	void doRenderConfig()
 	{
 		//image::Render(&res[id], xpos, ypos, width, height, 0, 0);
 		res[id].LoadResource();

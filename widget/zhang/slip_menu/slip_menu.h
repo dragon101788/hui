@@ -100,7 +100,7 @@ public:
 			Flush();
 		}
 
-		void doRender()
+		void doRenderConfig()
 		{
 
 		       // image::Render(&this->parent->img[isdn], x+this->parent->cx-this->parent->mx-this->parent->x, y-this->parent->y,width,height,0,0);
@@ -232,7 +232,7 @@ public:
 	void doTouchActive()
 	{
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 
 	//	image::Render(&output, cx - mx, 0, cx < 0 ? width + cx : width, height, 0, 0);

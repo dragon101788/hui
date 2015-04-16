@@ -300,7 +300,7 @@ public:
 
 	virtual void doFlushConfig(){};
 	virtual void doFlushConfigReduced(){};
-	virtual void doRender() {};
+	virtual void doRenderConfig() {};
 //	virtual void doRender(){
 //		if(!elem.empty())//有子元素，则需要输出子元素
 //		image::Render(&out, 0, 0, width, height, 0, 0);
@@ -339,12 +339,12 @@ public:
 		RenderOut();
 	}
 
-	void cleanBuf();
+	void cleanArea();
 
 
-	void AreaCopy(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
+	void copyLayer(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
 
-	void Render(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
+	void renderLayer(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
 
 	void Flush()
 	{

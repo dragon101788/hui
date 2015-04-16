@@ -652,8 +652,10 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	}
 	return 0;
 }
-
-int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y,int end_x,int end_y)
+/************************************
+ *
+ */
+int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y,int dst_end_x,int dst_end_y)
 {
 	if (cp_width == 0 || cp_height == 0)
 	{
@@ -695,23 +697,23 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 			return 1;
 		}
 	}
-	if(end_x>dst_img->GetWidth()){
-		end_x=dst_img->GetWidth();
+	if(dst_end_x>dst_img->GetWidth()){
+		dst_end_x=dst_img->GetWidth();
 	}
-	if(end_y>dst_img->GetHeight()){
-		end_y=dst_img->GetHeight();
+	if(dst_end_y>dst_img->GetHeight()){
+		dst_end_y=dst_img->GetHeight();
 	}
-	if (dst_y + cp_height > end_y)
+	if (dst_y + cp_height > dst_end_y)
 	{
-		cp_height = end_y - dst_y;
+		cp_height = dst_end_y - dst_y;
 		if (cp_width <= 0)
 		{
 			return 1;
 		}
 	}
-	if (dst_x + cp_width > end_x)
+	if (dst_x + cp_width > dst_end_x)
 	{
-		cp_width = end_x - dst_x;
+		cp_width = dst_end_x - dst_x;
 		if (cp_width <= 0)
 		{
 			return 1;

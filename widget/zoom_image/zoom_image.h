@@ -74,7 +74,7 @@ public:
 	}
 
 
-	void doRender()
+	void doRenderConfig()
 	{
 		render_res[0].img=&zoom_img;
 

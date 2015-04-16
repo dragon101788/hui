@@ -92,7 +92,7 @@ public:
 			ParseModifRes();
 			Flush();
 		}
-		void doRender()
+		void doRenderConfig()
 		{
 			if(this->father->mode=="def"){
 				res[isdn].LoadResource();
@@ -144,7 +144,7 @@ public:
 	}
 
 
-	void doRender()
+	void doRenderConfig()
 	{
 
 

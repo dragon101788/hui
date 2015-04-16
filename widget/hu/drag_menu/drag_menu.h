@@ -168,7 +168,7 @@ public:
 			xml_mgr->AddExec(0,select->exec);
 		}
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		if (isdn && hu_abs(move_x()) < remin && cx + (GetTouchX() - x) < sum_w)
 		{

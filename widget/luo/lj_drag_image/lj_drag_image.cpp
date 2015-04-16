@@ -126,7 +126,7 @@ public:
 	{
 
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		printf("move_y=%d\r\n", move_y());
 		if (vertical > 2)

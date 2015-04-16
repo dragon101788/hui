@@ -42,7 +42,7 @@ public:
 	{
 
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		put.LoadResource();
 		int py = sy - move_y();

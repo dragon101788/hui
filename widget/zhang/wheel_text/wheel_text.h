@@ -152,7 +152,7 @@ public:
 				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 		}
 
-		void doRender()
+		void doRenderConfig()
 		{
 			render_res[0].img=&ttf;
 		}
@@ -174,7 +174,7 @@ public:
 	map<int, node *> nodemp;
 
 
-	void doRender()
+	void doRenderConfig()
 			{
 				//image::Render(&ttf, 0, 0);
 				//	image::Render(&img, 0, 0, width, height, 0, 0);

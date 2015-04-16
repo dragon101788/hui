@@ -101,7 +101,7 @@ int hu_abs(int number)
 			x=x+parent->x;//x为在屏幕中的绝对位置，而非相对位置！！！
 			y=y+parent->y;//y为在屏幕中的绝对位置，而非相对位置！！！
 		}
-		void doRender()
+		void doRenderConfig()
 		{
               //  log_i("this->x=%d,this->cx=%d\n",x,cx);
                //
@@ -274,7 +274,7 @@ int hu_abs(int number)
 
 		}
 
-	void doRender()
+	void doRenderConfig()
 	{
 	//	printf("%s,doRender\n",name.c_str());
 		//image::Render(&img[0], cx , cy, (int)width, (int)height, 0, 0);

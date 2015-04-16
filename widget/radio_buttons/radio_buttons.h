@@ -62,7 +62,7 @@ public:
 
 			//printf("init end\r\n");
 		}
-		void doRender()
+		void doRenderConfig()
 		{
 			img[on].LoadResource();
 			//cur_res=&img[on];
@@ -141,7 +141,7 @@ public:
 
 		log_i("Radio_buttons OK\r\n");
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 	}
 

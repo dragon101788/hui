@@ -51,7 +51,7 @@ public:
 		ParseModifRes();
 		Flush();
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		//image::Render(&res[isdn], 0, 0)
 

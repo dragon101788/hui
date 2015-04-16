@@ -96,7 +96,7 @@ public:
 		Flush();
 
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		//printf("Render %s %d \r\n", name.c_str(), isdn);
 

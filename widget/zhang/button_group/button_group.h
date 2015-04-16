@@ -145,7 +145,7 @@ public:
 //			exec.parse(m_mp);
 //			//Flush();
 //		}
-		void doRender()
+		void doRenderConfig()
 		{
 			if(this->boss->mode=="def"){
 		       // image::Render(&this->boss->img[isdn], x-this->boss->x, y-this->boss->y,width,height,0,0);
@@ -272,7 +272,7 @@ public:
 	}
 
 
-	void doRender()
+	void doRenderConfig()
 	{
 		//img[0].LoadResource();
 		render_res[0].img=&img[0];

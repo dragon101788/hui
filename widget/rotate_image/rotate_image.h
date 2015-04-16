@@ -100,7 +100,7 @@ public:
 	}
 
 
-	void doRender()
+	void doRenderConfig()
 	{
 		res[id].LoadResource();
 		if(center)

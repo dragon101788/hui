@@ -136,7 +136,7 @@ public:
 	}
 		Flush();
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		//image::Render(&ttf, 0, 0);
 		render_res[0].img=&ttf;

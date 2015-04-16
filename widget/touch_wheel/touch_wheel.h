@@ -101,7 +101,7 @@ public:
 
 		}
 
-		void doRender()
+		void doRenderConfig()
 		{
 			render_res[0].img=&ttf;
 		}
@@ -119,7 +119,7 @@ public:
 	};
 
 
-	void doRender()
+	void doRenderConfig()
 			{
 
 			}

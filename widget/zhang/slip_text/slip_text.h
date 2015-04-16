@@ -286,7 +286,7 @@ public:
 	
 
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		int py = sy - move_y();
 		log_i("sy=%d,py=%d!!\n",sy,py);

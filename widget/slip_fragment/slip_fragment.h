@@ -175,7 +175,7 @@ public:
 	{
 
 	}
-	void doRender()
+	void doRenderConfig()
 	{
 		//image::Render(&img[0], cx - mx, 0, (int)page_w, (int)height, 0, 0);
 		scroll_x=cx - mx;
