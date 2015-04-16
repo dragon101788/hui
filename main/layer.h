@@ -103,8 +103,6 @@ public:
 class element_manager_for_ele
 {
 public:
-
-
 	virtual void AddElement(const char * name, element * ele)
 	{
 
@@ -300,14 +298,10 @@ public:
 
 	virtual void doFlushConfig(){};
 	virtual void doFlushConfigReduced(){};
-	virtual void doRenderConfig() {};
-//	virtual void doRender(){
-//		if(!elem.empty())//有子元素，则需要输出子元素
-//		image::Render(&out, 0, 0, width, height, 0, 0);
-//	}
+	virtual void doRenderConfig(){};
+
 	virtual void doGetInfo(info & info)
 	{
-		//log_i("warning element bash doGetInfo\r\n");
 	}
 	virtual void doDelete()
 	{

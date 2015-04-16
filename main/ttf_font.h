@@ -141,13 +141,13 @@ public:
 		//printf("destroy ttf\n");
 
 	}
-	void LCD_PutPixel(unsigned int x, unsigned int y, unsigned int color,
+	void LCD_PutPixel(unsigned int x, unsigned int y, unsigned long color,
 			unsigned char gray)
 	{
-
-		((Color32 *) pSrcBuffer + y * u32Width + x)->r = color >> 16& 0xff;
-		((Color32 *) pSrcBuffer + y * u32Width + x)->g = color >> 8& 0xff;
-		((Color32 *) pSrcBuffer + y * u32Width + x)->b = color&0xff;
+		*((unsigned long *) pSrcBuffer + y * u32Width + x)=color;
+//		((Color32 *) pSrcBuffer + y * u32Width + x)->r = color >> 16& 0xff;
+//		((Color32 *) pSrcBuffer + y * u32Width + x)->g = color >> 8& 0xff;
+//		((Color32 *) pSrcBuffer + y * u32Width + x)->b = color&0xff;
 		((Color32 *) pSrcBuffer + y * u32Width + x)->a = gray;
 	}
 	void ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,unsigned int color);
