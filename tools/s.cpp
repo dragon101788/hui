@@ -7,9 +7,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <unistd.h>
-#include "HuMsg.h"
+#include "main/HuMsg.h"
 
-int main(int argc, char** argv)                               //argc:²ÎÊý¸öÊý£¿    argv£º²ÎÊý
+int main(int argc, char** argv)                               //argc:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    argvï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	Msg msg;
 	msg.init_message();

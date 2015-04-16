@@ -5,6 +5,9 @@
 #include <linux/input.h>
 #include <errno.h>
 #include <list>
+#include"main/hulib.h"
+#include"main/debug.h"
+
 using namespace std;
 
 class touch_panel_sample_base

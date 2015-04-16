@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-
+#include "main/debug.h"
 unsigned int LunarCalendarDay;
 unsigned int LunarCalendarTable[199] =
 { 0x04AE53, 0x0A5748, 0x5526BD, 0x0D2650, 0x0D9544, 0x46AAB9, 0x056A4D, 0x09AD42, 0x24AEB6, 0x04AE4A,/*1901-1910*/

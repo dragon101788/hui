@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../hulib.h"
+#include "main/hulib.h"
 
 //hustr yue[12] =
 //{"01月","02月","03月","04月","05月","06月","07月","08月","09月","01月","11月","12月"};

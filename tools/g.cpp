@@ -7,8 +7,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <unistd.h>
-#include "../HuMsg.h"
-#include "../hulib.h"
+#include "main/HuMsg.h"
+#include "main/hulib.h"
 
 #include <sys/sem.h>
 #include <sys/ipc.h>
