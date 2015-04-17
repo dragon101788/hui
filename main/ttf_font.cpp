@@ -143,19 +143,19 @@ extern unsigned long ttfSize;
 //	}
 //	return 0;
 //}
-void FontDev::DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len){
-	TTF_DisplayUTF8(ptext, showtxt, txt_len, ptext->color, ptext->style);
+unsigned int FontDev::DrawText(text * ptext, char * showtxt,unsigned int txt_len){
+	return TTF_DisplayUTF8(ptext, showtxt, txt_len, ptext->color, ptext->style);
 }
-void FontDev::DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len,int padding_left,int padding_top){
-	TTF_DisplayUTF8(ptext, showtxt, txt_len, ptext->color, ptext->style,padding_left,padding_top);
+unsigned int FontDev::DrawText(text * ptext, char * showtxt,unsigned int txt_len,int padding_left,int padding_top){
+	return TTF_DisplayUTF8(ptext, showtxt, txt_len, ptext->color, ptext->style,padding_left,padding_top);
 }
-void FontDev::DrawText(text * ptext, const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd){
-	TTF_DisplayUTF8(ptext, showtxt, txt_len, ptext->color, ptext->style,padding_left,padding_top,alphaStart, alphaEnd);
+unsigned int FontDev::DrawText(text * ptext, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd){
+	return TTF_DisplayUTF8(ptext, showtxt, txt_len, ptext->color, ptext->style,padding_left,padding_top,alphaStart, alphaEnd);
 }
 
-int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style)
+unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style)
 {
-	int final_num=0;
+	//int final_num=0;
 	if (face == NULL)
 	{
 		errexitf("font not initialize %s\r\n", text);
@@ -166,11 +166,13 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2;//给点余量吧
 	int y = 0;
-	log_i("TTF_DisplayUnicode!,num=%d\n", num);
+	log_i("TTF_DisplayUTF8!,num=%d\n", num);
 	//log_i("ptext->GetWidth()=%d ,ptext->GetHeight()=%d\n",ptext->GetWidth(),ptext->GetHeight());
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
+	 const char *start=text;
 	 const char* stop = text + num;
+
 	    while (text < stop)
 	    {
 			if (style & FONT_BOLD)
@@ -196,7 +198,7 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 			FT_GlyphSlot_Embolden(slot);
 		}
 		//ptext->fontHeight for prevent overflow
-		final_num++;//显示文字数加一
+		//final_num++;//显示文字数加一
 		int word_w=slot->advance.x >> 6;
 		if ((x + slot->bitmap_left+ (word_w) ) > ptext->GetWidth())
 		{
@@ -215,16 +217,14 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 			ptext->ft_draw_bitmap(&slot->bitmap, x + slot->bitmap_left, y +ptext->fontHeight - slot->bitmap_top, color);
 			x += word_w; //可以从此处下手添加自动换行功能
 	}
-	log_i("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
-	return final_num;
+	log_i("final_num=%d TTF_Displayutft8 exit!\n",text-start);
+	return text-start;
 }
 
 
-int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
+unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 		int padding_left,int padding_top)
 {
-	int final_num=0;
-
 	if (face == NULL)
 	{
 		errexitf("font not initialize %s\r\n", text);
@@ -237,10 +237,8 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 	int y = padding_top;
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
-
-
-
-    const char* stop = text + num;
+	 const char *start=text;
+	 const char* stop = text + num;
     while (text < stop)
     {
 		if (style & FONT_BOLD)
@@ -269,7 +267,6 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 		{
 			FT_GlyphSlot_Embolden(slot);
 		}
-		final_num++;//显示文字数加一
 		int word_w=slot->advance.x >> 6;
 
 		if ((x + slot->bitmap_left+ (word_w) ) > ptext->GetWidth())
@@ -290,18 +287,15 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 
 	}
 
-	log_i("final_num=%d TTF_DisplayUTF8exit!\n",final_num);
-	return final_num;
+	return text-start;
 }
 
 
 
 
-int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
+unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 		int padding_left,int padding_top,float alphaStart,float alphaEnd)
 {
-
-	int final_num=0;
 	if (face == NULL)
 	{
 		errexitf("font not initialize %s\r\n", text);
@@ -316,7 +310,8 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 	//log_i("ptext->GetWidth()=%d ,ptext->GetHeight()=%d\n",ptext->GetWidth(),ptext->GetHeight());
 
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
-    const char* stop = text + num;
+	 const char *start=text;
+	 const char* stop = text + num;
     while (text < stop)
     {
 		if (style & FONT_BOLD)
@@ -341,8 +336,6 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 		{
 			FT_GlyphSlot_Embolden(slot);
 		}
-		//ptext->fontHeight for prevent overflow
-		final_num++;//显示文字数加一
 		int word_w=slot->advance.x >> 6;
 
 		if ((x + slot->bitmap_left+ word_w ) > ptext->GetWidth())
@@ -362,9 +355,7 @@ int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned i
 			x += word_w; //可以从此处下手添加自动换行功能
 
 	}
-
-	log_i("final_num=%d TTF_DisplayUnicode exit!\n",final_num);
-	return final_num;
+	return text-start;
 }
 
 void text::ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,

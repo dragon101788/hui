@@ -92,15 +92,15 @@ public:
 //         ssize_t convert(const char *tocode, const char *fromcode, char *inbufp, size_t inbytesleft, char *outbufp,
 //                size_t outbytesleft);
 
-	void DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len);
-	void DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len,int padding_left,int padding_top);
-	void DrawText(text * ptext, const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd);
+	unsigned int DrawText(text * ptext, char * showtxt,unsigned int txt_len);
+	unsigned int DrawText(text * ptext, char * showtxt,unsigned int txt_len,int padding_left,int padding_top);
+	unsigned int DrawText(text * ptext, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd);
 //	int TTF_DisplayAscii(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 //			int buff_width,int buff_height ,int padding_left,int padding_top);
-	int TTF_DisplayUTF8(text * ptext, const char *text, int num,unsigned int color, unsigned char style);
-	int TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
+	unsigned int TTF_DisplayUTF8(text * ptext, const char *text, int num,unsigned int color, unsigned char style);
+	unsigned int TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 			int padding_left,int padding_top);
-	int TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
+	unsigned int TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 			int padding_left,int padding_top,float alphaStart,float alphaEnd);
 	FT_Library ft_Lib;
 	FT_Face face;
@@ -163,15 +163,16 @@ public:
 	//int ft_set_style(int fontWidth, int fontHeight, unsigned char bitmap);
 	//int TTF_DisplayAscii(int x, int y, const unsigned char *text, int num, unsigned int color, unsigned char style);
 	//int TTF_DisplayUnicode(int x, int y, const wchar_t *text, int num, unsigned int color, unsigned char style);
-	void DrawText(const char *encode, char * showtxt, unsigned int txt_len)
+	unsigned int DrawText(const char *encode, char * showtxt, unsigned int txt_len)
 	{
 		if (m_font != NULL)
 		{
-			m_font->DrawText(this, encode, showtxt,txt_len);
+			return m_font->DrawText(this, showtxt,txt_len);
 		}
+		return 0;
 	}
 
-	void DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top)
+	unsigned int DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top)
 		{
 			if (m_font != NULL)
 			{
@@ -180,22 +181,19 @@ public:
 	//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
 	//						fontHeight, u32Height);
 	//			}
-				m_font->DrawText(this, encode, showtxt,txt_len,padding_left,padding_top);
+				return m_font->DrawText(this, showtxt,txt_len,padding_left,padding_top);
 
 			}
+			return 0;
 		}
-	void DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd)
+	unsigned int DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd)
 		{
 			if (m_font != NULL)
 			{
-	//			if (fontHeight > u32Height)
-	//			{
-	//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
-	//						fontHeight, u32Height);
-	//			}
-				m_font->DrawText(this, encode, showtxt, txt_len,padding_left,padding_top,alphaStart, alphaEnd);
-
+			return 	m_font->DrawText(this, showtxt, txt_len,padding_left,padding_top,alphaStart, alphaEnd);
 			}
+
+			return 0;
 		}
 //	int  DrawText_unicode( wchar_t * showtxt, unsigned int txt_len)
 //	{
