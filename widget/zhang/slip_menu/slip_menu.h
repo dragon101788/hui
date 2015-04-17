@@ -344,26 +344,26 @@ public:
 
 	}
 
-	void doFlushConfigReduced()
-	{
-		int i,j;
-		x_lock = m_mp["x_lock"]->getvalue_int();
-		y_lock = m_mp["y_lock"]->getvalue_int();
-		if (m_mp.exist("page"))
-
-		int touch_lock = m_mp["lock"]->getvalue_int();
-
-		for (int i = 0; i < node_num; i++)
-		{
-
-			nodemp[i]->FlushConfig();
-			nodemp[i]->touch_lock = touch_lock;
-			nodemp[i]->exec.parse(m_mp["node"][i]); // = mp["node"][i]["var"]getvalue();
-		//	nodemp[i]->exec.name = name;
-		}
-		Flush();
-
-	}
+//	void doFlushConfigReduced()
+//	{
+//		int i,j;
+//		x_lock = m_mp["x_lock"]->getvalue_int();
+//		y_lock = m_mp["y_lock"]->getvalue_int();
+//		if (m_mp.exist("page"))
+//
+//		int touch_lock = m_mp["lock"]->getvalue_int();
+//
+//		for (int i = 0; i < node_num; i++)
+//		{
+//
+//			nodemp[i]->FlushConfig();
+//			nodemp[i]->touch_lock = touch_lock;
+//			nodemp[i]->exec.parse(m_mp["node"][i]); // = mp["node"][i]["var"]getvalue();
+//		//	nodemp[i]->exec.name = name;
+//		}
+//		Flush();
+//
+//	}
 	slip_menu()
 	{
 		pic_sc=NULL;

@@ -194,8 +194,6 @@ public:
 		render_height=0;
 		parent=NULL;
 		is_parent=false;
-		//children_x_lock = 0;
-		//children_y_lock = 0;
 		children_touch_lock=0;
 		render_cached=0;
 		isDraw=0;
@@ -297,16 +295,14 @@ public:
 
 
 	virtual void doFlushConfig(){};
-	virtual void doFlushConfigReduced(){};
 	virtual void doRenderConfig(){};
-
+//	virtual void doFlushConfigReduced(){};
 	virtual void doGetInfo(info & info)
 	{
 	}
 	virtual void doDelete()
 	{
 		log_i("warning element bash OnDelete\r\n");
-
 	}
 
 	void GetElementInfo(info & info)
@@ -334,18 +330,13 @@ public:
 	}
 
 	void cleanArea();
-
-
 	void copyLayer(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
-
 	void renderLayer(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
-
 	void Flush()
 	{
 		if (mgr != NULL)
 		{
 			lock();
-			//resetRenderOffset();//父控件主动绘制时恢复整个控件输出
 			mgr->que.addele(this);
 			unlock();
 		}
@@ -355,7 +346,6 @@ public:
 					name.c_str());
 		}
 	}
-
 	void revocation()
 	{
 		if (mgr != NULL)
@@ -366,8 +356,7 @@ public:
 		}
 		else
 		{
-			errexitf("$$$$HU$$$$ revocation element %s manager is NULL\r\n",
-					name.c_str());
+			errexitf("$$$$HU$$$$ revocation element %s manager is NULL\r\n",name.c_str());
 		}
 	}
 
@@ -375,19 +364,15 @@ public:
 
 	void RenderOut();
 	void cleanLastPos();
-
 	void FlushConfig();
-	void FlushConfigReduced();
-
+//	void FlushConfigReduced();
 	void ParseModifRes();
 	void PraseElement();
-/*********************************
- * for sdcfg
- * called by FlushConfigReduced()
- */
-	void rePraseElement();
-
-
+///*********************************
+// * for sdcfg
+// * called by FlushConfigReduced()
+// */
+//	void rePraseElement();
 	void ModifXmlMap(HUMap &mp)
 	{
 		lock();
@@ -399,18 +384,18 @@ public:
 		FlushConfig();
 		unlock();
 	}
-
-	void GetPartialConfig(HUMap &mp)
-	{
-		lock();
-		HUMap::iterator it;
-		for (it = mp.begin(); it != mp.end(); ++it)
-		{
-			m_mp[it.key().c_str()] = it.value().getvalue();
-		}
-		FlushConfigReduced();
-		unlock();
-	}
+//
+//	void GetPartialConfig(HUMap &mp)
+//	{
+//		lock();
+//		HUMap::iterator it;
+//		for (it = mp.begin(); it != mp.end(); ++it)
+//		{
+//			m_mp[it.key().c_str()] = it.value().getvalue();
+//		}
+//		FlushConfigReduced();
+//		unlock();
+//	}
 	void ResetLayers()
 	{
 		if (!layers.empty())
@@ -425,11 +410,7 @@ public:
 			}
 		}
 	}
-
-
 	void renderLayers();
-
-
 	class Cmpare
 	{
 	public:
@@ -439,12 +420,7 @@ public:
 		}
 	};
 	void initstack();
-
-
-
-
-
- inline	void addLayers(element * ele)
+	inline	void addLayers(element * ele)
 	{
 		list<element *>::iterator it;
 		for (it = layers.begin(); it != layers.end(); ++it)
@@ -531,7 +507,6 @@ public:
 	map<int, LayerRes> render_res;//由原来的单一指针改为指针map，可以在doRender里面同时绘制几层图
 	schedule_draw * mgr;
 	list<element *> layers;     //底顶合一队列
-
 
 };
 

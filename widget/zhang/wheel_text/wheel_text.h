@@ -123,13 +123,12 @@ public:
 			}
 
 		}
-		//仅将后期可能需要改变对的参数放在这里面
-
-		void doFlushConfigReduced()
-		{
-			doFlushConfigCom();
-			Flush();
-		}
+//		//仅将后期可能需要改变对的参数放在这里面
+//		void doFlushConfigReduced()
+//		{
+//			doFlushConfigCom();
+//			Flush();
+//		}
 		void doFlushConfigCom()
 		{
 			hide=father->hide;
@@ -220,19 +219,19 @@ public:
 			xml_mgr->DoneProc();
 
 		}
-	//此函数仅用于刷新外部需要刷新的情况
-	void doFlushConfigReduced()
-			{
-				hide = m_mp["hide"]->getvalue_int();
-				//set_num= m_mp["set_num"]->getvalue_int();
-				FlushConfigCom();
-				xml_mgr->UnDoneProc();//统一刷新
-				for (int i = 0; i < node_num; i++)
-					{
-					nodemp[i]->FlushConfigReduced();
-					}
-				xml_mgr->DoneProc();
-			}
+//	//此函数仅用于刷新外部需要刷新的情况
+//	void doFlushConfigReduced()
+//			{
+//				hide = m_mp["hide"]->getvalue_int();
+//				//set_num= m_mp["set_num"]->getvalue_int();
+//				FlushConfigCom();
+//				xml_mgr->UnDoneProc();//统一刷新
+//				for (int i = 0; i < node_num; i++)
+//					{
+//					nodemp[i]->FlushConfigReduced();
+//					}
+//				xml_mgr->DoneProc();
+//			}
 	void FlushConfigCom()
 				{
 

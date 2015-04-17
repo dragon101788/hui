@@ -252,24 +252,24 @@ public:
 		Flush();
 
 	}
-	void doFlushConfigReduced()
-	{
-		if (m_mp.exist("mode"))
-                mode= m_mp["mode"]->getvalue();
-		else
-		mode="def";//没有指定模式则默认普通按钮
-
-		int touch_lock = m_mp["lock"]->getvalue_int();
-
-		for (int i = 0; i <node_num; i++)
-		{
-
-			nodemp[i]->FlushConfig();
-			nodemp[i]->touch_lock = touch_lock;
-		}
-		Flush();
-
-	}
+//	void doFlushConfigReduced()
+//	{
+//		if (m_mp.exist("mode"))
+//                mode= m_mp["mode"]->getvalue();
+//		else
+//		mode="def";//没有指定模式则默认普通按钮
+//
+//		int touch_lock = m_mp["lock"]->getvalue_int();
+//
+//		for (int i = 0; i <node_num; i++)
+//		{
+//
+//			nodemp[i]->FlushConfig();
+//			nodemp[i]->touch_lock = touch_lock;
+//		}
+//		Flush();
+//
+//	}
 
 
 	void doRenderConfig()

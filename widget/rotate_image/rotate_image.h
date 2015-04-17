@@ -80,24 +80,24 @@ public:
 		}
 		TimerSet(0);
 	}
-	void doFlushConfigReduced()
-	{
-		hide = m_mp["hide"]->getvalue_int();
-		scroll_x = m_mp["scroll_x"]->getvalue_int();
-		scroll_y = m_mp["scroll_y"]->getvalue_int();
-		angle=m_mp["angle"]->getvalue_int();
-		rsp = m_mp["timeSlot"]->getvalue_int();
-		stepAngle = m_mp["stepAngle"]->getvalue_int();
-		center=m_mp["center"]->getvalue_int();
-		stop=m_mp["stop"]->getvalue_int();
-		id = m_mp["id"]->getvalue_int();
-		if (m_mp.exist("zoomY"))
-		zoomY=(float)m_mp["zoomY"]->getvalue_int()/100;
-		if (m_mp.exist("zoomX"))
-		zoomX=(float)m_mp["zoomX"]->getvalue_int()/100;
-
-		Flush();
-	}
+//	void doFlushConfigReduced()
+//	{
+//		hide = m_mp["hide"]->getvalue_int();
+//		scroll_x = m_mp["scroll_x"]->getvalue_int();
+//		scroll_y = m_mp["scroll_y"]->getvalue_int();
+//		angle=m_mp["angle"]->getvalue_int();
+//		rsp = m_mp["timeSlot"]->getvalue_int();
+//		stepAngle = m_mp["stepAngle"]->getvalue_int();
+//		center=m_mp["center"]->getvalue_int();
+//		stop=m_mp["stop"]->getvalue_int();
+//		id = m_mp["id"]->getvalue_int();
+//		if (m_mp.exist("zoomY"))
+//		zoomY=(float)m_mp["zoomY"]->getvalue_int()/100;
+//		if (m_mp.exist("zoomX"))
+//		zoomX=(float)m_mp["zoomX"]->getvalue_int()/100;
+//
+//		Flush();
+//	}
 
 
 	void doRenderConfig()

@@ -45,15 +45,15 @@ public:
 			Flush();
 		}
 	}
-	void doFlushConfigReduced()
-	{
-		hide = m_mp["hide"]->getvalue_int();
-		scroll_x = m_mp["scroll_x"]->getvalue_int();
-		scroll_y = m_mp["scroll_y"]->getvalue_int();
-		id = m_mp["id"]->getvalue_int();
-
-		Flush();
-	}
+//	void doFlushConfigReduced()
+//	{
+//		hide = m_mp["hide"]->getvalue_int();
+//		scroll_x = m_mp["scroll_x"]->getvalue_int();
+//		scroll_y = m_mp["scroll_y"]->getvalue_int();
+//		id = m_mp["id"]->getvalue_int();
+//
+//		Flush();
+//	}
 	void setImageID(int id){
 		this->id=id;
 		Flush();

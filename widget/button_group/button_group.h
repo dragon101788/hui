@@ -139,10 +139,6 @@ public:
 		}
 
 	}
-	void doFlushConfigReduced()
-	{
-	}
-
 
 	void doRenderConfig()
 	{

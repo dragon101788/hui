@@ -47,7 +47,6 @@
 		if(hasParent()){
 		abs_x=x+parent->abs_x-parent->scroll_x;
 		abs_y=y+parent->abs_y-parent->scroll_y;
-		//hide|=parent->hide;
 		}else{
 			abs_x=x;
 			abs_y=y;
@@ -60,62 +59,51 @@
 		{
 			lay = 5;
 		}
+		initstack();
+	}
 
-//		if (pSrcBuffer == NULL)
+//	void element::rePraseElement()
+//	{
+//		int tmpX = m_mp["x"]->getvalue_int();
+//		int tmpY = m_mp["y"]->getvalue_int();
+//		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
 //		{
-//			//log_i("%s SetBuffer width=%d height=%d\r\n", name.c_str(), width, height);
-//			SetBuffer(width, height);
-//			path.format("ele-%s %dx%d", name.c_str(), width, height);
+//			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
 //		}
-
-		initstack();
-
-
-
-	}
-
-	void element::rePraseElement()
-	{
-		int tmpX = m_mp["x"]->getvalue_int();
-		int tmpY = m_mp["y"]->getvalue_int();
-		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
-		{
-			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
-		}
-		if (m_mp.exist("parentYPage"))
-		{
-			tmpY+=parent->height* m_mp["parentYPage"]->getvalue_int();
-		}
-
-		hide = m_mp["hide"]->getvalue_int();
-		if (m_mp.exist("x_page_num"))
-		{
-			x_page_num = m_mp["x_page_num"]->getvalue_int();
-		}
-		if (m_mp.exist("y_page_num"))
-		{
-			y_page_num = m_mp["y_page_num"]->getvalue_int();
-		}
-		//控件被移动
-		if (tmpX != x || tmpY != y)
-		{
-			cleanLastPos();
-			x = tmpX;
-			y = tmpY;
-		}
-		if(hasParent()){
-		abs_x=x+parent->abs_x-parent->scroll_x;
-		abs_y=y+parent->abs_y-parent->scroll_y;
-		}else{
-			abs_x=x;
-			abs_y=y;
-		}
-		if (m_mp.exist("lay"))
-		{
-			lay = m_mp["lay"]->getvalue_int();
-		}
-		initstack();
-	}
+//		if (m_mp.exist("parentYPage"))
+//		{
+//			tmpY+=parent->height* m_mp["parentYPage"]->getvalue_int();
+//		}
+//
+//		hide = m_mp["hide"]->getvalue_int();
+//		if (m_mp.exist("x_page_num"))
+//		{
+//			x_page_num = m_mp["x_page_num"]->getvalue_int();
+//		}
+//		if (m_mp.exist("y_page_num"))
+//		{
+//			y_page_num = m_mp["y_page_num"]->getvalue_int();
+//		}
+//		//控件被移动
+//		if (tmpX != x || tmpY != y)
+//		{
+//			cleanLastPos();
+//			x = tmpX;
+//			y = tmpY;
+//		}
+//		if(hasParent()){
+//		abs_x=x+parent->abs_x-parent->scroll_x;
+//		abs_y=y+parent->abs_y-parent->scroll_y;
+//		}else{
+//			abs_x=x;
+//			abs_y=y;
+//		}
+//		if (m_mp.exist("lay"))
+//		{
+//			lay = m_mp["lay"]->getvalue_int();
+//		}
+//		initstack();
+//	}
 
 	void element::renderLayers()
 	{
@@ -126,7 +114,6 @@
 			map<int,LayerRes>::iterator itp;
 			element * ele;
 			LayerRes *lay_res;
-			//image * img;
 			int s_ofx ; //源x
 			int d_ofx ; //目标x
 			int s_ofy ; //源x
@@ -247,13 +234,12 @@ int crossAlgorithm(element * r1, element * r2)
 
 void element::initstack()
 {
-
 	element_manager::iterator it;
-
 	for (it = xml_mgr->begin(); it != xml_mgr->end(); ++it)
 	{
 		element * ele = it->second;
-		if(ele->parent==parent){  //只有当在同一父亲下，或父亲都为0，才相互作用
+		if(ele->parent==parent)
+		{  //只有当在同一父亲下，或父亲都为0，才相互作用
 			if (crossAlgorithm(ele, this))
 			{
 				if(ele->lay != lay){
@@ -264,11 +250,7 @@ void element::initstack()
 		}
 	}
 	addLayers(this);  //自己也要加在自己的队列中
-
 }
-
-
-
 
 void element::RenderOut()
 {
@@ -300,7 +282,6 @@ void element::RenderOut()
 }
 
 
-
 void element::cleanLastPos()
 {
 	lock();
@@ -313,14 +294,7 @@ void element::cleanLastPos()
 		}
 		//parent->Draw(this,  0, 0, width, height, x, y);//控件输出到父控件
 		parent->RenderOut();
-
 	}
-//	else{
-//		if(xml_mgr->directDraw){ //一级父容器直接输出到fb
-//			xml_mgr->drawDirect(this,  0, 0, width, height, x, y);
-//		}else
-//		xml_mgr->Draw(this,  0, 0, width, height, x, y);//控件局部输出到容器
-//	}
 	unlock();
 
 }
@@ -333,13 +307,13 @@ void element::FlushConfig()
 	unlock();
 }
 
-void element::FlushConfigReduced()
-{
-	lock();
-	doFlushConfigReduced();
-	xml_mgr->AddElement(name, this);
-	unlock();
-}
+//void element::FlushConfigReduced()
+//{
+//	lock();
+//	doFlushConfigReduced();
+//	xml_mgr->AddElement(name, this);
+//	unlock();
+//}
 void element::Delete()
 {
 	doDelete();
@@ -558,7 +532,6 @@ void element::ParseModifRes()
 	//	elem.erase(name);
 	}
 }
-
 
 
  void ele_nest_extend::configChildAbsPos(){  //当父控件的scroll_x改变时，子控件的绝对位置就会改变，父控件需要调用此函数

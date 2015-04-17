@@ -164,21 +164,21 @@ public:
 			xml_mgr->DoneProc();
 
 		}
-	//此函数仅用于刷新外部需要刷新的情况
-	void doFlushConfigReduced()
-			{
-				hide = m_mp["hide"]->getvalue_int();
-				//set_num= m_mp["set_num"]->getvalue_int();
-				step_h=m_mp["remin"]->getvalue_int();
-				set_num= m_mp["set_num"]->getvalue_int();
-				FlushConfigCom();
-				xml_mgr->UnDoneProc();//统一刷新
-				for (int i = 0; i < node_num; i++)
-					{
-					nodemp[i]->FlushConfigReduced();
-					}
-				xml_mgr->DoneProc();
-			}
+//	//此函数仅用于刷新外部需要刷新的情况
+//	void doFlushConfigReduced()
+//			{
+//				hide = m_mp["hide"]->getvalue_int();
+//				//set_num= m_mp["set_num"]->getvalue_int();
+//				step_h=m_mp["remin"]->getvalue_int();
+//				set_num= m_mp["set_num"]->getvalue_int();
+//				FlushConfigCom();
+//				xml_mgr->UnDoneProc();//统一刷新
+//				for (int i = 0; i < node_num; i++)
+//					{
+//					nodemp[i]->FlushConfigReduced();
+//					}
+//				xml_mgr->DoneProc();
+//			}
 	void FlushConfigCom()
 				{
 					if(node_num==3){
@@ -264,7 +264,7 @@ int abs(int a){
 			xml_mgr->UnDoneProc();//统一刷新
 			for (int i = 0; i < node_num; i++)
 				{
-				nodemp[i]->FlushConfigReduced();
+				nodemp[i]->doFlushConfigReduced();
 				}
 			xml_mgr->DoneProc();
 			if(listener!=NULL){
@@ -342,7 +342,7 @@ int abs(int a){
 		xml_mgr->UnDoneProc();//统一刷新
 		for (int i = 0; i < node_num; i++)
 			{
-			nodemp[i]->FlushConfigReduced();
+			nodemp[i]->doFlushConfigReduced();
 			}
 		xml_mgr->DoneProc();
 	 }

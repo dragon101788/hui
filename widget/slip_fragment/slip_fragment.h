@@ -204,20 +204,20 @@ public:
 
 	}
 
-	void doFlushConfigReduced()
-	{
-		rePraseElement();
-		x_lock = m_mp["x_lock"]->getvalue_int();
-		y_lock = m_mp["y_lock"]->getvalue_int();
-		x_page=m_mp["x_page"]->getvalue_int();
-		y_page=m_mp["y_page"]->getvalue_int();
-		child_lock=m_mp["child_lock"]->getvalue_int();
-		sum_w=width*x_page_num;
-		sum_h=height*y_page_num;
-		int touch_lock = m_mp["lock"]->getvalue_int();
-		touch_init_area(x, y, width, height);
-		Flush();
-	}
+//	void doFlushConfigReduced()
+//	{
+//		rePraseElement();
+//		x_lock = m_mp["x_lock"]->getvalue_int();
+//		y_lock = m_mp["y_lock"]->getvalue_int();
+//		x_page=m_mp["x_page"]->getvalue_int();
+//		y_page=m_mp["y_page"]->getvalue_int();
+//		child_lock=m_mp["child_lock"]->getvalue_int();
+//		sum_w=width*x_page_num;
+//		sum_h=height*y_page_num;
+//		int touch_lock = m_mp["lock"]->getvalue_int();
+//		touch_init_area(x, y, width, height);
+//		Flush();
+//	}
 	slip_fragment()
 	{
 

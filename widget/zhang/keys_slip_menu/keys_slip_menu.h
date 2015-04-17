@@ -97,7 +97,6 @@ int hu_abs(int number)
 			hide=parent->hide;
 			x = m_mp["x"]->getvalue_int();
 			y = m_mp["y"]->getvalue_int();
-
 			x=x+parent->x;//x为在屏幕中的绝对位置，而非相对位置！！！
 			y=y+parent->y;//y为在屏幕中的绝对位置，而非相对位置！！！
 		}
@@ -418,20 +417,20 @@ int hu_abs(int number)
 
 
 	}
-	void doFlushConfigReduced()
-	{
-	//	printf("%s,doFlushConfigReduced\n",name.c_str());
-		hide = m_mp["hide"]->getvalue_int();
-		select_id=m_mp["select"]->getvalue_int();
-		//noAnimation=m_mp["noAnim"]->getvalue_int();
-		changeView();
-	}
+//	void doFlushConfigReduced()
+//	{
+//	//	printf("%s,doFlushConfigReduced\n",name.c_str());
+//		hide = m_mp["hide"]->getvalue_int();
+//		select_id=m_mp["select"]->getvalue_int();
+//		//noAnimation=m_mp["noAnim"]->getvalue_int();
+//		changeView();
+//	}
 
 	void changeView(){
 		changePage();
 		for (int i = 0; i < node_num; i++)
 		{
-			nodemp[i]->FlushConfigReduced();
+			nodemp[i]->doFlushConfigReduced();
 
 		}
 		if(vertical_mode)

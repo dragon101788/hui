@@ -475,19 +475,19 @@ void post_scfg(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 		xml->PostScfg(xmlmp);
 	}
 }
-//用于改变动态的参数
-void sendDynamicConfig(hustr parentName,HUMap & xmlmp, xmlproc * xml)
-{
-	if (xmlmp.exist("cus"))
-	{
-		hustr cus = xmlmp["cus"]->getvalue();
-		g_xml_proc[cus]->PostPartialConfig(xmlmp);
-	}
-	else
-	{
-		xml->PostPartialConfig(xmlmp);
-	}
-}
+////用于改变动态的参数
+//void sendDynamicConfig(hustr parentName,HUMap & xmlmp, xmlproc * xml)
+//{
+//	if (xmlmp.exist("cus"))
+//	{
+//		hustr cus = xmlmp["cus"]->getvalue();
+//		g_xml_proc[cus]->PostPartialConfig(xmlmp);
+//	}
+//	else
+//	{
+//		xml->PostPartialConfig(xmlmp);
+//	}
+//}
 
 
 //批量发送scfg
@@ -502,16 +502,16 @@ void post_scfg_set(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 	}
 	xml->DoneProc();
 }
-void post_sdcfg_set(hustr parentName,HUMap & xmlmp, xmlproc * xml)
-{
-	xml->UnDoneProc();
-	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
-	{
-		HUMap & mp = xmlmp["sdcfg"][i];
-		sendDynamicConfig(parentName,mp, xml);
-	}
-	xml->DoneProc();
-}
+//void post_sdcfg_set(hustr parentName,HUMap & xmlmp, xmlproc * xml)
+//{
+//	xml->UnDoneProc();
+//	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
+//	{
+//		HUMap & mp = xmlmp["sdcfg"][i];
+//		sendDynamicConfig(parentName,mp, xml);
+//	}
+//	xml->DoneProc();
+//}
 
 //各种控制集合，如果单纯的scfg集合，建议使用scfgSet
 
@@ -568,11 +568,11 @@ void ParseSet(hustr parentName,HUMap & xmlmp, xmlproc * xml)
 		HUMap & mp = xmlmp["gcfg"][i];
 		Parse_gcfg(parentName,mp, xml);
 	}
-	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
-	{
-		HUMap & mp = xmlmp["sdcfg"][i];
-		sendDynamicConfig(parentName,mp, xml);
-	}
+//	for (int i = 0; i < xmlmp.count("sdcfg"); i++)
+//	{
+//		HUMap & mp = xmlmp["sdcfg"][i];
+//		sendDynamicConfig(parentName,mp, xml);
+//	}
 	for (int i = 0; i < xmlmp.count("reDrawElement"); i++)
 	{
 		HUMap & mp = xmlmp["reDrawElement"][i];
@@ -596,12 +596,12 @@ void init_xml_instan()
 	XMLinstan["cus"] = ParseCUS;
 	XMLinstan["savecus"] = ParseSAVECUS;
 	XMLinstan["scfg"] = post_scfg;
-	XMLinstan["sdcfg"] = sendDynamicConfig;
+//	XMLinstan["sdcfg"] = sendDynamicConfig;
 	XMLinstan["gcfg"] = Parse_gcfg;
 	XMLinstan["cs"] = ParseCS;
 	XMLinstan["env"] = ParseEnv;
 	XMLinstan["scfgSet"] = post_scfg_set;
-	XMLinstan["sdcfgSet"] = post_sdcfg_set;
+//	XMLinstan["sdcfgSet"] = post_sdcfg_set;
 	XMLinstan["set"] = ParseSet;
 	XMLinstan["reDrawPage"] = ParseRefreshPage;
 	XMLinstan["reDrawElement"] = ParseRefreshElement;

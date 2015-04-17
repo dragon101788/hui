@@ -21,11 +21,11 @@ public:
 		Flush();
 	}
 
-	void doFlushConfigReduced()
-	{
-		rePraseElement();
-		Flush();
-	}
+//	void doFlushConfigReduced()
+//	{
+//		rePraseElement();
+//		Flush();
+//	}
 	simple_fragment()
 	{
 	}
