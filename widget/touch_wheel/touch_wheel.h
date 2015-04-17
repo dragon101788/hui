@@ -89,14 +89,14 @@ public:
 			padding_top>0?padding_top:0;
 			if(boss->edge_fading){
 				if(id==0){
-					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
+					ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
 				}else if(id==boss->node_num-1){
-					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
+					ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
 				}else
-					ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+					ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 			}
 			else
-			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+			ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 
 
 		}

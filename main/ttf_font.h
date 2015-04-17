@@ -163,7 +163,7 @@ public:
 	//int ft_set_style(int fontWidth, int fontHeight, unsigned char bitmap);
 	//int TTF_DisplayAscii(int x, int y, const unsigned char *text, int num, unsigned int color, unsigned char style);
 	//int TTF_DisplayUnicode(int x, int y, const wchar_t *text, int num, unsigned int color, unsigned char style);
-	unsigned int DrawText(const char *encode, char * showtxt, unsigned int txt_len)
+	unsigned int DrawText( char * showtxt, unsigned int txt_len)
 	{
 		if (m_font != NULL)
 		{
@@ -172,7 +172,7 @@ public:
 		return 0;
 	}
 
-	unsigned int DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top)
+	unsigned int DrawText( char * showtxt, unsigned int txt_len,int padding_left,int padding_top)
 		{
 			if (m_font != NULL)
 			{
@@ -186,7 +186,7 @@ public:
 			}
 			return 0;
 		}
-	unsigned int DrawText(const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd)
+	unsigned int DrawText( char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd)
 		{
 			if (m_font != NULL)
 			{

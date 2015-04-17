@@ -100,7 +100,7 @@ public:
 				padding_top>0?padding_top:0;
 				}
 
-			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+			ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 	}
 		if(!m_mp["cached"]->getvalue_int()){//如果存在cached标志就不绘制，等待下一次动态参数
 			Flush();
@@ -153,7 +153,7 @@ public:
 			pt+=(height-size)/2;
 			pt>0?pt:0;
 			}
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
+		ttf.DrawText( (char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
 	void setText(const char * t,unsigned int color){
@@ -168,7 +168,7 @@ public:
 			pt+=(height-size)/2;
 			pt>0?pt:0;
 			}
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
+		ttf.DrawText((char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
 	void setColor(unsigned int color){
@@ -182,7 +182,7 @@ public:
 			pt+=(height-size)/2;
 			pt>0?pt:0;
 			}
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
+		ttf.DrawText( (char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
 	void setSize( int size){
@@ -195,7 +195,7 @@ public:
 			pt+=(height-size)/2;
 			pt>0?pt:0;
 			}
-		ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),pl,pt);
+		ttf.DrawText( (char *) txt.c_str(), txt.length(),pl,pt);
 		Flush();
 	}
 	text ttf;

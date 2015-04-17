@@ -483,7 +483,7 @@ void element::ParseModifRes()
 			tmpttf.color = color;
 			tmpttf.style = style;
 			tmpttf.SetBuffer(cp_width, cp_height);
-			tmpttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length());
+			tmpttf.DrawText( (char *) txt.c_str(), txt.length());
 
 			log_i("ParseModifRes text=%s\r\n",txt.c_str());
 			if (!res[id].isNULL())
