@@ -240,9 +240,15 @@ public:
 				{
 					 list_add_next_delete_prior(mylist,width,height);
 					 page_list last=list_find_last(mylist);
-					print_num+=last->ttf.DrawText(buffer+print_num,txt_len);
+					 if(word_num_mp[page+1]!=0){
+						 print_num=word_num_mp[page+1];
+					 }
+					 print_num+=last->ttf.DrawText(buffer+print_num,txt_len);
+					 word_num_mp[page+2]=print_num;
+
+
                 		//print_num+=ttf.DrawText_unicode((wchar_t *) WStr+word_num_mp[page+2], lenth_once);
-				word_num_mp[page+2]=print_num;
+
 				if(print_num>=txt_len)
 					const_page=page+2;
 				}
