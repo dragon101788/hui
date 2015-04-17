@@ -224,13 +224,13 @@ public:
 			TimerSet(0);
 			flag_set_timer=0;
 		}
-		log_i("sy=%d!!\n",sy);
+		//log_i("sy=%d!!\n",sy);
 		Flush();
 	}
 
 	int doTimer(int tm)
 	{	
-		log_i("doTimer \n");
+		//log_i("doTimer \n");
 		if(cache_down)//当sy大于height时，准备缓存下一页
 		{     
 			if(page<const_page-1) 
@@ -281,7 +281,7 @@ public:
 	void doRenderConfig()
 	{
 		int py = sy - move_y();
-		log_i("sy=%d,py=%d!!\n",sy,py);
+		//log_i("sy=%d,py=%d!!\n",sy,py);
 		if (py<0)
 		{
 			if(page==1)
@@ -296,7 +296,10 @@ public:
 				log_i("page--,page=%d\n!!!!!!! ",page);
 				if(list_how_far_head(mylist)==0)//下面只剩一个缓存页面
 				{
-					while(cache_up) log_i("wait for cache_up clean!!!!!!1\n");//等待上一次的缓存完成
+					while(cache_up) {
+						log_i("wait for cache_up clean!!!!!!1\n");//等待上一次的缓存完成
+						usleep(10);
+					}
 					cache_up=1;
 					//log_i("start cache up\n!!!!!\n");
 					flag_set_timer=1;
@@ -324,7 +327,10 @@ public:
 					log_i("page++,page=%d\n!!!!!!! ",page);
 					if(list_how_far_last(mylist)==1)//下面只剩一个缓存页面
 					{
-						while(cache_down) log_i("wait for cache_down clean!!!!!!!\n");
+						while(cache_down){
+							log_i("wait for cache_down clean!!!!!!!\n");
+							usleep(10);
+						}
 						cache_down=1;
 						//log_i("start cache_down!!!!!!!!\n");
 						//TimerSet(0);
