@@ -356,6 +356,7 @@ public:
 	void doFlushConfig()
 	{
 		PraseElement();
+		TouchParaseXml(m_mp);
 		color = m_mp["color"]->getvalue_hex();
 		font = m_mp["font"]->getvalue();
 		txt_name = m_mp["file"]->getvalue();
