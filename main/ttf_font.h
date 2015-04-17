@@ -9,9 +9,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <iconv.h>
+//#include <iconv.h>
+
 #include <map>
 #include "hulib.h"
+#include "transcoding.h"
 using namespace std;
 
 
@@ -87,18 +89,18 @@ public:
 		TTF_bitmap_type = bitmap;
 		return 0;
 	}
-         ssize_t convert(const char *tocode, const char *fromcode, char *inbufp, size_t inbytesleft, char *outbufp,
-                size_t outbytesleft);
+//         ssize_t convert(const char *tocode, const char *fromcode, char *inbufp, size_t inbytesleft, char *outbufp,
+//                size_t outbytesleft);
 
 	void DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len);
 	void DrawText(text * ptext, const char *encode, char * showtxt,unsigned int txt_len,int padding_left,int padding_top);
 	void DrawText(text * ptext, const char *encode, char * showtxt, unsigned int txt_len,int padding_left,int padding_top,float alphaStart,float alphaEnd);
 //	int TTF_DisplayAscii(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 //			int buff_width,int buff_height ,int padding_left,int padding_top);
-	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num,unsigned int color, unsigned char style);
-	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
+	int TTF_DisplayUTF8(text * ptext, const char *text, int num,unsigned int color, unsigned char style);
+	int TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 			int padding_left,int padding_top);
-	int TTF_DisplayUnicode(text * ptext, const wchar_t *text, int num, unsigned int color, unsigned char style,
+	int TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style,
 			int padding_left,int padding_top,float alphaStart,float alphaEnd);
 	FT_Library ft_Lib;
 	FT_Face face;
@@ -195,26 +197,26 @@ public:
 
 			}
 		}
-	int  DrawText_unicode( wchar_t * showtxt, unsigned int txt_len)
-	{
-		if (m_font != NULL)
-		{
-//			if (fontHeight > u32Height)
-//			{
-//				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
-//						fontHeight, u32Height);
-//			}
-			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style);
-
-		}
-	}
-	int  DrawText_unicode( wchar_t * showtxt, unsigned int txt_len,int padding_left,int padding_top)
-	{
-		if (m_font != NULL)
-		{
-			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style, padding_left,padding_top);
-		}
-	}
+//	int  DrawText_unicode( wchar_t * showtxt, unsigned int txt_len)
+//	{
+//		if (m_font != NULL)
+//		{
+////			if (fontHeight > u32Height)
+////			{
+////				errexitf("DrawText fontHeight[%d] > u32Height[%d]\r\n",
+////						fontHeight, u32Height);
+////			}
+//			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style);
+//
+//		}
+//	}
+//	int  DrawText_unicode( wchar_t * showtxt, unsigned int txt_len,int padding_left,int padding_top)
+//	{
+//		if (m_font != NULL)
+//		{
+//			return m_font->TTF_DisplayUnicode(this,showtxt,txt_len, this->color, this->style, padding_left,padding_top);
+//		}
+//	}
 //format convert 
 //eg:convert("UTF-8", "wchar_t", (char *)out_buf1, rc, out_buf2, out_len);
 

@@ -47,9 +47,10 @@ obj-y += main/ParaseXML.o
 obj-y +=main/hulib.o
 obj-y +=main/codec.o
 obj-y += main/framebuffer.o
-obj-y +=main/hui.o 
+obj-y +=main/hui.o  
 obj-y +=platform/rotate_soft.o 
 obj-y +=platform/zoom_soft.o 
+
 obj-$(CONFIG_TOUCH_EKTF2K) += platform/touch_ektf2k.o
 obj-$(CONFIG_TOUCH_TSLIB) += platform/touch_tslib.o
 obj-$(CONFIG_TOUCH_NONE) += platform/touch_none.o
@@ -59,6 +60,7 @@ ifeq ($(CONFIG_USING_FONT),y)
 	#LDFLAG+=-liconv 
 	#obj-y += $(patsubst %.c,%.o,$(wildcard trueType/*.c))
 	obj-$(CONFIG_USING_FONT) += main/ttf_font.o
+	obj-$(CONFIG_USING_FONT) += main/transcoding.o
 else
 endif 
 
@@ -84,9 +86,9 @@ OBJS_MK=$(CC) $(CFLAG) -c $< -o $@
 	$(CC) $(CFLAG) -c $< -o $@
 
 
-all: .config lib/libz.a lib/libpng.a lib/libiconv.a lib/libfreetype.a dragon_auto $(DEPS) $(OBJS) dirobjs
+all: .config lib/libz.a lib/libpng.a  lib/libfreetype.a dragon_auto $(DEPS) $(OBJS) dirobjs
 	@echo built-in module: $(patsubst $(TOPDIR)%,%,$(dir-y))
-	@$(CC)  $(OBJS) $(SRCS) lib/libpng.a lib/libz.a lib/libiconv.a  lib/libfreetype.a $(dir-objs) -o $(TARGET) $(LDFLAG)
+	@$(CC)  $(OBJS) $(SRCS) lib/libpng.a lib/libz.a   lib/libfreetype.a $(dir-objs) -o $(TARGET) $(LDFLAG)
 	@#rm $(dir-objs)
 	@#$(STRIP) $(TARGET) 
 	@echo build done 	
