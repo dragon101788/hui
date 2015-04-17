@@ -660,76 +660,7 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 /************************************
  *
  */
-int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y,int dst_end_x,int dst_end_y)
-{
-	if (cp_width <= 0 || cp_height <= 0)
-	{
-		return 1;
-	}
 
-	if (src_x < 0)
-	{
-		dst_x -= src_x;
-		src_x = 0;
-	}
-	if (src_y < 0)
-	{
-		dst_y -= src_y;
-		src_y = 0;
-	}
-	if (dst_x < 0)
-	{
-		src_x -= dst_x;
-		dst_x = 0;
-	}
-	if (dst_y < 0)
-	{
-		src_y -= dst_y;
-		dst_y = 0;
-	}
-
-	if (src_y + cp_height > rsc_img->GetHeight())
-	{
-		//printf("AreaCopy src_y=%d cp_height=%d rsc_img->get_height()=%d\r\n", src_y, cp_height, rsc_img->get_height());
-		cp_height = rsc_img->GetHeight() - src_y;
-		if (cp_height <= 0)
-		{
-			return 1;
-		}
-	}
-	if (src_x + cp_width > rsc_img->GetWidth())
-	{
-		//printf("AreaCopy src_x=%d cp_width=%d rsc_img->get_width()=%d\r\n", src_x, cp_width, rsc_img->get_width());
-		cp_width = rsc_img->GetWidth() - src_x;
-		if (cp_width <= 0)
-		{
-			return 1;
-		}
-	}
-	if(dst_end_x>dst_img->GetWidth()){
-		dst_end_x=dst_img->GetWidth();
-	}
-	if(dst_end_y>dst_img->GetHeight()){
-		dst_end_y=dst_img->GetHeight();
-	}
-	if (dst_y + cp_height > dst_end_y)
-	{
-		cp_height = dst_end_y - dst_y;
-		if (cp_width <= 0)
-		{
-			return 1;
-		}
-	}
-	if (dst_x + cp_width > dst_end_x)
-	{
-		cp_width = dst_end_x - dst_x;
-		if (cp_width <= 0)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
 //void AreaCopy(image * dst_img, image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 //{
 //	int y;

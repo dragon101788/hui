@@ -256,8 +256,9 @@ public:
 			{			
 				list_add_prior_delete_next(mylist,width,height);
 				page_list head=list_find_head(mylist);
+				print_num=word_num_mp[page-2];
 				print_num+=head->ttf.DrawText(buffer+print_num,txt_len);
-				print_num=word_num_mp[page+3];
+
 
 			}
 			cache_up=0;

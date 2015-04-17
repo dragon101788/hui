@@ -342,7 +342,7 @@ void element::DeleteByParent()
 	xml_mgr->elem.erase(name);
 }
 
-extern int ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y,int dst_end_x,int dst_end_y);
+
 void element::copyLayer(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 {
 	int _dst_x=dst_x+x;
@@ -350,6 +350,7 @@ void element::copyLayer(image * src_img, int src_x, int src_y, int cp_width, int
 	if(hasParent()){
 		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
+
 		::AreaCopy_no_ProcArea(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 	}else{
 		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
