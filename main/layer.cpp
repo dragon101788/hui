@@ -350,11 +350,11 @@ void element::copyLayer(image * src_img, int src_x, int src_y, int cp_width, int
 	if(hasParent()){
 		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
-		::AreaCopy_no_ProcArea(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
+		::AreaCopy_no_ProcArea(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 	}else{
 		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
-		::AreaCopy_no_ProcArea(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,dst_x+x,dst_y+y);
+		::AreaCopy_no_ProcArea(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 	}
 }
 

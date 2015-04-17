@@ -4,7 +4,7 @@
 #include"layer.h"
 #include"screen_handler.h"
 #include "image_transform.h"
-
+#include "ttf_font.h"
 
 
 

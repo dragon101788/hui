@@ -144,11 +144,11 @@ public:
 			int padding_top=(height-size)/2;
 			padding_top>0?padding_top:0;
 			if(id==0){
-				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
+				ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
 			}else if(id==father->node_num-1){
-				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
+				ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)1,(float)0);
 			}else
-				ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+				ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top);
 		}
 
 		void doRenderConfig()

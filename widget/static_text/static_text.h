@@ -4,7 +4,7 @@
 #include "XMLInstal.h"
 //#include "layer.h"
 #include "view.h"
-#include "ttf_font.h"
+
 //#include "alpha.h"
 
 class static_text: public BaseView

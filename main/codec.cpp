@@ -594,15 +594,10 @@ int image_read_from_snap(image * img, const char * rawpath)
 
 int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y)
 {
-	if (cp_width == 0 || cp_height == 0)
+	if (cp_width <= 0 || cp_height <= 0)
 	{
 		return 1;
 	}
-	if (cp_width < 0 || cp_height < 0)
-	{
-		huErrExit("AreaCopy cp_windth or cp_height <0\r\n");
-	}
-	//printf("$$$HU$$$ src_x=%d\r\n", src_x);
 
 	if (src_x < 0)
 	{
@@ -613,6 +608,16 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 	{
 		dst_y -= src_y;
 		src_y = 0;
+	}
+	if (dst_x < 0)
+	{
+		src_x -= dst_x;
+		dst_x = 0;
+	}
+	if (dst_y < 0)
+	{
+		src_y -= dst_y;
+		dst_y = 0;
 	}
 
 
@@ -657,15 +662,10 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
  */
 int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & cp_width, int & cp_height, int & dst_x, int & dst_y,int dst_end_x,int dst_end_y)
 {
-	if (cp_width == 0 || cp_height == 0)
+	if (cp_width <= 0 || cp_height <= 0)
 	{
 		return 1;
 	}
-	if (cp_width < 0 || cp_height < 0)
-	{
-		huErrExit("AreaCopy cp_windth or cp_height <0\r\n");
-	}
-	//printf("$$$HU$$$ src_x=%d\r\n", src_x);
 
 	if (src_x < 0)
 	{
@@ -677,7 +677,16 @@ int  ProcArea(image * dst_img, image * rsc_img, int & src_x, int & src_y, int & 
 		dst_y -= src_y;
 		src_y = 0;
 	}
-
+	if (dst_x < 0)
+	{
+		src_x -= dst_x;
+		dst_x = 0;
+	}
+	if (dst_y < 0)
+	{
+		src_y -= dst_y;
+		dst_y = 0;
+	}
 
 	if (src_y + cp_height > rsc_img->GetHeight())
 	{

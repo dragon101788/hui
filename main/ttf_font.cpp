@@ -186,6 +186,10 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 				FT_Set_Transform(face, &matrix, &pen);
 			}
 			fontCode= UTF8_NextUnichar(&text);
+			if(fontCode==0){
+				text--;
+				break;
+			}
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
@@ -210,6 +214,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 			}
 			else{
 				log_i("overflow ptext->GetHeight() \n");
+				text--;
 				break;
 			}
 		}
@@ -254,8 +259,10 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 
 		//fontCode = text[i];
 		fontCode= UTF8_NextUnichar(&text);
-		if(fontCode==0)
+		if(fontCode==0){
+			text--;
 			break;
+		}
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
@@ -279,6 +286,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 			}
 			else{
 				log_i("overflow ptext->GetHeight() \n");
+				text--;
 				break;
 			}
 		}
@@ -325,6 +333,10 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 			FT_Set_Transform(face, &matrix, &pen);
 		}
 		fontCode= UTF8_NextUnichar(&text);
+		if(fontCode==0){
+			text--;
+			break;
+		}
 		ft_error = FT_Load_Char(face, fontCode, TTF_bitmap_type); /*  FT_LOAD_NO_BITMAP | FT_LOAD_RENDER */
 		if (ft_error)
 		{
@@ -348,6 +360,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 			}
 			else{
 				log_i("overflow ptext->GetHeight() \n");
+				text--;
 				break;
 			}
 		}

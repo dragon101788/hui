@@ -114,7 +114,7 @@ public:
 				padding_left+=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 				padding_top+=(height-size)/2;
 			}
-			ttf.DrawText("UTF-8", (char *) txt.c_str(), txt.length(),padding_left,padding_top);
+			ttf.DrawText((char *) txt.c_str(), txt.length(),padding_left,padding_top);
 			res[0].LoadResource();
 			res[1].LoadResource();
 			Render_img_to_img(&res[0], &ttf, 0, 0, width, height,0,0);//将文字复制到图片上
