@@ -512,6 +512,13 @@ public:
 			dst_y=0;
 			img=NULL;
 		}
+		/******************
+		 * 图像平移
+		 */
+		inline void  translate(int dx, int dy){
+			dst_x=dx;
+			dst_y=dy;
+		}
 	};
 
 	hustr name;

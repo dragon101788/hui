@@ -114,7 +114,8 @@ public:
 	void doRenderConfig()
 	{
 		//image::Render(&img, move_x(), move_y());
-		render_res[0].dst_x=offset_x;
+		render_res[0].translate(offset_x,0);
+		//render_res[0].dst_x=offset_x;
 		render_res[0].img=&img;
 
 	}
