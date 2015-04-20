@@ -133,15 +133,17 @@ private:
 		last->next=newpage;
 		newpage->prior=last;
 		newpage->next=NULL;
+		i++;
 	//	log_i("i=%d;j=%d!!!\n",i,j);
-		if(j>=3)
+		if(j>=4)
 			{
 			head->next->prior=NULL;
 		//	free(head->ttf.pSrcBuffer);
 		//	log_i("delete head!!!!\r\n");
 			delete head;//free(head);//删除原来的头
+			head=NULL;
 			}
-		return 0;
+		return i;  //last在往下第几个位置
 	}
 
 	int list_add_prior_delete_next(page_list &L,int w,int h)
@@ -167,20 +169,22 @@ private:
 		head->prior=newpage;
 		newpage->next=head;
 		newpage->prior=NULL;
+		j++;
 		if(i>=4)
 			{
 			last->prior->next=NULL;
 		//	free(last->ttf.pSrcBuffer);
 		//	log_i("delete last!!!\n");
 			delete last;//free(last);//删除原来的尾
+			last=NULL;
 			}
-		return 0;
+		return j; //head在前面第几个位置
 	}
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
+	int py;
 public:
 
 
@@ -193,6 +197,7 @@ public:
 	}
 	void doTouchDown()
 	{
+		 py = sy - move_y();
 		Flush();
 	}
 
@@ -203,7 +208,7 @@ public:
 	
 		if (sy<0)
 		{
-			if(page==1)
+			if(page==0)
 			sy = 0;
 		}
 		       
@@ -218,17 +223,19 @@ public:
 			}		
 	
 		}
+
 		if(flag_set_timer)//在抬手处处理定时任务目的在于解决滑动卡顿
 		{
 			TimerSet(0);
 			flag_set_timer=0;
 		}
 		//log_i("sy=%d!!\n",sy);
-		Flush();
+		//Flush();
 	}
 
 	int doTimer(int tm)
 	{	
+
 		//log_i("doTimer \n");
 		if(cache_down)//当sy大于height时，准备缓存下一页
 		{     
@@ -237,31 +244,34 @@ public:
 				//ttf.cleanBuf();
 				if(print_num<txt_len)
 				{
-					 list_add_next_delete_prior(mylist,width,height);
+					lock();
+					int pos= list_add_next_delete_prior(mylist,width,height);
+					 unlock();
 					 page_list last=list_find_last(mylist);
-					 if(word_num_mp[page+1]!=0){
-						 print_num=word_num_mp[page+1];
+					 if(word_num_mp[page+pos]!=0){
+						 print_num=word_num_mp[page+pos];
 					 }
 					 print_num+=last->ttf.DrawText(buffer+print_num,txt_len);
-					 word_num_mp[page+2]=print_num;
+					 word_num_mp[page+pos+1]=print_num;
 
 
                 		//print_num+=ttf.DrawText_unicode((wchar_t *) WStr+word_num_mp[page+2], lenth_once);
 
 				if(print_num>=txt_len)
-					const_page=page+2;
+					const_page=page+pos;
 				}
 			}
 			cache_down=0;
 		}
-
 		else if(cache_up)//当sy小于height时，准备缓存上一页
 		{
-			if(page!=1)
-			{			
-				list_add_prior_delete_next(mylist,width,height);
+			if(page>0)
+			{
+				lock();
+				int pos=list_add_prior_delete_next(mylist,width,height);
+				unlock();
 				page_list head=list_find_head(mylist);
-				print_num=word_num_mp[page-2];
+				print_num=word_num_mp[page-pos];
 				print_num+=head->ttf.DrawText(buffer+print_num,txt_len);
 
 
@@ -277,78 +287,88 @@ public:
 	}
 	void doRenderConfig()
 	{
-		int py = sy - move_y();
-		//log_i("sy=%d,py=%d!!\n",sy,py);
-		if (py<0)
-		{
-			if(page==1)
-			py = 0;
-			else  //向上换页
-			{
-				py+=height;
-				sy+=height;
-				mylist=mylist->prior;
-			//	{
-				page--;
-				log_i("page--,page=%d!!!!!!!\n ",page);
-				if(list_how_far_head(mylist)==0)//shang面只剩一个缓存页面
-				{
-					while(cache_up) {
-						touch_lock=1;
-						log_i("wait for cache_up clean!!!!!!1\n");//等待上一次的缓存完成
-						usleep(10);
-					}
-					touch_lock=0;
-					cache_up=1;
-					flag_set_timer=1;
-				}
-			        	
-			}
-		}
-		       
-		else  if(py>0)
-		 {
-			if(page==const_page)
-			py=0;
-			else if(py>=height)//向下换页
-			{
-			//	page++;
-				if(page==const_page-1)
-				py=height;
-				else
-				{
-					page++;
-					py-=height;
-					sy-=height;
-					mylist=mylist->next;
-					log_i("page++,page=%d!!!!!!!\n ",page);
-					if(list_how_far_last(mylist)<=1)//下面只剩一个缓存页面
-					{
-						while(cache_down){
-							touch_lock=1;
-							log_i("wait for cache_down clean!!!!!!!\n");
-							usleep(10);
-						}
-						touch_lock=0;
-						cache_down=1;
-						flag_set_timer=1;
-					}
-				}
-					
-			}		
-	
-		}
-		log_i("page=%d,const_page=%d,print_num=%d,txt_len=%d,sy=%d,py=%d!!\n",page,const_page,print_num,txt_len,sy,py);
 
+				//log_i("sy=%d,py=%d!!\n",sy,py);
+				if (py<0)
+				{
+					if(page==0)
+					py = 0;
+					else  //向上换页
+					{
+						py+=height;  //上面一页
+						sy+=height;
+						mylist=mylist->prior;    //节点移位
+					//	{
+						page--;
+						log_i("page--,page=%d!!!!!!!\n ",page);
+						if(list_how_far_head(mylist)<=1)//shang面只剩一个缓存页面
+						{
+							while(cache_up) {
+								touch_lock=1;
+								if(flag_set_timer){
+									TimerSet(0);
+								}
+								log_i("wait for cache_up clean!!!!!!1\n");//等待上一次的缓存完成
+								usleep(10);
+							}
+							touch_lock=0;
+							cache_up=1;
+							//TimerSet(0);
+							flag_set_timer=1;
+						}
+
+					}
+				}
+				else  if(py>0)
+				 {
+					if(page==const_page)
+					py=0;
+					else if(py>=height)//向下换页
+					{
+					//	page++;
+						if(page==const_page-1)
+						py=height;
+						else
+						{
+							page++;
+							py-=height;
+							sy-=height;
+							mylist=mylist->next;   //节点移位
+							log_i("page++,page=%d!!!!!!!\n ",page);
+							if(list_how_far_last(mylist)<=1)//下面只剩一个缓存页面
+							{
+								while(cache_down){
+									touch_lock=1;
+									if(flag_set_timer){
+										TimerSet(0);
+									}
+									log_i("wait for cache_down clean!!!!!!!\n");
+									usleep(10);
+								}
+								touch_lock=0;
+								cache_down=1;
+								//TimerSet(0);
+								flag_set_timer=1;
+							}
+						}
+
+					}
+
+				}
+
+
+
+		log_i("page=%d,const_page=%d,print_num=%d,txt_len=%d,sy=%d,py=%d!!\n",page,const_page,print_num,txt_len,sy,py);
+		lock();
 		render_res[0].translate(move_x()-sx,-py);
 		render_res[0].img=&mylist->ttf;
-		if(const_page>1){
+		if(const_page>0){
 			render_res[1].translate(move_x()-sx,height-py);
 			render_res[1].img=&mylist->next->ttf;
 		}
 		else
 			render_res.erase(1);
-
+		unlock();
 //
 //		image::Render(&mylist->ttf, sx - move_x(), py, width, height-py, 0, 0);//page start from 0
 //		if(const_page>1)
@@ -379,26 +399,27 @@ public:
 
 		init_list(mylist,width,height);//初始化一个有三个元素的链表
 
-		word_num_mp[0]=print_num;
+		//word_num_mp[0]=print_num;
         //print_num+=ttf.DrawText_unicode((wchar_t *) WStr+print_num, lenth_once);
+		word_num_mp[0]=0;
         print_num+=mylist->ttf.DrawText(buffer+print_num,txt_len);
 		word_num_mp[1]=print_num;
 		const_page=100000;
 		if(print_num>=txt_len)  //只有一页
-		const_page=1;
+		const_page=0;
 		else
 		{
 			list_add_next_delete_prior(mylist,width,height);
 			print_num+=mylist->next->ttf.DrawText(buffer+print_num,txt_len);
 			word_num_mp[2]=print_num;//第3页开始字数
 			if(print_num>=txt_len)
-				const_page=2;
+				const_page=1;
 			else{
 				list_add_next_delete_prior(mylist,width,height);
 				print_num+=mylist->next->next->ttf.DrawText(buffer+print_num,txt_len);
-				word_num_mp[4]=print_num;
+				word_num_mp[3]=print_num;
 				if(print_num>=txt_len)
-					const_page=3;
+					const_page=2;
 			}
 		}
 
@@ -419,8 +440,8 @@ public:
 		size=0;
 		lenth=0;
 		lenth_final=0;
-        page=1;
-        const_page=1;
+        page=0;
+        const_page=0;
 		cache_up =0;
 		cache_down =0;
 		flag_set_timer=0;
