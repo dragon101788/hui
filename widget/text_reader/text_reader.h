@@ -10,7 +10,7 @@
 	static unsigned char style;
 	static int size;
 
-class slip_text: public View
+class text_reader: public View
 {
 
 
@@ -56,59 +56,58 @@ private:
 	}//初始化了一个一个节点的双向链表
 	page_list list_find_last(page_list L)
 	{
-	page_list last=L;
-	while(last->next!=NULL)
-	{
-	last=last->next;
-	}
-	return last;
+		page_list last=L;
+		while(last->next!=NULL)
+		{
+		last=last->next;
+		}
+		return last;
 	}
 
 	page_list list_find_head(page_list L)
 	{
-	page_list head=L;
-	while(head->prior!=NULL)
-	{
-	head=head->prior;
-	}
-	return head;
+		page_list head=L;
+		while(head->prior!=NULL)
+		{
+		head=head->prior;
+		}
+		return head;
 	}
 
 	int list_how_far_last(page_list L)
 	{
-	page_list last=L;
-	int num=0;
-	while(last->next!=NULL)
-	{
-	num++;
-	last=last->next;
-	}
-	return num;
+		page_list last=L;
+		int num=0;
+		while(last->next!=NULL)
+		{
+		num++;
+		last=last->next;
+		}
+		return num;
 	}
 
 	int list_how_far_head(page_list L)
 	{
-	page_list head=L;
-	int num=0;
-	while(head->prior!=NULL)
-	{
-	num++;
-	//log_i("list_how_far_head:num=%d!!!!\n",num);
-	head=head->prior;
-	}
-	return num;
+		page_list head=L;
+		int num=0;
+		while(head->prior!=NULL)
+		{
+		num++;
+		//log_i("list_how_far_head:num=%d!!!!\n",num);
+		head=head->prior;
+		}
+		return num;
 	}
 
 	void destroy_list(page_list &L)
 	{
-	page_list i,head,last;
-	head=list_find_head(L);
-	last=list_find_last(L);
-	for(i=head;i!=last->next;i=i->next)
-	{
-	//       free(i->ttf.pSrcBuffer);
-	       delete i;//free(head);//删除原来的头
-	}
+		page_list i,head,last;
+		head=list_find_head(L);
+		last=list_find_last(L);
+		for(i=head;i!=last->next;i=i->next)
+		{
+			   delete i;//
+		}
 	}
 
 
@@ -274,8 +273,6 @@ public:
 	}
 	void doTouchActive()
 	{
-		
-	
 
 	}
 	void doRenderConfig()
@@ -293,17 +290,17 @@ public:
 				mylist=mylist->prior;
 			//	{
 				page--;
-				log_i("page--,page=%d\n!!!!!!! ",page);
-				if(list_how_far_head(mylist)==0)//下面只剩一个缓存页面
+				log_i("page--,page=%d!!!!!!!\n ",page);
+				if(list_how_far_head(mylist)==0)//shang面只剩一个缓存页面
 				{
 					while(cache_up) {
+						touch_lock=1;
 						log_i("wait for cache_up clean!!!!!!1\n");//等待上一次的缓存完成
 						usleep(10);
 					}
+					touch_lock=0;
 					cache_up=1;
-					//log_i("start cache up\n!!!!!\n");
 					flag_set_timer=1;
-				//	TimerSet(0);
 				}
 			        	
 			}
@@ -324,16 +321,16 @@ public:
 					py-=height;
 					sy-=height;
 					mylist=mylist->next;
-					log_i("page++,page=%d\n!!!!!!! ",page);
-					if(list_how_far_last(mylist)==1)//下面只剩一个缓存页面
+					log_i("page++,page=%d!!!!!!!\n ",page);
+					if(list_how_far_last(mylist)<=1)//下面只剩一个缓存页面
 					{
 						while(cache_down){
+							touch_lock=1;
 							log_i("wait for cache_down clean!!!!!!!\n");
 							usleep(10);
 						}
+						touch_lock=0;
 						cache_down=1;
-						//log_i("start cache_down!!!!!!!!\n");
-						//TimerSet(0);
 						flag_set_timer=1;
 					}
 				}
@@ -371,11 +368,11 @@ public:
 		{	
 			log_i("Cannot open output file.\n");
 		}
-			log_i("txt_len=%d!!!!!!!!!!!!!!!!\n",txt_len);
+		//	log_i("txt_len=%d!!!!!!!!!!!!!!!!\n",txt_len);
 		buffer=(char *)malloc(txt_len);//记得free()
 		//txt=buffer;
 		fread((char *)buffer,1,txt_len,txt_file);
-		log_i("fread end!!!");
+	//	log_i("fread end!!!");
 		style = (unsigned char) m_mp["style"]->getvalue_int();
 		size = m_mp["size"]->getvalue_int();
 		int col_num=height/(size*1.2);
@@ -405,14 +402,14 @@ public:
 			}
 		}
 
-		log_i("11111111114\n");
+		//log_i("11111111114\n");
 		touch_init_area(x, y, width, height);
 		xml_mgr->AddEleArea(this);
 		xml_mgr->AddTimerElement( this);
 		Flush();
 	}
 
-	slip_text()
+	text_reader()
 	{
 		sx = 0;
 		sy = 0;
@@ -429,7 +426,7 @@ public:
 		flag_set_timer=0;
 		print_num=0;
 	}
-	~slip_text()
+	~text_reader()
 	{
 		fclose(txt_file);
 		free(buffer);
@@ -445,10 +442,7 @@ public:
 
 	hustr txt;      //i
 	char * buffer;      //保存文本
-
 	hustr txt_name;
-
-
 	int lenth;
 	int lenth_final; //最后一页缓存字数
     int page;

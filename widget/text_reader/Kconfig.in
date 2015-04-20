@@ -1,0 +1,4 @@
+config  CONTROL_TEXT_READER 
+        bool "text_reader Control" 
+        help 
+			path=$AUTOPATH

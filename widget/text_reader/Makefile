@@ -3,8 +3,8 @@ CC:=$(CROSS_COMPILE)g++
 TOPDIR:=../../
 CFLAG:=-I$(TOPDIR)/ -I$(TOPDIR)/include -DHUMODULE
 OUTDIR:=./
-TAG=$(OUTDIR)slip_text.so
-SRC=slip_text.cpp
+TAG=$(OUTDIR)text_reader.so
+SRC=text_reader.cpp
 
 sinclude built-in.d
 all:built-in.d built-in.o
