@@ -61,6 +61,24 @@ void install_page_control(hustr parentName,HUMap &xmlmp, xmlproc * xml)
 	xml->windCtl=te;
 
 }
+/****************************************
+ * 进入动画
+ *
+ */
+template<class T>
+void install_animation(hustr parentName,HUMap &xmlmp, xmlproc * xml)
+{
+	if(xml->anim!=NULL){
+		return ;//一个页面只能有一个页面控制器
+	}
+	T * te = new T;
+	te->m_mp.fetch(xmlmp);
+	te->FlushConfig();
+	xml->anim=te;
+
+}
+
+
 
 class InstallXMLinstan
 {
@@ -72,6 +90,7 @@ public:
 };
 #define InstallXMLinstanPageCtl(a,b) static InstallXMLinstan install##_##b(a,install_page_control<b>)
 #define InstallXMLinstanWidget(a,b) static InstallXMLinstan install##_##b(a,Install_Element<b>)
+#define InstallXMLinstanAnimation(a,b) static InstallXMLinstan install##_##b(a,install_animation<b>)
 #ifdef HUMODULE
 #define hucall extern "C"
 #else

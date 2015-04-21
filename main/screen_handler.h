@@ -218,7 +218,7 @@ class ScreenHandler:public KeypadListener
 	void stopTimer(ScreenTimerThread *thread);
 
 	virtual void doFlushConfig(){
-		//name = m_mp["name"]->getvalue();
+		name = m_mp["name"]->getvalue();
 	}
 	void FlushConfig(){
 		doFlushConfig();

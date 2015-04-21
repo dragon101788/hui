@@ -48,6 +48,7 @@ obj-y +=main/hulib.o
 obj-y +=main/codec.o
 obj-y += main/framebuffer.o
 obj-y +=main/hui.o  
+obj-y += main/animation.o
 obj-y +=platform/rotate_soft.o 
 obj-y +=platform/zoom_soft.o 
 

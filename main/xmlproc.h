@@ -6,6 +6,7 @@
 #include "manager_cs.h"
 #include "framebuffer.h"
 #include "screen_handler.h"
+#include "animation.h"
 class xmlproc;
 typedef SmartPtr<xmlproc> pXmlproc;
 extern pXmlproc g_cur_xml;
@@ -84,9 +85,12 @@ public:
 //	int directDraw;
 	hustr filename;
 	ScreenHandler *windCtl;
+	Animation *anim;
 	void addDraw(){
 		isDraw++;
 	}
+
+
 	class xmlout: public image
 	{
 	public:
@@ -104,6 +108,22 @@ public:
 			//fb->NotifyRenderFrameBuffer(this);
 		//	unlock();
 		}
+//		/************************
+//		 * 带动画效果的切换
+//		 * 动画应该做成控件形式
+//		 * 分 alpha translation ,scale等
+//		 */
+//		void RenderToFramebufferAnim(framebuffer * fb,Animation *anim)
+//		{
+//			//fb->RenderImageToFrameBuffer(this);
+//			int steps=40;
+//			for(int i=steps;i>=0;i--){
+//			int src_x=u32Width/steps*i;
+//			int src_y=u32Height/steps*i;
+//			fb->RenderImageToFrameBuffer_part(this,src_x,src_y,u32Width-src_x,u32Height-src_y,0,0);
+//			FPSWaitFPS(anim->fps);
+//			}
+//		}
 	};
 	xmlout out;
 
@@ -171,22 +191,41 @@ public:
 			FPSWaitFPS(30);
 		}
 	}
+
+
+
 	void ProcDraw()
 	{
-//		if (fore == 0 || isDraw == 0)
-//			return;
-
-		//lock();
 		if (isDraw != 0 && fore == 1 && done == 1)
 		{
 			log_i("%s RenderToBuffer\r\n",filename.c_str());
-			out.RenderToFramebuffer(&fb);
+			if(switchProc){
+				if(anim!=NULL)
+					switch(anim->type){
+					case 0:
+						break;
+					case 1:
+						((AlphaAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer_part);
+						break;
+					case 2:
+						((TranslationAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer_part);
+						break;
+					default:
+						break;
+					}
+				out.RenderToFramebuffer(&fb);
+				switchProc=0;
+				switchProcs();
+
+			}else{
+				out.RenderToFramebuffer(&fb);
+			}
 			fps.debug_timer("<fps>");
 			isDraw = 0;
-			if(switchProc){
-			switchProc=0;
-			switchProcs();
-			}
+//			if(switchProc){
+//			switchProc=0;
+//			switchProcs();
+//			}
 
 		}
 	//	unlock();
@@ -282,6 +321,7 @@ public:
 		done = 0; //默认非完成状态
 //		directDraw=0;
 
+		anim=NULL; //默认是没有动画的
 		windCtl=NULL;
 		if (out.isNULL())
 		{
@@ -307,13 +347,13 @@ public:
 		filename = file;
 
 	}
-	void drawDirect(image* src_img,int src_x,int src_y,int src_w,int src_h,int dst_x, int dst_y)
-	{
-		//lock();
-		fb.RenderImageToFrameBuffer_part(src_img,src_x,src_y,src_w,src_h,dst_x,dst_y);
-		isDraw++;
-		//unlock();
-	}
+//	void drawDirect(image* src_img,int src_x,int src_y,int src_w,int src_h,int dst_x, int dst_y)
+//	{
+//		//lock();
+//		fb.RenderImageToFrameBuffer_part(src_img,src_x,src_y,src_w,src_h,dst_x,dst_y);
+//		isDraw++;
+//		//unlock();
+//	}
 
 
 
@@ -330,6 +370,10 @@ public:
 		if(windCtl!=NULL){
 			delete windCtl;
 			windCtl=NULL;
+		}
+		if(anim!=NULL){
+			delete anim;
+			anim=NULL;
 		}
 		m_exit = 0;
 		lock();

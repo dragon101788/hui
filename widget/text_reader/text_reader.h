@@ -12,12 +12,7 @@
 
 class text_reader: public View
 {
-
-
 private:
-
-
-
 
 	int getFileSize(char * strFileName)
 	{
