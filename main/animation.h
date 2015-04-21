@@ -61,7 +61,7 @@ public:
 	void renderAnim(T *dst,image *src,void (T::*pfun)(image * ,int ,int ,int ,int ,int ,int )){
 		int old_transp=src->transp;
 		for(int i=0;i<steps;i++){
-			src->transp=i*end_alpha/steps+start_alpha;
+			src->transp=i*(end_alpha-start_alpha)/steps+start_alpha;
 			(dst->*pfun)(src,0,0,src->u32Width,src->u32Height,0,0);
 			 FPSWaitTimer(duration);
 		}

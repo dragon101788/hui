@@ -112,6 +112,7 @@ public:
 //    //	log_i("RenderImageToFrameBuffer out!!!!\n");
 //    }
 	void RenderImageToFrameBuffer(image * img);
+	void RenderImageToFrameBuffer_alpha(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y);
 	void RenderImageToFrameBuffer_part(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y);
 
 };
