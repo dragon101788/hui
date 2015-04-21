@@ -213,6 +213,9 @@ public:
 					case 3:
 						((RotateAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer);
 						break;
+					case 4:
+						((ScaleAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer_part);
+						break;
 					default:
 						break;
 					}

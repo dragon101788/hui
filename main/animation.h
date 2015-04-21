@@ -152,17 +152,59 @@ public:
 		}
 	};
 
-//	void RenderToFramebufferAnim(framebuffer * fb,Animation *anim)
-//	{
-//		//fb->RenderImageToFrameBuffer(this);
-//		int steps=40;
-//		for(int i=steps;i>=0;i--){
-//		int src_x=u32Width/steps*i;
-//		int src_y=u32Height/steps*i;
-//		fb->RenderImageToFrameBuffer_part(this,src_x,src_y,u32Width-src_x,u32Height-src_y,0,0);
-//		FPSWaitFPS(anim->fps);
-//		}
-//	}
+
+
+	class ScaleAnim:public Animation{
+
+	public:
+		int start_angle;
+		int end_angle;
+		int start_x;
+		int end_x;
+		int start_y;
+		int end_y;
+		//int center;
+		float start_scale;
+		float end_scale;
+		ScaleAnim(){
+			type=4;
+			start_scale=0.2;
+			end_scale=1;
+			start_x=0;
+			start_y=0;
+			end_x=0;
+			end_y=0;
+			//center=0;
+		}
+		 void doFlushConfig(){
+			duration=m_mp["duration"]->getvalue_int();
+			steps = m_mp["steps"]->getvalue_int();
+			//center= m_mp["center"]->getvalue_int();
+			if(m_mp.exist("start_scale"))
+				start_scale=(float)m_mp["start_scale"]->getvalue_int()/100;
+			if(m_mp.exist("end_scale"))
+				end_scale=(float)m_mp["end_scale"]->getvalue_int()/100;
+		}
+
+		template <typename  T>
+		void renderAnim(T *dst,image *src,void (T::*pfun)(image * ,int ,int ,int ,int ,int ,int )){
+
+			image temp;
+			int x,y;
+			for(int i=0;i<steps;i++){
+				float scale=start_scale+i*(end_scale-start_scale)/steps;
+				x=start_x+i*(end_x-start_x)/steps;
+				y=start_y+i*(end_y-start_y)/steps;
+				temp.SetBuffer(src->u32Width*scale,src->u32Height*scale);
+				ImageTransform::zoom_no_bilinear(temp,*src);
+				//(dst->*pfun)(&temp);
+				(dst->*pfun)(&temp,0,0,temp.u32Width,temp.u32Height,x,y);
+				 FPSWaitTimer(duration);
+			}
+		}
+	};
+
+
 
 
 
