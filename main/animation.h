@@ -52,8 +52,8 @@ public:
 	 void doFlushConfig(){
 		duration=m_mp["duration"]->getvalue_int();
 		steps = m_mp["steps"]->getvalue_int();
-		start_alpha = m_mp["start_alpha"]->getvalue_int()/100;
-		end_alpha = m_mp["end_alpha"]->getvalue_int()/100;
+		start_alpha = (float)m_mp["start_alpha"]->getvalue_int()/100;
+		end_alpha = (float)m_mp["end_alpha"]->getvalue_int()/100;
 	}
 
 
@@ -62,6 +62,7 @@ public:
 		int old_transp=src->transp;
 		for(int i=0;i<steps;i++){
 			src->transp=i*(end_alpha-start_alpha)/steps+start_alpha;
+			log_i("src->transp=%f",src->transp);
 			(dst->*pfun)(src,0,0,src->u32Width,src->u32Height,0,0);
 			 FPSWaitTimer(duration);
 		}
