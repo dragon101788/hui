@@ -2,6 +2,7 @@
 #define __ANIMATION_H__
 #include"hulib.h"
 #include"codec.h"
+#include"image_transform.h"
 //extern void FPSWaitTimer(int ms);
 class Animation{
 public:
@@ -65,7 +66,6 @@ public:
 			src->transp=i*(end_alpha-start_alpha)/steps+start_alpha;
 			temp.SetBuffer(src->u32Width,src->u32Height);
 			temp.Render(src,0,0);
-			//log_i("src->transp=%d!!!!!!!!!\n",src->transp);
 			(dst->*pfun)(&temp);
 			 FPSWaitTimer(duration);
 		}
@@ -100,6 +100,7 @@ public:
 		void renderAnim(T *dst,image *src,void (T::*pfun)(image * ,int ,int ,int ,int ,int ,int )){
 			int x,y;
 			for(int i=0;i<steps;i++){
+				usleep(100);
 				x=start_x+i*(end_x-start_x)/steps;
 				y=start_y+i*(end_y-start_y)/steps;
 				(dst->*pfun)(src,0,0,src->u32Width,src->u32Height,x,y);
@@ -108,6 +109,48 @@ public:
 		}
 	};
 
+	class RotateAnim:public Animation{
+
+	public:
+		int start_angle;
+		int end_angle;
+		//int center;
+		float start_scale;
+		RotateAnim(){
+			type=3;
+			start_angle=0;
+			start_angle=0;
+			start_scale=0.2;
+			//center=0;
+		}
+		 void doFlushConfig(){
+			duration=m_mp["duration"]->getvalue_int();
+			steps = m_mp["steps"]->getvalue_int();
+			start_angle = m_mp["start_angle"]->getvalue_int();
+			end_angle = m_mp["end_angle"]->getvalue_int();
+			//center= m_mp["center"]->getvalue_int();
+			if(m_mp.exist("start_scale"))
+				start_scale=(float)m_mp["start_scale"]->getvalue_int()/100;
+		}
+
+		template <typename  T>
+		void renderAnim(T *dst,image *src,void (T::*pfun)(image *)){
+			int  angle;
+			image temp,temp2;
+			temp2.SetBuffer(src->u32Width,src->u32Height);
+			for(int i=0;i<steps;i++){
+				angle=start_angle+i*(end_angle-start_angle)/steps;
+				float scale=start_scale+i*(1-start_scale)/steps;
+//				if(center){
+//					ImageTransform::rotete_center(temp,*src,angle,scale,scale);
+//				}else
+					ImageTransform::rotate_no_bilinear(temp,*src,angle,scale,scale,0,0);
+				temp2.AreaCopy(&temp,0,0);
+				(dst->*pfun)(&temp2);
+				 FPSWaitTimer(duration);
+			}
+		}
+	};
 
 //	void RenderToFramebufferAnim(framebuffer * fb,Animation *anim)
 //	{

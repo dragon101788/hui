@@ -70,6 +70,9 @@ const double PI=3.1415926535897932384626433832795;
         PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, (dstPic.GetWidth()-srcPic.GetWidth())*0.5,(dstPic.GetHeight()-srcPic.GetHeight())*0.5);
     }
 
+
+
+
 void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,double move_x,double move_y)
 {
 	static int src_width=0;
@@ -87,6 +90,25 @@ void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,
     PicRotaryBilInear(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
 
 }
+
+void rotate_no_bilinear( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,double move_x,double move_y)
+{
+	static int src_width=0;
+	static int src_height=0;
+	static long dst_wh=0;
+	if(src_width!=srcPic.GetWidth()||src_height!=srcPic.GetHeight()){
+		debug("src_height!=srcPic.GetHeight()!!!!\n");
+		src_width=srcPic.GetWidth();
+		src_height=srcPic.GetHeight();
+		dst_wh=(long)( ::sqrt(1.0*srcPic.GetWidth()*srcPic.GetWidth()+srcPic.GetHeight()*srcPic.GetHeight()) +4 +0.5);
+	}
+    dstPic.SetBuffer(dst_wh,dst_wh);
+    double rotaryAngle=(PI*2)*(angle*1.0/360);
+  //  PicRotary2(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
+    PicRotary3(dstPic,srcPic,rotaryAngle,ZoomX,ZoomY, move_x, move_y);
+
+}
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //RotaryAngle为逆时针旋转的角度;
     //ZoomX,ZoomY为x轴y轴的缩放系数(支持负的系数,相当于图像翻转);
@@ -132,12 +154,6 @@ void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,
             ((UInt8*&)pDstLine)+=Dst.u32Stride;
         }
     }
-
-
-
-
-
-
 
     struct TRotaryClipData{
     public:
@@ -349,6 +365,298 @@ void rotate( image & dstPic,image &  srcPic,int angle,double ZoomX,double ZoomY,
             return (cur_dst_up_x0<cur_dst_up_x1);
         }
     };
+
+
+
+
+    void PicRotary3_CopyLine(Color32* pDstLine,long dstCount,long Ax_16,long Ay_16,
+                            long srcx0_16,long srcy0_16,const BaseImage& SrcPic)
+    {
+        Color32* pSrcLine=(Color32*)SrcPic.pSrcBuffer;
+        long src_byte_width=SrcPic.u32Stride;
+        for (long x=0;x<dstCount;++x)
+        {
+            pDstLine[x]= ((Color32*)( ((UInt8*)pSrcLine) + src_byte_width*(srcy0_16>>16))) [srcx0_16>>16];
+            srcx0_16+=Ax_16;
+            srcy0_16+=Ay_16;
+        }
+    }
+
+    void PicRotary3(const BaseImage& Dst,const BaseImage& Src,double RotaryAngle,double ZoomX,double ZoomY,double move_x,double move_y)
+    {
+        if ( (fabs(ZoomX*Src.u32Width)<1.0e-4) || (fabs(ZoomY*Src.u32Height)<1.0e-4) ) return; //太小的缩放比例认为已经不可见
+        double tmprZoomXY=1.0/(ZoomX*ZoomY);
+        double rZoomX=tmprZoomXY*ZoomY;
+        double rZoomY=tmprZoomXY*ZoomX;
+        double sinA,cosA;
+        SinCos(RotaryAngle,sinA,cosA);
+        long Ax_16=(long)(rZoomX*cosA*(1<<16));
+        long Ay_16=(long)(rZoomX*sinA*(1<<16));
+        long Bx_16=(long)(-rZoomY*sinA*(1<<16));
+        long By_16=(long)(rZoomY*cosA*(1<<16));
+        double rx0=Src.u32Width*0.5;  //(rx0,ry0)为旋转中心
+        double ry0=Src.u32Height*0.5;
+        long Cx_16=(long)((-(rx0+move_x)*rZoomX*cosA+(ry0+move_y)*rZoomY*sinA+rx0)*(1<<16));
+        long Cy_16=(long)((-(rx0+move_x)*rZoomX*sinA-(ry0+move_y)*rZoomY*cosA+ry0)*(1<<16));
+
+        TRotaryClipData rcData;
+        rcData.Ax_16=Ax_16;
+        rcData.Bx_16=Bx_16;
+        rcData.Cx_16=Cx_16;
+        rcData.Ay_16=Ay_16;
+        rcData.By_16=By_16;
+        rcData.Cy_16=Cy_16;
+        rcData.dst_width=Dst.u32Width;
+        rcData.dst_height=Dst.u32Height;
+        rcData.src_width=Src.u32Width;
+        rcData.src_height=Src.u32Height;
+        if (!rcData.inti_clip(move_x,move_y,0)) return;
+
+        Color32* pDstLine=(Color32*)Dst.pSrcBuffer;
+        ((UInt8*&)pDstLine)+=(Dst.u32Stride*rcData.out_dst_down_y);
+        while (true) //to down
+        {
+            long y=rcData.out_dst_down_y;
+            if (y>=Dst.u32Height) break;
+            if (y>=0)
+            {
+                long x0=rcData.out_dst_x0_in;
+                PicRotary3_CopyLine(&pDstLine[x0],rcData.out_dst_x1_in-x0,Ax_16,Ay_16,
+                    rcData.out_src_x0_16,rcData.out_src_y0_16,Src);
+            }
+            if (!rcData.next_clip_line_down()) break;
+            ((UInt8*&)pDstLine)+=Dst.u32Stride;
+        }
+
+        pDstLine=(Color32*)Dst.pSrcBuffer;
+        ((UInt8*&)pDstLine)+=(Dst.u32Stride*rcData.out_dst_up_y);
+        while (rcData.next_clip_line_up()) //to up
+        {
+            long y=rcData.out_dst_up_y;
+            if (y<0) break;
+            ((UInt8*&)pDstLine)-=Dst.u32Stride;
+            if (y<Dst.u32Height)
+            {
+                long x0=rcData.out_dst_x0_in;
+                PicRotary3_CopyLine(&pDstLine[x0],rcData.out_dst_x1_in-x0,Ax_16,Ay_16,
+                    rcData.out_src_x0_16,rcData.out_src_y0_16,Src);
+            }
+        }
+    }
+
+
+
+
+//    struct TRotaryClipData{
+//    public:
+//        long src_width;
+//        long src_height;
+//        long dst_width;
+//        long dst_height;
+//        long Ax_16;
+//        long Ay_16;
+//        long Bx_16;
+//        long By_16;
+//        long Cx_16;
+//        long Cy_16;
+//        long border_width;//插值边界宽度
+//    private:
+//        long cur_dst_up_x0;
+//        long cur_dst_up_x1;
+//        long cur_dst_down_x0;
+//        long cur_dst_down_x1;
+//        must_inline bool is_border_src(long src_x_16,long src_y_16)
+//        {
+//             return ( ( (src_x_16>=(-(border_width<<16)))&&((src_x_16>>16)<(src_width +border_width)) )
+//                   && ( (src_y_16>=(-(border_width<<16)))&&((src_y_16>>16)<(src_height+border_width)) ) );
+//        }
+//        must_inline bool is_in_src(long src_x_16,long src_y_16)
+//        {
+//             return ( ( (src_x_16>=(border_width<<16))&&((src_x_16>>16)<(src_width-border_width) ) )
+//                   && ( (src_y_16>=(border_width<<16))&&((src_y_16>>16)<(src_height-border_width)) ) );
+//        }
+//        void find_begin_in(long dst_y,long& out_dst_x,long& src_x_16,long& src_y_16)
+//        {
+//            src_x_16-=Ax_16;
+//            src_y_16-=Ay_16;
+//            while (is_border_src(src_x_16,src_y_16))
+//            {
+//                --out_dst_x;
+//                src_x_16-=Ax_16;
+//                src_y_16-=Ay_16;
+//            }
+//            src_x_16+=Ax_16;
+//            src_y_16+=Ay_16;
+//        }
+//        bool find_begin(long dst_y,long& out_dst_x0,long dst_x1)
+//        {
+//            long test_dst_x0=out_dst_x0-1;
+//            long src_x_16=Ax_16*test_dst_x0 + Bx_16*dst_y + Cx_16;
+//            long src_y_16=Ay_16*test_dst_x0 + By_16*dst_y + Cy_16;
+//            for (long i=test_dst_x0;i<=dst_x1;++i)
+//            {
+//                if (is_border_src(src_x_16,src_y_16))
+//                {
+//                    out_dst_x0=i;
+//                    if (i==test_dst_x0)
+//                        find_begin_in(dst_y,out_dst_x0,src_x_16,src_y_16);
+//                    if (out_dst_x0<0)
+//                    {
+//                        src_x_16-=(Ax_16*out_dst_x0);
+//                        src_y_16-=(Ay_16*out_dst_x0);
+//                    }
+//                    out_src_x0_16=src_x_16;
+//                    out_src_y0_16=src_y_16;
+//                    return true;
+//                }
+//                else
+//                {
+//                    src_x_16+=Ax_16;
+//                    src_y_16+=Ay_16;
+//                }
+//            }
+//            return false;
+//        }
+//        void find_end(long dst_y,long dst_x0,long& out_dst_x1)
+//        {
+//            long test_dst_x1=out_dst_x1;
+//            if (test_dst_x1<dst_x0) test_dst_x1=dst_x0;
+//
+//            long src_x_16=Ax_16*test_dst_x1 + Bx_16*dst_y + Cx_16;
+//            long src_y_16=Ay_16*test_dst_x1 + By_16*dst_y + Cy_16;
+//            if (is_border_src(src_x_16,src_y_16))
+//            {
+//                ++test_dst_x1;
+//                src_x_16+=Ax_16;
+//                src_y_16+=Ay_16;
+//                while (is_border_src(src_x_16,src_y_16))
+//                {
+//                    ++test_dst_x1;
+//                    src_x_16+=Ax_16;
+//                    src_y_16+=Ay_16;
+//                }
+//                out_dst_x1=test_dst_x1;
+//            }
+//            else
+//            {
+//                src_x_16-=Ax_16;
+//                src_y_16-=Ay_16;
+//                while (!is_border_src(src_x_16,src_y_16))
+//                {
+//                    --test_dst_x1;
+//                    src_x_16-=Ax_16;
+//                    src_y_16-=Ay_16;
+//                }
+//                out_dst_x1=test_dst_x1;
+//            }
+//        }
+//
+//        must_inline void update_out_dst_x_in()
+//        {
+//            if ((0==border_width)||(out_dst_x0_boder>=out_dst_x1_boder) )
+//            {
+//                out_dst_x0_in=out_dst_x0_boder;
+//                out_dst_x1_in=out_dst_x1_boder;
+//            }
+//            else
+//            {
+//                long src_x_16=out_src_x0_16;
+//                long src_y_16=out_src_y0_16;
+//                long i=out_dst_x0_boder;
+//                while (i<out_dst_x1_boder)
+//                {
+//                    if (is_in_src(src_x_16,src_y_16)) break;
+//                    src_x_16+=Ax_16;
+//                    src_y_16+=Ay_16;
+//                    ++i;
+//                }
+//                out_dst_x0_in=i;
+//
+//                src_x_16=out_src_x0_16+(out_dst_x1_boder-out_dst_x0_boder)*Ax_16;
+//                src_y_16=out_src_y0_16+(out_dst_x1_boder-out_dst_x0_boder)*Ay_16;
+//                i=out_dst_x1_boder;
+//                while (i>out_dst_x0_in)
+//                {
+//                    src_x_16-=Ax_16;
+//                    src_y_16-=Ay_16;
+//                    if (is_in_src(src_x_16,src_y_16)) break;
+//                    --i;
+//                }
+//                out_dst_x1_in=i;
+//            }
+//        }
+//        must_inline void update_out_dst_up_x()
+//        {
+//            if (cur_dst_up_x0<0)
+//                out_dst_x0_boder=0;
+//            else
+//                out_dst_x0_boder=cur_dst_up_x0;
+//            if (cur_dst_up_x1>=dst_width)
+//                out_dst_x1_boder=dst_width;
+//            else
+//                out_dst_x1_boder=cur_dst_up_x1;
+//            update_out_dst_x_in();
+//        }
+//        must_inline void update_out_dst_down_x()
+//        {
+//            if (cur_dst_down_x0<0)
+//                out_dst_x0_boder=0;
+//            else
+//                out_dst_x0_boder=cur_dst_down_x0;
+//            if (cur_dst_down_x1>=dst_width)
+//                out_dst_x1_boder=dst_width;
+//            else
+//                out_dst_x1_boder=cur_dst_down_x1;
+//            update_out_dst_x_in();
+//        }
+//
+//    public:
+//        long out_src_x0_16;
+//        long out_src_y0_16;
+//
+//        long out_dst_up_y;
+//        long out_dst_down_y;
+//
+//        long out_dst_x0_boder;
+//        long out_dst_x0_in;
+//        long out_dst_x1_in;
+//        long out_dst_x1_boder;
+//
+//    public:
+//        bool inti_clip(double move_x,double move_y,unsigned long aborder_width)
+//        {
+//            border_width=aborder_width;
+//
+//            //计算src中心点映射到dst后的坐标
+//            out_dst_down_y=(long)(src_height*0.5+move_y);
+//            cur_dst_down_x0=(long)(src_width*0.5+move_x);
+//            cur_dst_down_x1=cur_dst_down_x0;
+//            //得到初始扫描线
+//            if (find_begin(out_dst_down_y,cur_dst_down_x0,cur_dst_down_x1))
+//                find_end(out_dst_down_y,cur_dst_down_x0,cur_dst_down_x1);
+//            out_dst_up_y=out_dst_down_y;
+//            cur_dst_up_x0=cur_dst_down_x0;
+//            cur_dst_up_x1=cur_dst_down_x1;
+//            update_out_dst_up_x();
+//            return (cur_dst_down_x0<cur_dst_down_x1);
+//        }
+//        bool next_clip_line_down()
+//        {
+//            ++out_dst_down_y;
+//            if (!find_begin(out_dst_down_y,cur_dst_down_x0,cur_dst_down_x1)) return false;
+//            find_end(out_dst_down_y,cur_dst_down_x0,cur_dst_down_x1);
+//            update_out_dst_down_x();
+//            return (cur_dst_down_x0<cur_dst_down_x1);
+//        }
+//        bool next_clip_line_up()
+//        {
+//            --out_dst_up_y;
+//            if (!find_begin(out_dst_up_y,cur_dst_up_x0,cur_dst_up_x1)) return false;
+//            find_end(out_dst_up_y,cur_dst_up_x0,cur_dst_up_x1);
+//            update_out_dst_up_x();
+//            return (cur_dst_up_x0<cur_dst_up_x1);
+//        }
+//    };
 
 must_inline void BilInear_Fast(const BaseImage& pic,const long x_16,const long y_16,Color32* result)
 {

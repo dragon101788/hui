@@ -210,6 +210,9 @@ public:
 					case 2:
 						((TranslationAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer_part);
 						break;
+					case 3:
+						((RotateAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer);
+						break;
 					default:
 						break;
 					}
