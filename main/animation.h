@@ -22,7 +22,7 @@ public:
 	int steps;
 	Animation(){
 		duration=40;
-		type=0;
+	//	type=0;
 		steps=0;
 	}
 
@@ -42,28 +42,31 @@ public:
 class AlphaAnim:public Animation{
 
 public:
-	float start_alpha;
-	float end_alpha;
+	int start_alpha;
+	int end_alpha;
 	AlphaAnim(){
 		type=1;
 		start_alpha=0;
-		end_alpha=1;
+		end_alpha=100;
 	}
 	 void doFlushConfig(){
 		duration=m_mp["duration"]->getvalue_int();
 		steps = m_mp["steps"]->getvalue_int();
-		start_alpha = (float)m_mp["start_alpha"]->getvalue_int()/100;
-		end_alpha = (float)m_mp["end_alpha"]->getvalue_int()/100;
+		start_alpha = m_mp["start_alpha"]->getvalue_int();
+		end_alpha = m_mp["end_alpha"]->getvalue_int();
 	}
 
 
 	template <typename  T>
-	void renderAnim(T *dst,image *src,void (T::*pfun)(image * ,int ,int ,int ,int ,int ,int )){
+	void renderAnim(T *dst,image *src,void (T::*pfun)(image * )){
 		int old_transp=src->transp;
+		image temp;
 		for(int i=0;i<steps;i++){
 			src->transp=i*(end_alpha-start_alpha)/steps+start_alpha;
-			log_i("src->transp=%f",src->transp);
-			(dst->*pfun)(src,0,0,src->u32Width,src->u32Height,0,0);
+			temp.SetBuffer(src->u32Width,src->u32Height);
+			temp.Render(src,0,0);
+			//log_i("src->transp=%d!!!!!!!!!\n",src->transp);
+			(dst->*pfun)(&temp);
 			 FPSWaitTimer(duration);
 		}
 		src->transp=old_transp;

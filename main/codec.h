@@ -146,7 +146,7 @@ class image:public BaseImage, virtual public Mutex
 {
 
 public:
-	float transp;             //透明度
+	int transp;             //透明度
 	hustr path;
 
 	friend void Render_img_to_img(image * dst, image * src, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
@@ -167,7 +167,7 @@ public:
 		return u32Height;
 	}
 */
-	void setTransp(float n)
+	void setTransp(int n)
 	{
 		lock();
 		transp = n;
@@ -461,7 +461,7 @@ inline 	image()
 //		u32Width = 0;       // crop width
 //		u32Height = 0;      // crop height
 //		u32Stride = 0;
-		transp = 1;		//控件透明度-默认不透明
+		transp = 100;		//控件透明度-默认不透明
 
 		//s_sblitop.transformation = &stransformation;
 

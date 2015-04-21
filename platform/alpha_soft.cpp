@@ -30,7 +30,7 @@ void Render_img_to_img(image * dst, image * src, int src_x, int src_y, int cp_wi
 			}else if(src_pix->a>250){  //大于250时，底图片的像素基本看不清了，不如直接覆盖
 			 *((unsigned int *) dst->pSrcBuffer + (y + dst_y) * dst->u32Width + x + dst_x)=*(unsigned int *)src_pix;
 			}else{
-				// alpha = src_pix->a*src->transp;
+				// alpha = src_pix->a*src->transp/100;
 				 alpha = src_pix->a;  //图片的预设透明度失效
 				 dst_pix = ((Color32 *) dst->pSrcBuffer + (y + dst_y) * dst->u32Width + x + dst_x);
 	//			dst_pix->r =  (dst_pix->r * (MAX_ALPHA - alpha) + src_pix->r * alpha) / MAX_ALPHA;

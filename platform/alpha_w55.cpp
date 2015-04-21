@@ -61,7 +61,7 @@ void Render_img_to_img(image * dst, image * src, int src_x, int src_y, int cp_wi
 		stransformation.userData = NULL;
 	}
 
-	stransformation.colorMultiplier.i16Alpha = 255*src->transp;
+	stransformation.colorMultiplier.i16Alpha = (255*src->transp)/100;
 	s_sblitop.transformation = &stransformation;
 	if (g_blt.blt_start_blit(&s_sblitop))
 	{	// Configure blit operation and then trigger.

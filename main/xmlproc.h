@@ -205,7 +205,7 @@ public:
 					case 0:
 						break;
 					case 1:
-						((AlphaAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer_alpha);
+						((AlphaAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer);
 						break;
 					case 2:
 						((TranslationAnim *)anim)->renderAnim(&fb,&out,&framebuffer::RenderImageToFrameBuffer_part);

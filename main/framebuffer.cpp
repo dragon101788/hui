@@ -23,7 +23,7 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 				*(((unsigned short*)pSrcBuffer)+(y*u32Width+x)) = RGB565(pix->r,pix->g,pix->b);
 			}
 		}
-		img->lock();
+		img->unlock();
 	}
 	else if (lcm_dpp == 32)
 	{
@@ -36,32 +36,6 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 
 }
 
-void framebuffer::RenderImageToFrameBuffer_alpha(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y)
-{
-	if (img == NULL ||img->isNULL())
-	{
-		huErrExit("RenderFromBuffer Image invalid\r\n");
-	}
-	ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
-	img->lock();
-	//log_i("$$$luo$$$ bpp=16\r\n");
-	for(int y=0;y<u32Height;y++)
-	{
-		for(int x=0;x<u32Width;x++)
-		{
-			Color32 * pix = &img->pixels(x,y);
-			pix->a=pix->a*img->transp;
-			*(((unsigned int*)pSrcBuffer)+(y*u32Width+x)) =*(unsigned int *)pix ;
-		}
-	}
-	img->lock();
-
-
-	//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);
-
-	ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
-
-}
 
  void framebuffer::RenderImageToFrameBuffer_part(image * img,int src_x,int src_y,int src_w,int src_h,int dst_x,int dst_y)
 {
