@@ -219,13 +219,10 @@ public:
 					default:
 						break;
 					}
-				out.RenderToFramebuffer(&fb);
 				switchProc=0;
 				switchProcs();
-
-			}else{
-				out.RenderToFramebuffer(&fb);
 			}
+			out.RenderToFramebuffer(&fb);
 			fps.debug_timer("<fps>");
 			isDraw = 0;
 //			if(switchProc){
