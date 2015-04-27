@@ -6,9 +6,21 @@ comment "------------HUI Configuretion---------"
 config  USING_FONT
         bool "Using TTF Font"
 
-config  REVERSE_SCREEN
-        bool "reverse screen to 180 degree"
+choice 
+        prompt "rotate screen"
+        default SCREEN_ROTATE_0
+        help
+		select alpha channel render
+config  SCREEN_ROTATE_0
+        bool "rotate screen to 0 degree"
 
+config  SCREEN_ROTATE_90
+        bool "rotate screen to 90 degree"
+        
+config  SCREEN_ROTATE_180
+        bool "rotate screen to 180 degree"
+        
+endchoice
 choice 
         prompt "alpha channel render"
         default ALPHA_SOFT

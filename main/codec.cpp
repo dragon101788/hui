@@ -23,7 +23,7 @@
 int image_write_to_snap(image * img, const char * path);
 int image_read_from_snap(image * img, const char * path);
 
-void MyMemMove(void *dst,const void *src,size_t count)
+void memcpy_rotate180(void *dst,const void *src,size_t count)
 {
     assert(dst!=NULL && src!=NULL);
 
@@ -36,6 +36,11 @@ void MyMemMove(void *dst,const void *src,size_t count)
     }
 
 }
+
+
+
+
+
 
 int access_Image(const char * filename)
 {
@@ -778,7 +783,7 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 		//int s_y=src_y;
 		int cp_w=src_w;
 		int cp_h=src_h;
-		unsigned int * dst_start;
+
 
 		if (cp_h <= 0 || cp_w <= 0)
 		{
@@ -848,12 +853,28 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 		int line_byte=cp_w * 4;
 		unsigned int dst_step= dst_w;
 		unsigned int src_step= u32Width;
+		unsigned int * dst_start;
 		unsigned int * src_start=(unsigned int *)pSrcBuffer +src_y * src_step + src_x;
 		unsigned int dst_offset=0;
 		unsigned int src_offset=0;
 
 
-	#ifdef CONFIG_REVERSE_SCREEN
+#ifdef CONFIG_SCREEN_ROTATE_90
+	int d_temp_y=dst_x;
+	int d_temp_x=dst_h-dst_y-cp_h-1;
+	 dst_step= dst_h;
+	dst_start=(unsigned int *)buf +  d_temp_y * dst_step + d_temp_x;
+	src_start+=cp_h*src_step;
+    for(size_t i=0;i<cp_w;i++){
+    	for(int j=0;j<cp_h;j++){
+    		*(dst_start+dst_offset+j)=*(src_start+src_offset+i);
+    		src_offset-=src_step;
+    	}
+    	src_offset=0;
+    	dst_offset+=dst_step;
+    }
+
+#elif CONFIG_SCREEN_ROTATE_180
 		dst_x=dst_w-dst_x-1;
 		dst_y=dst_h-dst_y-1;
 		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
@@ -867,7 +888,7 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 			dst_offset-=dst_step;
 			src_offset+=src_step;
 		}
-	#else
+#else
 		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
 		for (y = 0; y < cp_h; y++)
 		{

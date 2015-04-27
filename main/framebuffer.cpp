@@ -9,8 +9,6 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 	}
 
 	ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
-
-
 	if (lcm_dpp == 16)
 	{
 		img->lock();

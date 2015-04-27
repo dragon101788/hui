@@ -74,10 +74,13 @@ public:
 		{
 			errexitf("### Error: ioctl FBIOGET_VSCREENINFO: %s\n", strerror(errno));
 		}
-
+#ifdef CONFIG_SCREEN_ROTATE_90
+		u32Width = var.yres;
+		u32Height = var.xres;
+#else
 		u32Width = var.xres;
 		u32Height = var.yres;
-
+#endif
 		lcm_dpp = var.bits_per_pixel;
 		log_i("FrameBuffer Accept %d %d %d %d %d %d %d\r\n",u32Width,u32Height,lcm_dpp,var.xres_virtual,var.yres_virtual,var.xoffset,var.yoffset);
 		SrcSize = u32Width * u32Height * (lcm_dpp / 8);
