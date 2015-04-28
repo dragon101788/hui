@@ -115,12 +115,34 @@ public:
 			{
 				continue;
 			}
-
 			errexitf("ioctl BLT_IOCFLUSH failed: %s\n", strerror(errno));
 		}
 		unlock();
 		return 0;
 	}
+
+	bool start_fill(S_DRVBLT_FILL_OP &fillop)
+	{
+		if ((ioctl(blt_fd, BLT_IOCSFILL, &fillop)) == -1) {
+			fprintf(stderr, "set FILL parameter failed: %s\n", strerror(errno));
+			return false;
+		}
+
+		if ((ioctl(blt_fd, BLT_IOCTRIGGER, NULL)) == -1) {
+			fprintf(stderr, "trigger BLT failed: %s\n", strerror(errno));
+			return false;
+		}
+		while (ioctl(blt_fd, BLT_IOCFLUSH) == -1)
+		{
+			if (errno == EINTR)
+			{
+				continue;
+			}
+			errexitf("ioctl BLT_IOCFLUSH failed: %s\n", strerror(errno));
+		}
+		return true;
+	}
+
 
 	int blt_fd;
 };

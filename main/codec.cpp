@@ -927,11 +927,18 @@ int image::SetBuffer(int width, int height,unsigned int color)
 	}
 	if (pSrcBuffer == NULL)
 	{
-		pSrcBuffer = malloc(tmpsize);
-		if (pSrcBuffer == NULL)
-		{
-			errexitf("image malloc failed: width=%d height=%d\n", width, height);
+//		pSrcBuffer = malloc(tmpsize);
+//		if (pSrcBuffer == NULL)
+//		{
+//			errexitf("image malloc failed: width=%d height=%d\n", width, height);
+//		}
+
+		int err = posix_memalign(&pSrcBuffer, 4, tmpsize);
+		if (err) {
+			log_e("posix_memalign failed: %s\n", strerror(err));
+			return false;
 		}
+
 	}
 	SrcSize = tmpsize;
 	u32Width = width;
@@ -956,11 +963,18 @@ int image::SetBuffer(int width, int height)
 	}
 	if (pSrcBuffer == NULL)
 	{
-		pSrcBuffer = malloc(tmpsize);
-		if (pSrcBuffer == NULL)
-		{
-			errexitf("image malloc failed: width=%d height=%d\n", width, height);
+		//pSrcBuffer = malloc(tmpsize);
+
+		int err = posix_memalign(&pSrcBuffer, 4, tmpsize);
+		if (err) {
+			log_e("posix_memalign failed: %s\n", strerror(err));
+			return false;
 		}
+//
+//		if (pSrcBuffer == NULL)
+//		{
+//			errexitf("image malloc failed: width=%d height=%d\n", width, height);
+//		}
 	}
 	SrcSize = tmpsize;
 
