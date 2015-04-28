@@ -265,7 +265,7 @@ void element::RenderOut()
 	}
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 	if(parent!=NULL){
-		parent->addDraw();
+		parent->addDraw(x+render_offset_x,y+render_offset_y,render_width,render_height);
 		if(!parent->isParent()){
 			parent->tobeParent(name,this);
 		}

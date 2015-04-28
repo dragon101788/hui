@@ -240,7 +240,11 @@ public:
 		render_height=height;
 	}
 
-	void addDraw(){
+	void addDraw(int dst_x,int dst_y,int cp_width,int cp_height){
+		render_offset_x=dst_x%width;//偏移位置不能超过页面宽度
+		render_offset_y=dst_y%height;
+		render_width=cp_width;
+		render_height=cp_height;
 		isDraw++;
 	}
 /*************
