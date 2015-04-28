@@ -275,7 +275,7 @@ void element::RenderOut()
 			parent->RenderOut();
 
 	}else{
-		xml_mgr->addDraw();
+		xml_mgr->addDraw(x+render_offset_x,y+render_offset_y,render_width,render_height);
 	}
 
 

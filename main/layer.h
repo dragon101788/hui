@@ -257,6 +257,9 @@ public:
 			render_width=width;
 			render_height=height;
 		}
+//		else{
+//			log_i("part draw to parent:draw_offset_x=%d,draw_offset_y=%d,draw_width=%d,draw_height=%d\n",render_offset_x,render_offset_y,render_width,render_height);
+//		}
 		isDraw=0;
 	}
 	void resetChildren();

@@ -86,7 +86,25 @@ public:
 	hustr filename;
 	ScreenHandler *windCtl;
 	Animation *anim;
-	void addDraw(){
+	int draw_offset_x;//以下四个参数实现元素部分输出到绘图容器，实现控件的部分刷新
+	int draw_offset_y;
+	int draw_width;
+	int draw_height;
+
+	void cfgPartDraw(){
+		if(isDraw!=1){
+			draw_offset_x=0;
+			draw_offset_y=0;
+			draw_width=width;
+			draw_height=height;
+		}
+	//	isDraw=0;
+	}
+	void addDraw(int dst_x,int dst_y,int cp_width,int cp_height){
+		draw_offset_x=dst_x;//偏移位置不能超过页面宽度
+		draw_offset_y=dst_y;
+		draw_width=cp_width;
+		draw_height=cp_height;
 		isDraw++;
 	}
 
@@ -94,6 +112,7 @@ public:
 	class xmlout: public image
 	{
 	public:
+		xmlproc *parent;
 		void Draw(image * src_img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y)
 		{
 			lock();
@@ -104,10 +123,15 @@ public:
 		{
 			//lock();
 		//	log_i("before fb->RenderImageToFrameBuffer(this);!!!!!!!!\r\n");
-			fb->RenderImageToFrameBuffer(this);
+			if(parent->isDraw==1){
+			//	log_i("part draw to fb:draw_offset_x=%d,draw_offset_y=%d,draw_width=%d,draw_height=%d\n",parent->draw_offset_x,parent->draw_offset_y,parent->draw_width,parent->draw_height);
+				fb->RenderImageToFrameBuffer_part(this,parent->draw_offset_x,parent->draw_offset_y,parent->draw_width,parent->draw_height,parent->draw_offset_x,parent->draw_offset_y);
+			}else
+				fb->RenderImageToFrameBuffer(this);
 			//fb->NotifyRenderFrameBuffer(this);
 		//	unlock();
 		}
+
 //		/************************
 //		 * 带动画效果的切换
 //		 * 动画应该做成控件形式
@@ -199,6 +223,7 @@ public:
 		if (isDraw != 0 && fore == 1 && done == 1)
 		{
 			log_i("%s RenderToBuffer\r\n",filename.c_str());
+			cfgPartDraw();
 			if(switchProc){
 				if(anim!=NULL)
 					switch(anim->type){
@@ -326,6 +351,7 @@ public:
 
 		anim=NULL; //默认是没有动画的
 		windCtl=NULL;
+		out.parent=this;
 		if (out.isNULL())
 		{
 			if (out.SetBuffer(fb.u32Width, fb.u32Height))
@@ -333,6 +359,7 @@ public:
 				huErrExit("$$$HU$$$ blt_set_dest_buff error\r\n");
 			}
 		}
+
 		m_exit = 1;
 		create();
 	}
