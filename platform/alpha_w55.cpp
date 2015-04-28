@@ -143,4 +143,35 @@ void Copy_img_to_img(image * dst, image * src, int src_x, int src_y, int cp_widt
 
 }
 
+void Draw_rectangle(image * dst, int width, int height, int dst_x, int dst_y,unsigned int color,bool is_blend)
+{
+	if (dst->SrcGPUAddr() == 0 )
+	{
+		errexitf("warning::Image source point is NULL dst=%#x#x\r\n", dst->SrcGPUAddr());
+	}
+	dst->lock();
+
+   S_DRVBLT_FILL_OP				s_sfillop={ 0 };
+
+	s_sfillop.color.u8Blue = color&0xff;
+	s_sfillop.color.u8Green = (color>>8)&0xff;
+	s_sfillop.color.u8Red = (color>>16)&0xff;
+	s_sfillop.color.u8Alpha = (color>>24)&0xff;
+	s_sfillop.blend = is_blend;
+	s_sfillop.u32FrameBufAddr =(unsigned long)dst->pSrcBuffer+dst_y*dst->u32Stride+(dst_x<<2);
+	s_sfillop.rowBytes =dst->u32Stride;
+	s_sfillop.format = eDRVBLT_DEST_ARGB8888;
+	s_sfillop.rect.i16Xmin = 0;
+	s_sfillop.rect.i16Xmax = width;
+	s_sfillop.rect.i16Ymin = 0;
+	s_sfillop.rect.i16Ymax = height;
+	if (g_blt.start_fill(&s_sfillop))
+	{	// Configure blit operation and then trigger.
+		huErrExit("Configure 2d fill operation and then trigger.");
+	}
+
+	dst->unlock();
+
+
+}
 

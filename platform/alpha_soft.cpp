@@ -44,8 +44,57 @@ void Render_img_to_img(image * dst, image * src, int src_x, int src_y, int cp_wi
 			//((S_DRVBLT_ARGB8 *) dst->pSrcBuffer + (dst->y + dst_y) * dst->u32Width + dst->x + dst_x)->u8Alpha = 255;
 		}
 	}
+}
 
+	void Draw_rectangle(image * dst, int width, int height, int dst_x, int dst_y,unsigned int color,bool is_blend){
+		if (dst->SrcGPUAddr() == 0)
+		{
+			errexitf("warning::Image source point is NULL dst=%#x #x\r\n", dst->SrcGPUAddr());
+		}
 
+		int x;
+		int y;
+		int alpha;
+		Color32 * dst_pix ;
+		Color32 * src_pix ;
 
+		if(is_blend){
+
+			if(color>>24&&0xff<5){
+
+			}else if(color>>24&&0xff>250){
+				for (y = 0; y < height; y++)
+				{
+					for (x = 0; x < width; x++)
+					{
+					  *((unsigned int *) dst->pSrcBuffer + (y + dst_y) * dst->u32Width + x + dst_x)=color;
+					}
+				}
+			}else{
+
+				alpha = color>>24&&0xff;
+				for (y = 0; y < height; y++)
+					{
+						for (x = 0; x < width; x++)
+						{
+							dst_pix = ((Color32 *) dst->pSrcBuffer + (y + dst_y) * dst->u32Width + x + dst_x);
+							dst_pix->r =  (dst_pix->r * (MAX_ALPHA - alpha) + src_pix->r * alpha) >>8;//除以255跟除以256差异不大，不如近似用位移
+							dst_pix->g = (dst_pix->g * (MAX_ALPHA - alpha) + src_pix->g * alpha) >>8;
+							dst_pix->b =  (dst_pix->b * (MAX_ALPHA - alpha) + src_pix->b * alpha) >>8;
+							dst_pix->a = (dst_pix->a>src_pix->a?dst_pix->a:src_pix->a);
+						}
+					}
+				}
+
+		}else{
+			for (y = 0; y < height; y++)
+			{
+
+				for (x = 0; x < width; x++)
+				{
+				  *((unsigned int *) dst->pSrcBuffer + (y + dst_y) * dst->u32Width + x + dst_x)=color;
+				}
+			}
+		}
 
 }

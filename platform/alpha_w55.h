@@ -121,15 +121,15 @@ public:
 		return 0;
 	}
 
-	bool start_fill(S_DRVBLT_FILL_OP &fillop)
+	bool start_fill(S_DRVBLT_FILL_OP *fillop)
 	{
-		if ((ioctl(blt_fd, BLT_IOCSFILL, &fillop)) == -1) {
-			fprintf(stderr, "set FILL parameter failed: %s\n", strerror(errno));
+		if ((ioctl(blt_fd, BLT_IOCSFILL, fillop)) == -1) {
+			log_e("set FILL parameter failed: %s\n", strerror(errno));
 			return false;
 		}
 
 		if ((ioctl(blt_fd, BLT_IOCTRIGGER, NULL)) == -1) {
-			fprintf(stderr, "trigger BLT failed: %s\n", strerror(errno));
+			log_e( "trigger BLT failed: %s\n", strerror(errno));
 			return false;
 		}
 		while (ioctl(blt_fd, BLT_IOCFLUSH) == -1)
@@ -138,9 +138,9 @@ public:
 			{
 				continue;
 			}
-			errexitf("ioctl BLT_IOCFLUSH failed: %s\n", strerror(errno));
+			log_e("ioctl BLT_IOCFLUSH failed: %s\n", strerror(errno));
 		}
-		return true;
+		return 0;
 	}
 
 

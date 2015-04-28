@@ -180,6 +180,8 @@ public:
 		//image::Render(&img[0], cx - mx, 0, (int)page_w, (int)height, 0, 0);
 		scroll_x=cx - mx;
 		scroll_y=cy - my;
+		if(back_color)
+			render_res[0].img=&bg;
 	}
 	void doFlushConfig()
 	{
@@ -194,6 +196,13 @@ public:
 		x_page=m_mp["x_page"]->getvalue_int();
 		y_page=m_mp["y_page"]->getvalue_int();
 		child_lock=m_mp["child_lock"]->getvalue_int();
+		if (m_mp.exist("back_color"))//在父元素的第几个页面里,0开始算起
+		{
+			back_color= m_mp["back_color"]->getvalue_hex();
+			bg.SetBuffer(width,height,back_color);
+			//Draw_rectangle(&bg,300,200,50,20,0x77aabbff,1);
+		}
+
 		sum_w=width*x_page_num;
 		sum_h=height*y_page_num;
 		int touch_lock = m_mp["lock"]->getvalue_int();
@@ -204,20 +213,7 @@ public:
 
 	}
 
-//	void doFlushConfigReduced()
-//	{
-//		rePraseElement();
-//		x_lock = m_mp["x_lock"]->getvalue_int();
-//		y_lock = m_mp["y_lock"]->getvalue_int();
-//		x_page=m_mp["x_page"]->getvalue_int();
-//		y_page=m_mp["y_page"]->getvalue_int();
-//		child_lock=m_mp["child_lock"]->getvalue_int();
-//		sum_w=width*x_page_num;
-//		sum_h=height*y_page_num;
-//		int touch_lock = m_mp["lock"]->getvalue_int();
-//		touch_init_area(x, y, width, height);
-//		Flush();
-//	}
+
 	slip_fragment()
 	{
 
@@ -236,6 +232,7 @@ public:
 		child_lock=0;
 		remax = 0;
 		remin = 0;
+		back_color=0;
 
 	}
 	~slip_fragment()
@@ -264,6 +261,8 @@ public:
 	int rsp;//返回定时器频率
 	int rcn;///返回速度
 	int child_lock;
+	int back_color;
+	image bg;
 
 };
 

@@ -13,11 +13,18 @@ public:
 
 	void doRenderConfig()
 	{
-
+		if(back_color)
+			render_res[0].img=&bg;
 	}
 	void doFlushConfig()
 	{
 		PraseElement();
+		if (m_mp.exist("back_color"))//在父元素的第几个页面里,0开始算起
+		{
+			back_color= m_mp["back_color"]->getvalue_hex();
+			bg.SetBuffer(width,height,back_color);
+		}
+
 		Flush();
 	}
 
@@ -28,6 +35,7 @@ public:
 //	}
 	simple_fragment()
 	{
+		back_color=0;
 	}
 	~simple_fragment()
 	{
@@ -37,7 +45,8 @@ public:
 	{
 
 	}
-
+	int back_color;
+	image bg;
 };
 
 
