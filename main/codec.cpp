@@ -30,13 +30,27 @@ void memcpy_rotate180(void *dst,const void *src,size_t count)
     int num = count/4-1;
     uint32_t* tmp =(uint32_t* ) dst;
      uint32_t* s = (uint32_t* )src+num;
-
     for(size_t i=0;i<num;i++){
     	*(tmp++)=*(s--);
     }
 
 }
-
+void memcpy_rotate90(void *dst,void *src,unsigned int width,unsigned int height)
+{
+	 assert(dst!=NULL && src!=NULL);
+    uint32_t* pd =(uint32_t* ) dst;
+     uint32_t* ps = (uint32_t* )src+width*height-1;
+     int dst_offset=0;
+     int src_offset=0;
+    for(size_t i=0;i<width;i++){
+    	for(int j=0;j<height;j++){
+    		*(pd+dst_offset+j)=*(ps+src_offset+i);
+    		src_offset-=width;
+    	}
+    	src_offset=0;
+    	dst_offset+=height;
+    }
+}
 
 
 

@@ -20,7 +20,7 @@ using namespace std;
 
 extern int snapcache;
 
-
+void memcpy_rotate90(void *dst,void *src,unsigned int width,unsigned int height);
 void memcpy_rotate180(void *dst,const void *src,size_t count);
 //int bmpCodec_to_image(image * sobj, const char *filename);
 //int jpegCodec_to_image(image * sobj, const char *filename);
@@ -176,22 +176,7 @@ public:
 	void dump_from_buf(const void * buf, int width, int height);
 
 
-	void memcpy_rotate90(void *dst)
-	{
-	    if(dst==NULL&&isNULL())return;
-	    uint32_t* pd =(uint32_t* ) dst;
-	     uint32_t* ps = (uint32_t* )pSrcBuffer+u32Width*u32Height-1;
-	     int dst_offset=0;
-	     int src_offset=0;
-	    for(size_t i=0;i<u32Width;i++){
-	    	for(int j=0;j<u32Height-1;j++){
-	    		*(pd+dst_offset+j)=*(ps+src_offset+i);
-	    		src_offset-=u32Width;
-	    	}
-	    	src_offset=0;
-	    	dst_offset+=u32Height;
-	    }
-	}
+
 
 
 	inline void dump_to_buf(void * buf)
@@ -199,7 +184,7 @@ public:
 		lock();
 		//memcpy(buf, pSrcBuffer, SrcSize);
 #ifdef CONFIG_SCREEN_ROTATE_90
-		memcpy_rotate90(buf);
+		memcpy_rotate90(buf,pSrcBuffer,u32Width,u32Height);
 
 #elif CONFIG_SCREEN_ROTATE_180
 		memcpy_rotate180(buf, pSrcBuffer, SrcSize);
