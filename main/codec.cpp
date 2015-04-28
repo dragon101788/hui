@@ -193,12 +193,13 @@ int pngCodec_to_image(image * sobj, const char *filepath)
 			unsigned char a;
 		}__attribute__ ((packed));
 		PNG_ARGB ** pix = (PNG_ARGB **) row_pointers;
+		Color32 * dst_pix;
 		for (int y = 0; y < h; y++)
 		{
 			for (int x = 0; x < w; x++)
 			{
 
-				Color32 * dst_pix = &sobj->pixels(x, y);
+				dst_pix = &sobj->pixels(x, y);
 				dst_pix->r = pix[y][x].r;
 				dst_pix->g = pix[y][x].g;
 				dst_pix->b = pix[y][x].b;
@@ -216,11 +217,12 @@ int pngCodec_to_image(image * sobj, const char *filepath)
 			unsigned char b;
 		}__attribute__ ((packed));
 		PNG_RGB ** pix = (PNG_RGB **) row_pointers;
+		Color32 * dst_pix ;
 		for (int y = 0; y < h; y++)
 		{
 			for (int x = 0; x < w; x++)
 			{
-				Color32 * dst_pix = &sobj->pixels(x, y);
+				 dst_pix = &sobj->pixels(x, y);
 				dst_pix->r = pix[y][x].r;
 				dst_pix->g = pix[y][x].g;
 				dst_pix->b = pix[y][x].b;
@@ -296,12 +298,13 @@ int pngEndec_to_image(const char *file_name, image * graph)
 
 	pos = 0;
 	row_pointers = (png_bytep*) malloc(graph->GetHeight() * sizeof(png_bytep));
+	Color32 * tmp;
 	for (i = 0; i < graph->GetHeight(); i++)
 	{
 		row_pointers[i] = (png_bytep) malloc(sizeof(unsigned char) * temp);
 		for (j = 0; j < temp; j += 4)
 		{
-			Color32 * tmp = graph->GetPix(pos);
+			tmp = graph->GetPix(pos);
 			row_pointers[i][j] = tmp->r; // red
 			row_pointers[i][j + 1] = tmp->g; // green
 			row_pointers[i][j + 2] = tmp->b; // blue
