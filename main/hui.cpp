@@ -6,7 +6,7 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <signal.h>
-#include "ParaseXML.h"
+#include "ParseXML.h"
 #include "hui.h"
 #include "manager_touch.h"
 #include "manager_timer.h"
@@ -609,23 +609,6 @@ void init_xml_instan()
 
 }
 //int ParseXMLElement2(hustr name, HUMap & xmlmp, xmlproc * xml)
-int ParseXMLElement2(hustr parentName,hustr name, HUMap & xmlmp, xmlproc * xml)
-{
-	log_i("$$$HU$$$ Parse [%s]\r\n", name.c_str());
-
-	//xmlmp.display();
-	XMLinstan_tf fun = XMLinstan[name];
-	if (fun != NULL)
-	{
-		//xml->done = 0;
-		fun(parentName,xmlmp, xml);  //调用Install_Element(HUMap &xmlmp, xmlproc * xml)
-		//xml->done = 1;
-	}
-	else
-	{
-		log_i("$$$$$HU$$$$$$$warning :: %s is not an element or cmd \r\n", name.c_str());
-	}
-}
 
 void ParaseTinyXmlFile(const char * file, xmlproc * xml);
 

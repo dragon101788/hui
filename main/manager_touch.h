@@ -10,7 +10,7 @@
 #include <list>
 #include <set>
 using namespace std;
-#include "ParaseXML.h"
+//#include "ParseXML.h"
 #include "hulib.h"
 #include "layer.h"
 class touch_manager;

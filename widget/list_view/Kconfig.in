@@ -1,0 +1,4 @@
+config  CONTROL_LIST_VIEW 
+        bool "list_view Control" 
+        help 
+			path=$AUTOPATH

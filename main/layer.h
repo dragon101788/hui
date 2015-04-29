@@ -1,7 +1,7 @@
 #ifndef __LAYER_H__
 #define __LAYER_H__
 
-#include "ParaseXML.h"
+#include "ParseXML.h"
 #include "codec.h"
 #include "schedule.h"
 #include <deque>
@@ -143,6 +143,9 @@ public:
 	iterator end()
 	{
 		return elem.end();
+	}
+	unsigned int getEleNum(){
+		return elem.size();
 	}
 	element_manager_for_ele()
 	{

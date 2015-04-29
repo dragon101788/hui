@@ -1028,6 +1028,7 @@ public:
 		assign(buffer);
 
 	}
+
 	const char * getvalue()
 	{
 		const char * tmp = c_str();
