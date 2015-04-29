@@ -188,7 +188,6 @@ public:
 	}
 	void doFlushConfig()
 	{
-
 		PraseElement();
 		x_lock = m_mp["x_lock"]->getvalue_int();
 		y_lock = m_mp["y_lock"]->getvalue_int();
@@ -196,10 +195,10 @@ public:
 		rcn = m_mp["rcn"]->getvalue_int();
 		remax = m_mp["remax"]->getvalue_int();
 		remin = m_mp["remin"]->getvalue_int();
-		x_page=m_mp["x_page"]->getvalue_int();
-		y_page=m_mp["y_page"]->getvalue_int();
+//		x_page=m_mp["x_page"]->getvalue_int();
+//		y_page=m_mp["y_page"]->getvalue_int();
 		child_lock=m_mp["child_lock"]->getvalue_int();
-		mode=m_mp["direction_mode"]->getvalue_int();
+		direction=m_mp["direction"]->getvalue_int();
 		item_h=m_mp["item_h"]->getvalue_int();
 		item_w=m_mp["item_w"]->getvalue_int();
 		if (m_mp.exist("back_color"))//在父元素的第几个页面里,0开始算起
@@ -216,7 +215,6 @@ public:
 		xml_mgr->AddEleArea( this);
 		xml_mgr->AddTimerElement( this);
 		Flush();
-
 	}
 
 	void addItemInEnd(const char * file,listMap &data)
@@ -236,7 +234,7 @@ public:
 
 		int offset_x=0;
 		int offset_y=0;
-		if(mode){
+		if(direction){
 			 offset_x=item_w*item_num;
 		}else{
 			offset_y=item_h*item_num;
@@ -248,23 +246,32 @@ public:
 		//	mp["offset_x"]->setvalue(""+offset_x);
 			(*mp)["offset_y"]->format("%d",offset_y);
 			(*mp)["family_name"]->format("%d",item_num);
-			log_i("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-			log_i("data[i][\"family_name\"]=%s!!!!!!!!!!!!!!\n",(*mp)["family_name"]->getvalue());
 	}
-		log_i("data.size()=%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",data.size());
-//		for(int i=0;i<data.size();i++){
-//			data[i]["offset_x"]=""+offset_x;
-//		//	mp["offset_x"]->setvalue(""+offset_x);
-//			data[i]["offset_y"]=""+offset_y;
-//			data[i]["family_name"]="testy";
-//			log_i("data[i][\"family_name\"]=%s!!!!!!!!!!!!!!|n",data[i]["family_name"]);
-//		}
-
-
 		item_num++;
-
+		setPages();
 		ParaseUpdateXmlWithData(name,root,xml_mgr,data);
 	}
+
+	int setPages(){
+		if(direction){ //像又增加模式
+			int w=item_num*item_w;
+			int temp_x_page=w/width+1;
+			if(temp_x_page!=x_page_num){
+				x_page_num=temp_x_page;
+				top_image.SetBuffer(width*x_page_num,height*y_page_num);
+			}
+		}else{
+			int h=item_num*item_h;
+			int temp_y_page=h/height+1;
+			if(temp_y_page!=y_page_num){
+				y_page_num=temp_y_page;
+				top_image.SetBuffer(width*x_page_num,height*y_page_num);
+			}
+		}
+
+
+	}
+
 
 void setItems(const char * file,itemList &lists){
 
@@ -283,7 +290,7 @@ void setItems(const char * file,itemList &lists){
 		sum_h = 0;
 		item_h=0;
 		item_w=0;
-		mode=0; //0 :v ;1:h
+		direction=0; //0 :v ;1:h
 		cx = 0; //当前x
 		mx = 0; //拖动轴mx
 		dx = 0; //时间轴x
@@ -311,7 +318,7 @@ void setItems(const char * file,itemList &lists){
 	}
 	int item_h;
 	int item_w;
-	int mode; //0 :v ;1:h
+	int direction; //0 :v ;1:h
 	int item_num;
 	int sum_w;//menu的宽度
 	int sum_h; 
