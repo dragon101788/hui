@@ -228,8 +228,8 @@ public:
 		//image::Render(&img[0], cx - mx, 0, (int)page_w, (int)height, 0, 0);
 		scroll_x=cx - mx;
 		scroll_y=cy - my;
-		if(back_color)
-			render_res[0].img=&bg;
+//		if(back_color)
+//			render_res[0].img=&bg;
 	}
 	void doFlushConfig()
 	{
