@@ -8,7 +8,7 @@
 #include "thread_msg.h"
 #include<list>
 
-typedef list<listMap *> itemList;
+typedef list<listMap > itemList;
 
 extern void ParaseUpdateXmlWithData(hustr parentName,TiXmlNode* pParent, xmlproc * xml,listMap &setData);
 
@@ -275,7 +275,7 @@ public:
 		for (it = lists.begin(); it != lists.end(); ++it)
 		{
 			if(i==pos){
-				data=*it;
+				data=&(*it);
 				break;
 			}
 				i++;
@@ -290,8 +290,8 @@ public:
 			hustr SN;
 			SN.format("%s-%d-%d",name.c_str(),pos,i);
 			xml_mgr->DelElement(SN.c_str());
-	}
-		lists.remove(data);
+		}
+		lists.remove(*data);
 		for(int i=pos+1;i<=item_num;i++){
 			hustr SN;
 			for(int j=0;j<num;j++){
@@ -310,7 +310,7 @@ public:
 
 
 	void addItemToListEnd(const char * adapter,listMap &data,itemList &lists){
-		lists.push_back(&data);
+		lists.push_back(data);
 		addItemInEnd(adapter,data);
 	}
 
@@ -339,11 +339,11 @@ public:
 		listMap ::iterator it;
 		int i=0;
 		for(it=data.begin();it!=data.end();++it){
-			HUMap *mp=it->second;
-			(*mp)["offset_x"]->format("%d",offset_x);
+			HUMap &mp=it->second;
+			mp["offset_x"]->format("%d",offset_x);
 		//	mp["offset_x"]->setvalue(""+offset_x);
-			(*mp)["offset_y"]->format("%d",offset_y);
-			(*mp)["SN"]->format("%s-%d-%d",name.c_str(),item_num,i);
+			mp["offset_y"]->format("%d",offset_y);
+			mp["SN"]->format("%s-%d-%d",name.c_str(),item_num,i);
 			i++;
 	}
 		item_num++;
@@ -376,9 +376,9 @@ public:
 void setItems(const char * file,itemList &lists){
 
 		item_num=0;
-		list<listMap *>::iterator it;
+		itemList::iterator it;
 		for(it=lists.begin();it!=lists.end();++it){
-			listMap &data=**it;
+			listMap &data=*it;
 			addItemInEnd(file,data);
 		}
 

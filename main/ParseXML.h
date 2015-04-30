@@ -8,7 +8,7 @@ using namespace std;
 #include "tinyxml/tinyxml.h"
 #include "hulib.h"
 
-typedef map<int,HUMap *> listMap;
+typedef map<int,HUMap > listMap;
 //class XMLAttribute
 //{
 //public:

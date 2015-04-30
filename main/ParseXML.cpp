@@ -291,13 +291,13 @@ void ParaseUpdateXmlWithData(hustr parentName,TiXmlNode* pParent, xmlproc * xml,
 			ParaseUpdateXml2(pchild, mp);
 		}
 
-		ParseXMLElementWithData(parentName,name, mp, xml,setData[cnt]);
+		ParseXMLElementWithData(parentName,name, mp, xml,&setData[cnt]);
 		//added by zhangtian this is a ele name ,not ele type
 		hustr  parent_name = mp["name"]->getvalue();
 		//added by zhangtian for element nest
 		if (pchild->FirstChild() != NULL && pchild->FirstChild()->Type() == TiXmlNode::TINYXML_ELEMENT)
 		{
-			HUMap &father=*(setData[cnt]);
+			HUMap &father=setData[cnt];
 			hustr SN=father["SN"]->getvalue();
 			ParaseUpdateXmlWithFamilyName(parent_name,SN,pchild, xml);//用于元素嵌套
 		}
