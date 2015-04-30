@@ -480,6 +480,11 @@ public:
 			return;
 		Render_img_to_img(this, src_img, src_x, src_y, cp_width, cp_height, dst_x, dst_y);
 	}
+	void drawRectangle(int width, int height, int dst_x, int dst_y,unsigned int color,bool is_blend){
+		::Draw_rectangle(this,width,height,  dst_x, dst_y, color, is_blend);
+	}
+
+
 
 //	int SetConfig(const char * key,const char * value)
 //	{

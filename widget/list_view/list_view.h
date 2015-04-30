@@ -11,6 +11,28 @@
 typedef list<listMap *> itemList;
 
 extern void ParaseUpdateXmlWithData(hustr parentName,TiXmlNode* pParent, xmlproc * xml,listMap &setData);
+
+
+class OnItemTouchListener{
+public:
+	OnItemTouchListener(){
+
+	}
+	virtual ~OnItemTouchListener(){
+
+	}
+
+	virtual void onItemTouchActive(int item){
+
+	}
+
+};
+
+
+
+
+
+
 class list_view: public View
 {
 
@@ -46,6 +68,10 @@ public:
 			TimerSet(tm + rsp);
 		}
 	}
+
+
+
+
 	void doTouchDown()
 	{
 
@@ -73,6 +99,7 @@ public:
 
 				}
 				configChildAbsPos();
+				drawPressRec();
 		}
 		else{ //步子大一点才刷新
 
@@ -80,9 +107,9 @@ public:
 				children_touch_lock=1;
 				//configChildAbsPos();
 			}
-			Flush();
+			cleanPressRec();
 		}
-
+		 Flush();
 
 	}
 
@@ -92,6 +119,7 @@ public:
         cy-=my;
 		mx=0;
 		my=0;
+		cleanPressRec();
 		if (hu_abs(move_x()) > remax)
 		{ //移动页面
 			log_i("move\r\n");
@@ -129,6 +157,8 @@ public:
 			cx=dx;
 			//Flush();
 		}
+
+
 
 /***********************************
  * y轴变化
@@ -171,11 +201,26 @@ public:
 			cy=dy;
 		//	Flush();
 		}
-
+		Flush();
 	}
 
 	void doTouchActive()
 	{
+		if(list_touch_listener!=NULL&&!children_touch_lock){//有监听器,且不在滑动状态
+			int select_item;
+			int tx=GetTouchX()-abs_x;
+			int ty=GetTouchY()-abs_y;
+			if(direction)//水平模式
+			{
+				tx+=x_page*width;
+				select_item=tx/item_w;
+			}else{
+				ty+=y_page*height;
+				select_item=ty/item_h;
+			}
+			if(select_item<=item_num)
+				list_touch_listener->onItemTouchActive(select_item);
+		}
 
 	}
 	void doRenderConfig()
@@ -201,12 +246,13 @@ public:
 		direction=m_mp["direction"]->getvalue_int();
 		item_h=m_mp["item_h"]->getvalue_int();
 		item_w=m_mp["item_w"]->getvalue_int();
-		if (m_mp.exist("back_color"))//在父元素的第几个页面里,0开始算起
-		{
-			back_color= m_mp["back_color"]->getvalue_hex();
-			bg.SetBuffer(width,height,back_color);
-			//Draw_rectangle(&bg,300,200,50,20,0x77aabbff,1);
-		}
+		sel_color=m_mp["select_color"]->getvalue_hex();
+//		if (m_mp.exist("back_color"))//在父元素的第几个页面里,0开始算起
+//		{
+//			back_color= m_mp["back_color"]->getvalue_hex();
+//			bg.SetBuffer(width,height,back_color);
+//			//Draw_rectangle(&bg,300,200,50,20,0x77aabbff,1);
+//		}
 
 		sum_w=width*x_page_num;
 		sum_h=height*y_page_num;
@@ -214,13 +260,26 @@ public:
 		touch_init_area(x, y, width, height);
 		xml_mgr->AddEleArea( this);
 		xml_mgr->AddTimerElement( this);
+
+		press_image.SetBuffer(item_w,item_h);
+
 		Flush();
 	}
 
-	void addItemInEnd(const char * file,listMap &data)
+	void delItem(int posistion,listMap &data){
+
+	}
+
+
+	void addItemToListEnd(const char * adapter,itemList &lists,listMap &data){
+		lists.push_back(&data);
+		addItemInEnd(adapter,data);
+	}
+
+	void addItemInEnd(const char * adapter,listMap &data)
 	{
 		TiXmlDocument doc;
-		if (!doc.LoadFile(file))
+		if (!doc.LoadFile(adapter))
 		{
 			errexitf("ParaseTinyXmlFile LoadFile %s %s \r\n		TiXmlDocument error :%s\r\n", xml_mgr->filename.c_str(), strerror(errno),
 					doc.ErrorDesc());
@@ -248,18 +307,18 @@ public:
 			(*mp)["SN"]->format("%d",item_num);
 	}
 		item_num++;
-		setPages();
+		caliPages();
 		ParaseUpdateXmlWithData(name,root,xml_mgr,data);
 	}
 
-	int setPages(){
+	int caliPages(){
 		if(direction){ //像又增加模式
 			int w=item_num*item_w;
 			int temp_x_page=w/width+1;
 			if(temp_x_page!=x_page_num){
 				x_page_num=temp_x_page;
 				top_image.resize(width*x_page_num,height*y_page_num);
-				//top_image.SetBuffer(width*x_page_num,height*y_page_num);
+
 			}
 		}else{
 			int h=item_num*item_h;
@@ -267,7 +326,6 @@ public:
 			if(temp_y_page!=y_page_num){
 				y_page_num=temp_y_page;
 				top_image.resize(width*x_page_num,height*y_page_num);
-			//	top_image.SetBuffer(width*x_page_num,height*y_page_num);
 			}
 		}
 
@@ -286,8 +344,57 @@ void setItems(const char * file,itemList &lists){
 
 	}
 
+void setOnItemTouchListener(OnItemTouchListener *L){
+	list_touch_listener=L;
+}
+
+	void drawPressRec(){
+		if(!has_pressed){
+			int select_item;
+			int tx=GetTouchX()-abs_x;
+			int ty=GetTouchY()-abs_y;
+			if(direction)//水平模式
+			{
+
+				if(ty<item_h){
+					tx+=x_page*width;
+					select_item=tx/item_w;
+					if(select_item<=item_num){
+						int dst_x=select_item*item_w;
+						//dst_x=dst_x%width;
+						press_image.drawRectangle(item_w,item_h,0,0,sel_color,0);
+						render_res[0].translate(dst_x,0);
+						render_res[0].img=&press_image;
+						has_pressed=1;
+					}
+				}
+			}else {
+				if(tx<item_w){
+					ty+=y_page*height;
+					select_item=ty/item_h;
+
+					if(select_item<=item_num){
+						int dst_y=select_item*item_h;
+						//dst_y=dst_y%height;
+						log_i("--------in drawrec select=%d,dst_y=%d\n",select_item,dst_y);
+						press_image.drawRectangle(item_w,item_h,0,0,sel_color,0);
+						render_res[0].translate(0,dst_y);
+						render_res[0].img=&press_image;
+						has_pressed=1;
+					}
+				}
+			}
+		}
+	}
+	void cleanPressRec(){
+		if(has_pressed){
+			has_pressed=0;
+			press_image.cleanBuf();
+		}
+	}
 	list_view()
 	{
+		has_pressed=0;
 		item_num=0;
 		sum_w = 0;
 		sum_h = 0;
@@ -308,6 +415,8 @@ void setItems(const char * file,itemList &lists){
 		remax = 0;
 		remin = 0;
 		back_color=0;
+		list_touch_listener=NULL;
+		sel_color=0;
 
 	}
 	~list_view()
@@ -319,6 +428,9 @@ void setItems(const char * file,itemList &lists){
 		xml_mgr->DelTimerElement(this);
 		xml_mgr->DelTouchElement(this);
 	}
+	image press_image;
+	unsigned int sel_color;
+	int has_pressed;
 	int item_h;
 	int item_w;
 	int direction; //0 :v ;1:h
@@ -340,6 +452,7 @@ void setItems(const char * file,itemList &lists){
 	int child_lock;
 	int back_color;
 	image bg;
+	OnItemTouchListener * list_touch_listener;
 
 };
 

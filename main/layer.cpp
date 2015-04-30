@@ -122,7 +122,6 @@
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
-
 				if (ele->hide == 0&&ele->lay!=hide_lay)
 				{
 					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
@@ -168,16 +167,34 @@
 							cnt++;
 							lay_res=&itp->second;
 							//log_i("itp->first=%d\n",itp->first);
+							int final_s_off_x=s_ofx+ele->scroll_x;
+							int final_s_off_y=s_ofy+ele->scroll_y;
+							int final_d_off_x=d_ofx+lay_res->dst_x;
+							int final_d_off_y=d_ofy+lay_res->dst_y;
+							//log_i("+++++final_s_off_y=%d\n",final_s_off_y);
+							if(lay_res->dst_x>=ele->width){
+								int reduce=(lay_res->dst_x/ele->width)*ele->width;
+								final_s_off_x-=reduce;
+								final_d_off_x-=reduce;
+							}
+							if(lay_res->dst_y>=ele->height){
+								int reduce=(lay_res->dst_y/ele->height)*ele->height;
+								final_s_off_y-=reduce;
+								final_d_off_y-=reduce;
+							}
+						//	log_i("+++++final_s_off_y=%d\n",final_s_off_y);
 							if(itp == ele->render_res.begin())
-								copyLayer(lay_res->img, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx+lay_res->dst_x, d_ofy+lay_res->dst_y);
+								copyLayer(lay_res->img, final_s_off_x, final_s_off_y, render_width,render_height,final_d_off_x, final_d_off_y);
 							else
-								renderLayer(lay_res->img, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height,  d_ofx+lay_res->dst_x, d_ofy+lay_res->dst_y);
+								renderLayer(lay_res->img, final_s_off_x, final_s_off_y, render_width,render_height,final_d_off_x, final_d_off_y);
 						}
 						if(ele->isParent()){
+							int final_s_off_x=s_ofx+ele->scroll_x;
+							int final_s_off_y=s_ofy+ele->scroll_y;
 							if(cnt==0){
-								copyLayer(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								copyLayer(&ele->top_image,  final_s_off_x, final_s_off_y, render_width,render_height, d_ofx, d_ofy);
 							}else
-								renderLayer(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								renderLayer(&ele->top_image, final_s_off_x, final_s_off_y, render_width,render_height, d_ofx, d_ofy);
 						}
 					}
 					else{
@@ -185,10 +202,28 @@
 							for (itp = ele->render_res.begin(); itp != ele->render_res.end(); itp++)
 							{
 								lay_res=&itp->second;
-								renderLayer(lay_res->img, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height,  d_ofx+lay_res->dst_x, d_ofy+lay_res->dst_y);
+								int final_s_off_x=s_ofx+ele->scroll_x;
+								int final_s_off_y=s_ofy+ele->scroll_y;
+								int final_d_off_x=d_ofx+lay_res->dst_x;
+								int final_d_off_y=d_ofy+lay_res->dst_y;
+								//log_i("+++++final_s_off_y=%d\n",final_s_off_y);
+								if(lay_res->dst_x>=ele->width){
+									int reduce=(lay_res->dst_x/ele->width)*ele->width;
+									final_s_off_x-=reduce;
+									final_d_off_x-=reduce;
+								}
+								if(lay_res->dst_y>=ele->height){
+									int reduce=(lay_res->dst_y/ele->height)*ele->height;
+									final_s_off_y-=reduce;
+									final_d_off_y-=reduce;
+								}
+								//log_i("+++++final_s_off_y=%d\n",final_s_off_y);
+								renderLayer(lay_res->img, final_s_off_x, final_s_off_y, render_width,render_height,final_d_off_x, final_d_off_y);
 							}
 							if(ele->isParent()){
-								renderLayer(&ele->top_image, s_ofx+ele->scroll_x, s_ofy+ele->scroll_y, render_width,render_height, d_ofx, d_ofy);
+								int final_s_off_x=s_ofx+ele->scroll_x;
+								int final_s_off_y=s_ofy+ele->scroll_y;
+								renderLayer(&ele->top_image, final_s_off_x, final_s_off_y, render_width,render_height, d_ofx, d_ofy);
 							}
 						}
 					cnt++;

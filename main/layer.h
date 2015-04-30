@@ -543,7 +543,7 @@ public:
 		if (dst_y + cp_height > dst_end_y)
 		{
 			cp_height = dst_end_y - dst_y;
-			if (cp_width <= 0)
+			if (cp_height <= 0)
 			{
 				return 1;
 			}
