@@ -24,9 +24,9 @@ int ParseXMLElement2(hustr parentName,hustr name, HUMap & xmlmp, xmlproc * xml)
 }
 
 void setXmlData(HUMap & xmlmp,HUMap  *setData){
-	string final_name = xmlmp["name"]->getvalue();
-	final_name+=(*setData)["SN"]->getvalue();
-
+///	string final_name = xmlmp["name"]->getvalue();
+//	final_name+=(*setData)["SN"]->getvalue();
+	string final_name =(*setData)["SN"]->getvalue();
 	int x=xmlmp["x"]->getvalue_int();
 	x+=(*setData)["offset_x"]->getvalue_int();
 	int y=xmlmp["y"]->getvalue_int();

@@ -266,12 +266,50 @@ public:
 		Flush();
 	}
 
-	void delItem(int posistion,listMap &data){
+	void delItem(int pos,itemList &lists){
 
+
+		itemList::iterator it;
+		int i=0;
+		listMap *data=NULL;
+		for (it = lists.begin(); it != lists.end(); ++it)
+		{
+			if(i==pos){
+				data=*it;
+				break;
+			}
+				i++;
+		}
+		if(data==NULL){
+			return ;
+		}
+		int num=data->size();
+		for(int i=0;i<num;i++)
+		{
+			//HUMap *mp=data[i];
+			hustr SN;
+			SN.format("%s-%d-%d",name.c_str(),pos,i);
+			xml_mgr->DelElement(SN.c_str());
+	}
+		lists.remove(data);
+		for(int i=pos+1;i<=item_num;i++){
+			hustr SN;
+			for(int j=0;j<num;j++){
+				SN.format("%s-%d-%d",name.c_str(),i,j);
+				BaseView *view=(BaseView *)xml_mgr->GetElementByName(SN.c_str());
+				if(direction){
+					view->setXY((i-1)*item_w,0);
+				}else{
+					view->setXY(0,(i-1)*item_h);
+				}
+			}
+		}
+		item_num--;
+		caliPages();
 	}
 
 
-	void addItemToListEnd(const char * adapter,itemList &lists,listMap &data){
+	void addItemToListEnd(const char * adapter,listMap &data,itemList &lists){
 		lists.push_back(&data);
 		addItemInEnd(adapter,data);
 	}
@@ -299,12 +337,14 @@ public:
 			offset_y=item_h*item_num;
 		}
 		listMap ::iterator it;
+		int i=0;
 		for(it=data.begin();it!=data.end();++it){
 			HUMap *mp=it->second;
 			(*mp)["offset_x"]->format("%d",offset_x);
 		//	mp["offset_x"]->setvalue(""+offset_x);
 			(*mp)["offset_y"]->format("%d",offset_y);
-			(*mp)["SN"]->format("%d",item_num);
+			(*mp)["SN"]->format("%s-%d-%d",name.c_str(),item_num,i);
+			i++;
 	}
 		item_num++;
 		caliPages();
