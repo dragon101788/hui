@@ -245,7 +245,7 @@ public:
 			(*mp)["offset_x"]->format("%d",offset_x);
 		//	mp["offset_x"]->setvalue(""+offset_x);
 			(*mp)["offset_y"]->format("%d",offset_y);
-			(*mp)["family_name"]->format("%d",item_num);
+			(*mp)["SN"]->format("%d",item_num);
 	}
 		item_num++;
 		setPages();
