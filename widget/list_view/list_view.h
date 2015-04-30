@@ -258,14 +258,16 @@ public:
 			int temp_x_page=w/width+1;
 			if(temp_x_page!=x_page_num){
 				x_page_num=temp_x_page;
-				top_image.SetBuffer(width*x_page_num,height*y_page_num);
+				top_image.resize(width*x_page_num,height*y_page_num);
+				//top_image.SetBuffer(width*x_page_num,height*y_page_num);
 			}
 		}else{
 			int h=item_num*item_h;
 			int temp_y_page=h/height+1;
 			if(temp_y_page!=y_page_num){
 				y_page_num=temp_y_page;
-				top_image.SetBuffer(width*x_page_num,height*y_page_num);
+				top_image.resize(width*x_page_num,height*y_page_num);
+			//	top_image.SetBuffer(width*x_page_num,height*y_page_num);
 			}
 		}
 
@@ -275,6 +277,7 @@ public:
 
 void setItems(const char * file,itemList &lists){
 
+		item_num=0;
 		list<listMap *>::iterator it;
 		for(it=lists.begin();it!=lists.end();++it){
 			listMap &data=**it;

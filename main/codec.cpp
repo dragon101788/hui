@@ -939,7 +939,7 @@ int image::SetBuffer(int width, int height,unsigned int color)
 		int err = posix_memalign(&pSrcBuffer, 4, tmpsize);
 		if (err) {
 			log_e("posix_memalign failed: %s\n", strerror(err));
-			return false;
+			return err;
 		}
 
 	}

@@ -412,6 +412,41 @@ public:
 		if (pSrcBuffer)
 			memset(pSrcBuffer, 0, SrcSize);
 	}
+
+	int resize(int width,int height){
+		lock();
+		static int dep = 4;
+		int tmpsize = width * height * dep;
+//		if (tmpsize > SrcSize)
+//		{
+//			//destroy();
+//		}
+		if (pSrcBuffer == NULL)
+		{
+			int err = posix_memalign(&pSrcBuffer, 4, tmpsize);
+			if (err) {
+				log_e("posix_memalign failed: %s\n", strerror(err));
+				return err;
+			}
+
+		}else{
+			void *newBuffer;
+			int err = posix_memalign(&newBuffer, 4, tmpsize);
+			if (err) {
+				log_e("posix_memalign failed: %s\n", strerror(err));
+				return err;
+			}
+			dump_to_buf_part(newBuffer,0,0,u32Width,u32Height,width,height,0,0);
+			free(pSrcBuffer);
+			pSrcBuffer=newBuffer;
+		}
+		SrcSize = tmpsize;
+		u32Width = width;
+		u32Height = height;
+		u32Stride = width * dep;
+		unlock();
+	}
+
 	void cleanBuf(unsigned int color)
 	{
 		if (pSrcBuffer)

@@ -10,7 +10,167 @@
 	static unsigned char style;
 	static int size;
 
-class text_reader: public View
+
+	class LinkedList{
+	public:
+		typedef struct page_node    //页链表
+		{
+			text ttf;
+			struct page_node *next;
+			struct page_node *prior;
+			inline page_node(){
+				ttf.m_font = &font_mp[font];
+				ttf.fontHeight = size;
+				ttf.color = color;
+				ttf.style = style;
+			}
+		}page_node,*page_list;
+
+
+		int init_list(page_list &L,int w,int h)   //初始化单链表
+		{
+			L=new page_node;//(page_list)malloc(sizeof(page));   //表头附加结点
+			if(!L)
+			{
+			log_i("L malloc mem fialed!!!!!!\n");
+			 exit(-2);
+			}
+			L->ttf.SetBuffer(w,h);
+			L->next=NULL;
+			L->prior=NULL;
+			return 1;
+		}//初始化了一个一个节点的双向链表
+		page_list list_find_last(page_list L)
+		{
+			page_list last=L;
+			while(last->next!=NULL)
+			{
+			last=last->next;
+			}
+			return last;
+		}
+
+		page_list list_find_head(page_list L)
+		{
+			page_list head=L;
+			while(head->prior!=NULL)
+			{
+			head=head->prior;
+			}
+			return head;
+		}
+
+		int list_how_far_last(page_list L)
+		{
+			page_list last=L;
+			int num=0;
+			while(last->next!=NULL)
+			{
+			num++;
+			last=last->next;
+			}
+			return num;
+		}
+
+		int list_how_far_head(page_list L)
+		{
+			page_list head=L;
+			int num=0;
+			while(head->prior!=NULL)
+			{
+			num++;
+			//log_i("list_how_far_head:num=%d!!!!\n",num);
+			head=head->prior;
+			}
+			return num;
+		}
+
+		void destroy_list(page_list &L)
+		{
+			page_list i,head,last;
+			head=list_find_head(L);
+			last=list_find_last(L);
+			for(i=head;i!=last->next;i=i->next)
+			{
+				   delete i;//
+			}
+		}
+
+
+		int list_add_next_delete_prior(page_list &L,int w,int h)  //前面删一个，后面加一个，往下滑动
+		{
+			int i=0,j=0;
+			page_list last,head;
+			last=L;//当前的最后一个
+			while(last->next!=NULL)
+			{
+				i++;
+				last=last->next;
+			}
+			head=L;//当前的第一个
+			while(head->prior!=NULL)
+			{
+				j++;
+				head=head->prior;
+			}
+
+			page_list newpage=new page_node;//(page_list)malloc(sizeof(page));
+			newpage->ttf.SetBuffer(w,h);
+			last->next=newpage;
+			newpage->prior=last;
+			newpage->next=NULL;
+			i++;
+		//	log_i("i=%d;j=%d!!!\n",i,j);
+			if(j>=4)
+				{
+				head->next->prior=NULL;
+			//	free(head->ttf.pSrcBuffer);
+			//	log_i("delete head!!!!\r\n");
+				delete head;//free(head);//删除原来的头
+				head=NULL;
+				}
+			return i;  //last在往下第几个位置
+		}
+
+		int list_add_prior_delete_next(page_list &L,int w,int h)
+		{
+			int i=0,j=0;
+			page_list last,head;//当前的最后一个
+			last=L;//当前的最后一个
+			while(last->next!=NULL)
+			{
+				i++;
+				last=last->next;
+			}
+			head=L;//当前的第一个
+			while(head->prior!=NULL)
+			{
+				j++;
+				head=head->prior;
+			}
+
+			//log_i("list_add_prior_delete_next: i=%d;j=%d!!!\n",i,j);
+			page_list newpage=new page_node;//(page_list)malloc(sizeof(page));
+		        newpage->ttf.SetBuffer(w,h);
+			head->prior=newpage;
+			newpage->next=head;
+			newpage->prior=NULL;
+			j++;
+			if(i>=4)
+				{
+				last->prior->next=NULL;
+			//	free(last->ttf.pSrcBuffer);
+			//	log_i("delete last!!!\n");
+				delete last;//free(last);//删除原来的尾
+				last=NULL;
+				}
+			return j; //head在前面第几个位置
+		}
+
+
+	};
+
+class text_reader: public View,public LinkedList
 {
 private:
 
@@ -22,160 +182,6 @@ private:
 	    fclose(fp);
 	    return size;
 	}
-	typedef struct page_node    //页链表
-	{
-		text ttf;
-		struct page_node *next;
-		struct page_node *prior;
-		inline page_node(){
-			ttf.m_font = &font_mp[font];
-			ttf.fontHeight = size;
-			ttf.color = color;
-			ttf.style = style;
-		}
-	}page_node,*page_list;
-
-
-	int init_list(page_list &L,int w,int h)   //初始化单链表
-	{
-		L=new page_node;//(page_list)malloc(sizeof(page));   //表头附加结点
-		if(!L)
-		{
-		log_i("L malloc mem fialed!!!!!!\n");
-		 exit(-2);
-		}
-		L->ttf.SetBuffer(w,h);
-		L->next=NULL;
-		L->prior=NULL;
-		return 1;
-	}//初始化了一个一个节点的双向链表
-	page_list list_find_last(page_list L)
-	{
-		page_list last=L;
-		while(last->next!=NULL)
-		{
-		last=last->next;
-		}
-		return last;
-	}
-
-	page_list list_find_head(page_list L)
-	{
-		page_list head=L;
-		while(head->prior!=NULL)
-		{
-		head=head->prior;
-		}
-		return head;
-	}
-
-	int list_how_far_last(page_list L)
-	{
-		page_list last=L;
-		int num=0;
-		while(last->next!=NULL)
-		{
-		num++;
-		last=last->next;
-		}
-		return num;
-	}
-
-	int list_how_far_head(page_list L)
-	{
-		page_list head=L;
-		int num=0;
-		while(head->prior!=NULL)
-		{
-		num++;
-		//log_i("list_how_far_head:num=%d!!!!\n",num);
-		head=head->prior;
-		}
-		return num;
-	}
-
-	void destroy_list(page_list &L)
-	{
-		page_list i,head,last;
-		head=list_find_head(L);
-		last=list_find_last(L);
-		for(i=head;i!=last->next;i=i->next)
-		{
-			   delete i;//
-		}
-	}
-
-
-	int list_add_next_delete_prior(page_list &L,int w,int h)  //前面删一个，后面加一个，往下滑动
-	{
-		int i=0,j=0;
-		page_list last,head;
-		last=L;//当前的最后一个
-		while(last->next!=NULL)
-		{
-			i++;
-			last=last->next;
-		}
-		head=L;//当前的第一个
-		while(head->prior!=NULL)
-		{
-			j++;
-			head=head->prior;
-		}
-
-		page_list newpage=new page_node;//(page_list)malloc(sizeof(page));
-		newpage->ttf.SetBuffer(w,h);
-		last->next=newpage;
-		newpage->prior=last;
-		newpage->next=NULL;
-		i++;
-	//	log_i("i=%d;j=%d!!!\n",i,j);
-		if(j>=4)
-			{
-			head->next->prior=NULL;
-		//	free(head->ttf.pSrcBuffer);
-		//	log_i("delete head!!!!\r\n");
-			delete head;//free(head);//删除原来的头
-			head=NULL;
-			}
-		return i;  //last在往下第几个位置
-	}
-
-	int list_add_prior_delete_next(page_list &L,int w,int h)
-	{
-		int i=0,j=0;
-		page_list last,head;//当前的最后一个
-		last=L;//当前的最后一个
-		while(last->next!=NULL)
-		{
-			i++;
-			last=last->next;
-		}
-		head=L;//当前的第一个
-		while(head->prior!=NULL)
-		{
-			j++;
-			head=head->prior;
-		}
-
-		//log_i("list_add_prior_delete_next: i=%d;j=%d!!!\n",i,j);
-		page_list newpage=new page_node;//(page_list)malloc(sizeof(page));
-	        newpage->ttf.SetBuffer(w,h);
-		head->prior=newpage;
-		newpage->next=head;
-		newpage->prior=NULL;
-		j++;
-		if(i>=4)
-			{
-			last->prior->next=NULL;
-		//	free(last->ttf.pSrcBuffer);
-		//	log_i("delete last!!!\n");
-			delete last;//free(last);//删除原来的尾
-			last=NULL;
-			}
-		return j; //head在前面第几个位置
-	}
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
