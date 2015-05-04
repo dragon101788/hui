@@ -418,10 +418,10 @@ void element::cleanArea()
 {
 
 	if (hasParent()){
-		unsigned long src_offset=(unsigned long)parent->top_image.pSrcBuffer+y*parent->top_image.u32Stride+x<<2;
-		int cp_size=width<<2;
+		unsigned long src_offset=(unsigned long)parent->top_image.pSrcBuffer+(y+render_offset_y)*parent->top_image.u32Stride+(x+render_offset_x)<<2;
+		int cp_size=render_width<<2;
 		parent->top_image.lock();
-		for(int i=0;i<height;i++){
+		for(int i=0;i<render_height;i++){
 			src_offset+=cp_size*i;
 			if(src_offset+cp_size>parent->top_image.SrcSize){
 				break;
@@ -430,10 +430,10 @@ void element::cleanArea()
 		}
 		parent->top_image.unlock();
 	}else{
-		unsigned long  src_offset=(unsigned long)xml_mgr->out.pSrcBuffer+y*xml_mgr->out.u32Stride+x<<2;
-		int cp_size=width<<2;
+		unsigned long  src_offset=(unsigned long)xml_mgr->out.pSrcBuffer+(y+render_offset_y)*xml_mgr->out.u32Stride+(x+render_offset_x)<<2;
+		int cp_size=render_width<<2;
 		xml_mgr->lock();
-		for(int i=0;i<height;i++){
+		for(int i=0;i<render_height;i++){
 			src_offset+=cp_size*i;
 			if(src_offset+cp_size>xml_mgr->out.SrcSize){
 							break;
