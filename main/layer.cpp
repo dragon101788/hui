@@ -300,6 +300,7 @@ void element::RenderOut()
 	}
 	else
 	{
+		render_res.clear();
 		log_i("Render %s hide\r\n", name.c_str());
 	}
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
@@ -420,28 +421,30 @@ void element::renderLayer(image * src_img, int src_x, int src_y, int cp_width, i
 
 void element::cleanArea()
 {
-
+	log_i("--%s cleanArea render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d---\n"
+			,name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
 	if (hasParent()){
-		unsigned long src_offset=(unsigned long)parent->top_image.pSrcBuffer+(y+render_offset_y)*parent->top_image.u32Stride+(x+render_offset_x)<<2;
+		unsigned long *src_offset=(unsigned long *)parent->top_image.pSrcBuffer+(y+render_offset_y)*parent->top_image.u32Width+(x+render_offset_x);
 		int cp_size=render_width<<2;
 		parent->top_image.lock();
 		for(int i=0;i<render_height;i++){
-			src_offset+=cp_size*i;
-			if(src_offset+cp_size>parent->top_image.SrcSize){
-				break;
-			}
+			src_offset+=parent->top_image.u32Width;
+//			if(src_offset+cp_size>parent->top_image.SrcSize){
+//				break;
+//			}
 			memset((void*)src_offset, 0,cp_size);
 		}
 		parent->top_image.unlock();
 	}else{
-		unsigned long  src_offset=(unsigned long)xml_mgr->out.pSrcBuffer+(y+render_offset_y)*xml_mgr->out.u32Stride+(x+render_offset_x)<<2;
+		unsigned long  *src_offset=(unsigned long *)xml_mgr->out.pSrcBuffer+(y+render_offset_y)*xml_mgr->out.u32Width+(x+render_offset_x);
 		int cp_size=render_width<<2;
 		xml_mgr->lock();
 		for(int i=0;i<render_height;i++){
-			src_offset+=cp_size*i;
-			if(src_offset+cp_size>xml_mgr->out.SrcSize){
-							break;
-						}
+
+			src_offset+=xml_mgr->out.u32Width;
+//			if(src_offset+cp_size>xml_mgr->out.SrcSize){
+//							break;
+//						}
 			memset((void*)src_offset, 0, cp_size);
 		}
 		xml_mgr->unlock();

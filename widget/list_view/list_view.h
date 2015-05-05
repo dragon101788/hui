@@ -218,7 +218,7 @@ public:
 				ty+=y_page*height;
 				select_item=ty/item_h;
 			}
-			if(select_item<=item_num)
+			if(select_item<item_num)
 				list_touch_listener->onItemTouchActive(select_item);
 		}
 
@@ -288,23 +288,48 @@ public:
 		{
 			//HUMap *mp=data[i];
 			hustr SN;
-			SN.format("%s-%d-%d",name.c_str(),pos,i);
-			xml_mgr->DelElement(SN.c_str());
-		}
-		lists.remove(*data);
-		for(int i=pos+1;i<=item_num;i++){
-			hustr SN;
-			for(int j=0;j<num;j++){
-				SN.format("%s-%d-%d",name.c_str(),i,j);
-				BaseView *view=(BaseView *)xml_mgr->GetElementByName(SN.c_str());
-				if(direction){
-					view->setXY((i-1)*item_w,0);
-				}else{
-					view->setXY(0,(i-1)*item_h);
-				}
-			}
+			SN.format("%s-%d-%d",name.c_str(),item_num-1,i);
+		//	xml_mgr->DelElement(SN.c_str());
+			xml_mgr->DelElement(SN.c_str());  //应该删除最后面的元素，仅重新赋值
 		}
 		item_num--;
+		lists.remove(*data);
+
+			i=0;
+			int start=0;
+			for (it = lists.begin(); it != lists.end(); ++it)
+			{
+				if(i==pos){
+					start=1;
+					}
+					if(start){
+						data=&(*it);
+						for(int j=0;j<num;j++){
+							HUMap &xml=(*data)[j];
+							hustr SN;
+							SN.format("%s-%d-%d",name.c_str(),i,j);
+							BaseView *view=(BaseView *)xml_mgr->GetElementByName(SN.c_str());
+							//view->m_mp.fetch(xml);
+							view->ModifXmlMap(xml);
+
+					}
+
+				}
+				i++	;
+			}
+//		for(int i=pos;i<item_num;i++){
+//			hustr SN;
+//			for(int j=0;j<num;j++){
+//				SN.format("%s-%d-%d",name.c_str(),i,j);
+//				BaseView *view=(BaseView *)xml_mgr->GetElementByName(SN.c_str());
+//				if(direction){
+//					view->m_mp.fetch(xmlmp);
+//					//view->setXY((i-1)*item_w+view->x%item_w,view->y);
+//				}else{
+//					//view->setXY(view->x,(i-1)*item_h+view->y%item_h);
+//				}
+//			}
+//		}
 		caliPages();
 	}
 
@@ -399,7 +424,7 @@ void setOnItemTouchListener(OnItemTouchListener *L){
 				if(ty<item_h){
 					tx+=x_page*width;
 					select_item=tx/item_w;
-					if(select_item<=item_num){
+					if(select_item<item_num){
 						int dst_x=select_item*item_w;
 						//dst_x=dst_x%width;
 						press_image.drawRectangle(item_w,item_h,0,0,sel_color,0);
@@ -413,7 +438,7 @@ void setOnItemTouchListener(OnItemTouchListener *L){
 					ty+=y_page*height;
 					select_item=ty/item_h;
 
-					if(select_item<=item_num){
+					if(select_item<item_num){
 						int dst_y=select_item*item_h;
 						//dst_y=dst_y%height;
 						log_i("--------in drawrec select=%d,dst_y=%d\n",select_item,dst_y);
@@ -432,6 +457,8 @@ void setOnItemTouchListener(OnItemTouchListener *L){
 			press_image.cleanBuf();
 		}
 	}
+
+
 	list_view()
 	{
 		has_pressed=0;
