@@ -27,6 +27,8 @@ void debug_timer(const char * str = NULL);
 void FPSWaitTimer(int ms);
 #define FPSWaitFPS(fps) FPSWaitTimer(1000/fps)
 
+void huErrExit(const char * str);
+#define huErrExitf(a,...)       huErrExit(hustr(a,##__VA_ARGS__))
 //static inline void errexit(const char * str)
 //{
 //	printf("**************error exit*****************\r\n");

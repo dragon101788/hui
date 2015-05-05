@@ -7,7 +7,6 @@
 #include <sys/ioctl.h>
 #include <signal.h>
 #include "ParseXML.h"
-#include "hui.h"
 #include "manager_touch.h"
 #include "manager_timer.h"
 #include "manager_cs.h"
@@ -29,6 +28,8 @@ using namespace std;
 
 #define DEFAULT_XMLFILE "start.xml"
 #define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
+
+
 
 void RefreshPage(xmlproc * xml);
 

@@ -10,7 +10,6 @@
 
 using namespace std;
 
-#include "hui.h"
 //#include "jpeg.h"
 //#include "jpegcodec.h"
 //#include "w55fa92_blt.h"
