@@ -6,7 +6,7 @@
 #include "thread_msg.h"
 
 
-class cartoon: TimerView
+class cartoon:public TimerView
 {
 public:
 

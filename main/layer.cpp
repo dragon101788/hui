@@ -12,6 +12,7 @@
 		name = m_mp["name"]->getvalue();
 		int tmpX = m_mp["x"]->getvalue_int();
 		int tmpY = m_mp["y"]->getvalue_int();
+		//clean_buf=m_mp["clean"]->getvalue_int();//绘制时是否清除缓存，在只有一个层的时候很管用
 		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
 		{
 			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
@@ -118,7 +119,9 @@
 			int d_ofx ; //目标x
 			int s_ofy ; //源x
 			int d_ofy ; //目标x
-
+//			if(clean_buf){
+//				cleanArea();
+//			}
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
@@ -229,6 +232,7 @@
 					cnt++;
 				}
 			}
+		//	if(!cnt&&!clean_buf){ //没有队列，为了清除原状态。否则会显示上一次的状态
 			if(!cnt){ //没有队列，为了清除原状态。否则会显示上一次的状态
 				cleanArea();
 			}

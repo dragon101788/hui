@@ -462,8 +462,22 @@ public:
 			res[id].SetResource(path);
 		}
 	}
-
-
+	void SetRes(int id)
+	{
+		if ( res[id].isNULL())
+		{
+			//log_i("SetRes %d %s\r\n",id,path);
+			res[id].SetBuffer(width,height);
+		}
+	}
+	void SetRes(int id,unsigned int color)
+	{
+		if ( res[id].isNULL())
+		{
+			//log_i("SetRes %d %s\r\n",id,path);
+			res[id].SetBuffer(width,height,color);
+		}
+	}
 	 element()
 	{
 		lay = 0;
@@ -581,6 +595,7 @@ public:
 	hustr name;
 	int lay;
 	int hide_lay;//向对此元素此层隐藏
+//	int clean_buf;
 	HUMap m_mp;
 	xmlproc * xml_mgr;
 	map<int, image> res; //从外面加载的图片资源

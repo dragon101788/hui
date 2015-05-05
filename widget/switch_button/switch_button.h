@@ -46,8 +46,22 @@ public:
 		TouchParaseXml(m_mp);
 		touch_init_area(abs_x, abs_y, width, height);
 
-		SetRes(0, m_mp["up"]->getvalue());
-		SetRes(1, m_mp["dn"]->getvalue());
+		if (m_mp.exist("up"))
+			SetRes(0, m_mp["up"]->getvalue());
+		else if(m_mp.exist("up_color")){
+			unsigned int up_color=m_mp["up_color"]->getvalue_hex();
+			SetRes(0, up_color);
+		}else{
+			SetRes(0);
+		}
+		if (m_mp.exist("dn"))
+			SetRes(1, m_mp["dn"]->getvalue());
+		else if(m_mp.exist("dn_color")){
+			unsigned int dn_color=m_mp["dn_color"]->getvalue_hex();
+			SetRes(1, dn_color);
+		}else{
+			SetRes(1);
+		}
 
 		xml_mgr->AddEleArea(this);
 
