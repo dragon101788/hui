@@ -143,15 +143,15 @@ public:
 	void touch_area()
 	{
 
-		lock();
+		//lock();
 		origin_in();
 		onTouchDown();
 		isdn = 1;
-		unlock();
+		//unlock();
 	}
 	void free_area()
 	{
-		lock();
+		//lock();
 		onTouchUp();
 		isdn = 0;
 		origin_out();
@@ -159,13 +159,13 @@ public:
 		{
 			touch_activate();
 		}
-		unlock();
+	//	unlock();
 	}
 	void touch_activate()
 	{
-		lock();
+	//	lock();
 		onTouchActive();
-		unlock();
+	//	unlock();
 	}
 	void TouchParaseXml(HUMap & mp)
 	{

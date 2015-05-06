@@ -124,7 +124,7 @@ public:
 			//lock();
 		//	log_i("before fb->RenderImageToFrameBuffer(this);!!!!!!!!\r\n");
 			if(parent->isDraw==1){
-			//	log_i("part draw to fb:draw_offset_x=%d,draw_offset_y=%d,draw_width=%d,draw_height=%d\n",parent->draw_offset_x,parent->draw_offset_y,parent->draw_width,parent->draw_height);
+				log_i("part draw to fb:draw_offset_x=%d,draw_offset_y=%d,draw_width=%d,draw_height=%d\n",parent->draw_offset_x,parent->draw_offset_y,parent->draw_width,parent->draw_height);
 				fb->RenderImageToFrameBuffer_part(this,parent->draw_offset_x,parent->draw_offset_y,parent->draw_width,parent->draw_height,parent->draw_offset_x,parent->draw_offset_y);
 			}else
 				fb->RenderImageToFrameBuffer(this);
@@ -200,6 +200,7 @@ public:
 	{
 		while (go && m_exit)
 		{
+
 			if(!fore){ //如果非前台，直接睡眠等待
 				resetSem();
 				waitSem();

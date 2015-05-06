@@ -408,8 +408,11 @@ public:
 	void AreaCmp(image * img, int src_x, int src_y, int cp_width, int cp_height, int dst_x, int dst_y);
 	void cleanBuf()
 	{
-		if (pSrcBuffer)
+		if (pSrcBuffer){
+			lock();
 			memset(pSrcBuffer, 0, SrcSize);
+			unlock();
+		}
 	}
 
 	int resize(int width,int height){
@@ -448,8 +451,11 @@ public:
 
 	void cleanBuf(unsigned int color)
 	{
-		if (pSrcBuffer)
+		if (pSrcBuffer){
+			lock();
 			memset_int((unsigned int *)pSrcBuffer, color, SrcSize>>2);
+			unlock();
+		}
 	}
 
 	inline void memset_int(unsigned int *start,unsigned int value,unsigned int len){

@@ -87,7 +87,7 @@ public:
 			ttf.fontHeight = size;
 			ttf.color = color;
 			ttf.style = style;
-			log_i("bkcolor=%d!!!!!!!!!!!!\n",bk_color);
+			//log_i("bkcolor=%d!!!!!!!!!!!!\n",bk_color);
 			/*
 			if(align_center)
 			x-=(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值

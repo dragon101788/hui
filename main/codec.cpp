@@ -374,7 +374,6 @@ int image_write_to_snap(image * img, const char * rawpath)
 int image_read_from_snap(image * img, const char * rawpath)
 {
 	hustr path("cache/%s.snap", rawpath);
-
 	if (access(path, F_OK) != 0)
 	{
 		return -1;
@@ -867,7 +866,7 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 		}
 
 		lock();
-		int line_byte=cp_w * 4;
+		int line_byte=cp_w <<2;
 		unsigned int dst_step= dst_w;
 		unsigned int src_step= u32Width;
 		unsigned int * dst_start;
@@ -906,6 +905,7 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 			src_offset+=src_step;
 		}
 #else
+		log_i("===src_x=%d,src_y=%d,dst_x=%d,dst_y=%d,cp_w=%d,cp_h=%d====\n",src_x,src_y,dst_x,dst_y,cp_w,cp_h);
 		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
 		for (y = 0; y < cp_h; y++)
 		{

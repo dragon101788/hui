@@ -108,7 +108,9 @@
 
 	void element::renderLayers()
 	{
+		//log_i("iiiiiiiiiiiiiiii %s renderLayers in \n",name.c_str());
 		int cnt=0;
+
 		if (!layers.empty())
 		{
 			list<element *>::iterator it;
@@ -125,6 +127,7 @@
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
+				log_i("%s render ele=%s\n",name.c_str(),ele->name.c_str());
 				if (ele->hide == 0&&ele->lay!=hide_lay)
 				{
 					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
@@ -167,7 +170,7 @@
 					if(cnt==0){//最底的元素直接复制
 						for (itp = ele->render_res.begin();itp != ele->render_res.end(); itp++)
 						{
-							cnt++;
+
 							lay_res=&itp->second;
 							//log_i("itp->first=%d\n",itp->first);
 							int final_s_off_x=s_ofx+ele->scroll_x;
@@ -190,6 +193,7 @@
 								copyLayer(lay_res->img, final_s_off_x, final_s_off_y, render_width,render_height,final_d_off_x, final_d_off_y);
 							else
 								renderLayer(lay_res->img, final_s_off_x, final_s_off_y, render_width,render_height,final_d_off_x, final_d_off_y);
+							cnt++;
 						}
 						if(ele->isParent()){
 							int final_s_off_x=s_ofx+ele->scroll_x;
@@ -198,12 +202,14 @@
 								copyLayer(&ele->top_image,  final_s_off_x, final_s_off_y, render_width,render_height, d_ofx, d_ofy);
 							}else
 								renderLayer(&ele->top_image, final_s_off_x, final_s_off_y, render_width,render_height, d_ofx, d_ofy);
+							cnt++;
 						}
 					}
 					else{
 							//log_i("itp->first=%d!!!\n",itp->first);
 							for (itp = ele->render_res.begin(); itp != ele->render_res.end(); itp++)
 							{
+
 								lay_res=&itp->second;
 								int final_s_off_x=s_ofx+ele->scroll_x;
 								int final_s_off_y=s_ofy+ele->scroll_y;
@@ -222,14 +228,16 @@
 								}
 								//log_i("+++++final_s_off_y=%d\n",final_s_off_y);
 								renderLayer(lay_res->img, final_s_off_x, final_s_off_y, render_width,render_height,final_d_off_x, final_d_off_y);
+								cnt++;
 							}
 							if(ele->isParent()){
 								int final_s_off_x=s_ofx+ele->scroll_x;
 								int final_s_off_y=s_ofy+ele->scroll_y;
 								renderLayer(&ele->top_image, final_s_off_x, final_s_off_y, render_width,render_height, d_ofx, d_ofy);
+								cnt++;
 							}
 						}
-					cnt++;
+
 				}
 			}
 		//	if(!cnt&&!clean_buf){ //没有队列，为了清除原状态。否则会显示上一次的状态
@@ -237,6 +245,7 @@
 				cleanArea();
 			}
 		}
+	//	log_i("oooooooooooo %s renderLayers out cnt=%d!!\n",name.c_str(),cnt);
 	}
 
 
@@ -293,14 +302,17 @@ void element::initstack()
 
 void element::RenderOut()
 {
+	lock();
 	cfgPartRender();
+
+	log_i("~~~%s render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d~~~\n",name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
 	if (hide == 0)
 	{
 		doRenderConfig();
 	}
 	else
 	{
-		render_res.clear();
+		//render_res.clear();
 		log_i("Render %s hide\r\n", name.c_str());
 	}
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
@@ -317,24 +329,26 @@ void element::RenderOut()
 	}else{
 		xml_mgr->addDraw(x+render_offset_x,y+render_offset_y,render_width,render_height);
 	}
-
-
+	log_i("~~~%s RenderOut leave~~~\n",name.c_str());
+	unlock();
 }
 
 
 void element::cleanLastPos()
 {
 	lock();
-
+   log_i("%s cleanLastPos !!\n",name.c_str());
+   int temp_hide=hide;
+   hide=1;
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
-	if(parent!=NULL){
-		log_i("%s draw to parent!!!!!!!\n",name.c_str());
-		if(!parent->isParent()){
-			parent->tobeParent(name,this);
-		}
-		//parent->Draw(this,  0, 0, width, height, x, y);//控件输出到父控件
-		parent->RenderOut();
-	}
+	hide=temp_hide;
+//	if(parent!=NULL){
+//		log_i("%s draw to parent!!!!!!!\n",name.c_str());
+//		if(!parent->isParent()){
+//			parent->tobeParent(name,this);
+//		}
+//		parent->RenderOut();
+//	}
 	unlock();
 
 }
@@ -356,6 +370,7 @@ void element::FlushConfig()
 //}
 void element::Delete()
 {
+
 	doDelete();
 	if(isParent()){
 		delChildren();
@@ -387,15 +402,18 @@ void element::copyLayer(image * src_img, int src_x, int src_y, int cp_width, int
 {
 	int _dst_x=dst_x+x;
 	int _dst_y=dst_y+y;
+	log_i("####in copyLayer####\n");
 	if(hasParent()){
+
 		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
-
+		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		::AreaCopy_no_ProcArea(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 		//::Copy_img_to_img(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 	}else{
 		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
+		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		::AreaCopy_no_ProcArea(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 		//::Copy_img_to_img(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 	}
@@ -406,15 +424,17 @@ void element::renderLayer(image * src_img, int src_x, int src_y, int cp_width, i
 	src_img->LoadResource();
 	int _dst_x=dst_x+x;
 	int _dst_y=dst_y+y;
-
+	log_i("####in renderLayer####\n");
 	if(hasParent()){
 		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			return;
+		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		Render_img_to_img(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 
 	}else{
 		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			return;
+		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		Render_img_to_img(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 	}
 }
@@ -428,26 +448,28 @@ void element::cleanArea()
 		int cp_size=render_width<<2;
 		parent->top_image.lock();
 		for(int i=0;i<render_height;i++){
-			src_offset+=parent->top_image.u32Width;
+
 //			if(src_offset+cp_size>parent->top_image.SrcSize){
 //				break;
 //			}
 			memset((void*)src_offset, 0,cp_size);
+			src_offset+=parent->top_image.u32Width;
 		}
 		parent->top_image.unlock();
 	}else{
 		unsigned long  *src_offset=(unsigned long *)xml_mgr->out.pSrcBuffer+(y+render_offset_y)*xml_mgr->out.u32Width+(x+render_offset_x);
 		int cp_size=render_width<<2;
-		xml_mgr->lock();
+		xml_mgr->out.lock();
 		for(int i=0;i<render_height;i++){
 
-			src_offset+=xml_mgr->out.u32Width;
+
 //			if(src_offset+cp_size>xml_mgr->out.SrcSize){
 //							break;
 //						}
 			memset((void*)src_offset, 0, cp_size);
+			src_offset+=xml_mgr->out.u32Width;
 		}
-		xml_mgr->unlock();
+		xml_mgr->out.unlock();
 	}
 }
 

@@ -245,10 +245,8 @@ public:
 	}
 
 	void addDraw(int dst_x,int dst_y,int cp_width,int cp_height){
-//		render_offset_x=dst_x%width;//偏移位置不能超过页面宽度,dst_x有可能会超过，比如当处在第二页时
-//		render_offset_y=dst_y%height;
-		render_offset_x=dst_x;
-		render_offset_y=dst_y;
+		render_offset_x=dst_x%width;//偏移位置不能超过页面宽度,dst_x有可能会超过，比如当处在第二页时
+		render_offset_y=dst_y%height;//render_offset_y 指视窗内的偏移，所以不能超过视窗区域！
 		render_width=cp_width;
 		render_height=cp_height;
 		isDraw++;
