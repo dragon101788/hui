@@ -905,7 +905,7 @@ void image::dump_to_buf_part(void * buf,int src_x,int src_y,int src_w,int src_h,
 			src_offset+=src_step;
 		}
 #else
-		log_i("===src_x=%d,src_y=%d,dst_x=%d,dst_y=%d,cp_w=%d,cp_h=%d====\n",src_x,src_y,dst_x,dst_y,cp_w,cp_h);
+		//log_i("===src_x=%d,src_y=%d,dst_x=%d,dst_y=%d,cp_w=%d,cp_h=%d====\n",src_x,src_y,dst_x,dst_y,cp_w,cp_h);
 		dst_start=(unsigned int *)buf +  dst_y * dst_step + dst_x;
 		for (y = 0; y < cp_h; y++)
 		{

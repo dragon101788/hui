@@ -378,7 +378,7 @@ public:
 
 	int caliPages(){
 		if(direction){ //像又增加模式
-			int w=item_num*item_w;
+			int w=item_num*item_w-1;
 			int temp_x_page=w/width+1;
 			if(temp_x_page!=x_page_num){
 				x_page_num=temp_x_page;

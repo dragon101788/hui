@@ -127,7 +127,7 @@
 			for (it = layers.begin(); it != layers.end(); ++it)
 			{
 				ele = *it;
-				log_i("%s render ele=%s\n",name.c_str(),ele->name.c_str());
+				//log_i("%s render ele=%s\n",name.c_str(),ele->name.c_str());
 				if (ele->hide == 0&&ele->lay!=hide_lay)
 				{
 					//log_i("$$$HU$$$ RenderEB %s <-- %s\r\n", name.c_str(), ele->name.c_str());
@@ -305,7 +305,7 @@ void element::RenderOut()
 	lock();
 	cfgPartRender();
 
-	log_i("~~~%s render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d~~~\n",name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
+	//log_i("~~~%s render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d~~~\n",name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
 	if (hide == 0)
 	{
 		doRenderConfig();
@@ -329,7 +329,7 @@ void element::RenderOut()
 	}else{
 		xml_mgr->addDraw(x+render_offset_x,y+render_offset_y,render_width,render_height);
 	}
-	log_i("~~~%s RenderOut leave~~~\n",name.c_str());
+	//log_i("~~~%s RenderOut leave~~~\n",name.c_str());
 	unlock();
 }
 
@@ -402,18 +402,18 @@ void element::copyLayer(image * src_img, int src_x, int src_y, int cp_width, int
 {
 	int _dst_x=dst_x+x;
 	int _dst_y=dst_y+y;
-	log_i("####in copyLayer####\n");
+	//log_i("####in copyLayer####\n");
 	if(hasParent()){
 
 		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
-		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
+	//	log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		::AreaCopy_no_ProcArea(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 		//::Copy_img_to_img(&parent->top_image ,src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 	}else{
 		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			 return;
-		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
+	//	log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		::AreaCopy_no_ProcArea(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 		//::Copy_img_to_img(&xml_mgr->out, src_img,src_x, src_y, cp_width, cp_height,_dst_x,_dst_y);
 	}
@@ -424,25 +424,25 @@ void element::renderLayer(image * src_img, int src_x, int src_y, int cp_width, i
 	src_img->LoadResource();
 	int _dst_x=dst_x+x;
 	int _dst_y=dst_y+y;
-	log_i("####in renderLayer####\n");
+	//log_i("####in renderLayer####\n");
 	if(hasParent()){
 		if(ProcArea(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			return;
-		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
+	//	log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		Render_img_to_img(&parent->top_image, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 
 	}else{
 		if(ProcArea(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y,x+width,y+height))
 			return;
-		log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
+	//	log_i("####%s src_x=%d, src_y=%d, cp_width=%d, cp_height=%d, _dst_x=%d, _dst_y=%d####\n",name.c_str(),src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 		Render_img_to_img(&xml_mgr->out, src_img, src_x, src_y, cp_width, cp_height, _dst_x, _dst_y);
 	}
 }
 
 void element::cleanArea()
 {
-	log_i("--%s cleanArea render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d---\n"
-			,name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
+	//log_i("--%s cleanArea render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d---\n"
+	//		,name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
 	if (hasParent()){
 		unsigned long *src_offset=(unsigned long *)parent->top_image.pSrcBuffer+(y+render_offset_y)*parent->top_image.u32Width+(x+render_offset_x);
 		int cp_size=render_width<<2;
