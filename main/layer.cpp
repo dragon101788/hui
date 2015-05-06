@@ -10,16 +10,16 @@
 	void element::PraseElement()
 	{
 		name = m_mp["name"]->getvalue();
-		int tmpX = m_mp["x"]->getvalue_int();
-		int tmpY = m_mp["y"]->getvalue_int();
+		 x = m_mp["x"]->getvalue_int();
+		 y = m_mp["y"]->getvalue_int();
 		//clean_buf=m_mp["clean"]->getvalue_int();//绘制时是否清除缓存，在只有一个层的时候很管用
 		if (m_mp.exist("parentXPage"))//在父元素的第几个页面里,0开始算起
 		{
-			tmpX+=parent->width* m_mp["parentXPage"]->getvalue_int();
+			x+=parent->width* m_mp["parentXPage"]->getvalue_int();
 		}
 		if (m_mp.exist("parentYPage"))
 		{
-			tmpY+=parent->height* m_mp["parentYPage"]->getvalue_int();
+			y+=parent->height* m_mp["parentYPage"]->getvalue_int();
 		}
 		width = m_mp["width"]->getvalue_int();
 		height = m_mp["height"]->getvalue_int();
@@ -38,13 +38,13 @@
 		{
 			hide_lay= m_mp["hide_lay"]->getvalue_int();
 		}
-		//控件被移动
-		if (tmpX != x || tmpY != y)
-		{
-			cleanLastPos();
-			x = tmpX;
-			y = tmpY;
-		}
+//		//控件被移动
+//		if (tmpX != x || tmpY != y)
+//		{
+//			cleanLastPos();
+//			x = tmpX;
+//			y = tmpY;
+//		}
 		if(hasParent()){
 		abs_x=x+parent->abs_x-parent->scroll_x;
 		abs_y=y+parent->abs_y-parent->scroll_y;
@@ -337,20 +337,39 @@ void element::RenderOut()
 void element::cleanLastPos()
 {
 	lock();
+	render_offset_x=0;
+	render_offset_y=0;
+	render_width=width;
+	render_height=height;
    log_i("%s cleanLastPos !!\n",name.c_str());
    int temp_hide=hide;
    hide=1;
 	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
 	hide=temp_hide;
-//	if(parent!=NULL){
-//		log_i("%s draw to parent!!!!!!!\n",name.c_str());
-//		if(!parent->isParent()){
-//			parent->tobeParent(name,this);
-//		}
-//		parent->RenderOut();
-//	}
+	if(parent!=NULL){
+		parent->addDraw(x,y,render_width,render_height);
+		if(!parent->isParent()){
+			parent->tobeParent(name,this);
+		}
+		parent->cleanLastPos_by_parent();
+	}
 	unlock();
+}
 
+void element::cleanLastPos_by_parent()
+{
+	lock();
+	cfgPartRender();
+	renderLayers();  //如果自己隐藏的话，此函数是不会绘制自己的。
+
+	if(parent!=NULL){
+		parent->addDraw(x+render_offset_x,y+render_offset_y,render_width,render_height);
+		if(!parent->isParent()){
+			parent->tobeParent(name,this);
+		}
+		parent->cleanLastPos_by_parent();
+	}
+	unlock();
 }
 
 void element::FlushConfig()

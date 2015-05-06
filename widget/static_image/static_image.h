@@ -58,7 +58,14 @@ public:
 		this->id=id;
 		Flush();
 	}
-
+	void setXY(int x,int y){
+		if(this->x!=x||this->y!=y){
+			cleanLastPos();
+			this->x=x;
+			this->y=y;
+			Flush();
+		}
+	}
 	void doRenderConfig()
 	{
 		//image::Render(&res[id], xpos, ypos, width, height, 0, 0);

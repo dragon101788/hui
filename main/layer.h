@@ -375,6 +375,7 @@ public:
 
 	void RenderOut();
 	void cleanLastPos();
+	void cleanLastPos_by_parent();
 	void FlushConfig();
 //	void FlushConfigReduced();
 	void ParseModifRes();
