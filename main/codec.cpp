@@ -755,6 +755,7 @@ void AreaCopy_no_ProcArea(image * dst_img, image * src_img, int src_x, int src_y
 	dst_img->lock();
 	src_img->lock();
 	int line_byte=cp_width<<2;
+
 //	unsigned int dst_step= dst_img->u32Width;
 //	unsigned int src_step= src_img->u32Width;
 	unsigned int * dst_start=(unsigned int *)dst_img->pSrcBuffer +  dst_y * dst_img->u32Width + dst_x;

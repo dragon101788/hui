@@ -83,9 +83,11 @@ public:
 			ttf.color = color;
 			ttf.SetBuffer(width, height);
 
-			int padding_left=width/2-((txt.length())*size)/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			//int padding_left=width/2-((txt.length())*size)/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			int padding_left=(width>>1)-(((txt.length())*size)>>2);
+
 			padding_left>0?padding_left:0;
-			int padding_top=(height-size)/2;
+			int padding_top=(height-size)>>1;
 			padding_top>0?padding_top:0;
 			lock();
 			if(boss->edge_fading){
