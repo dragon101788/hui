@@ -155,6 +155,7 @@ unsigned int FontDev::DrawText(text * ptext, char * showtxt, unsigned int txt_le
 
 unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, unsigned int color, unsigned char style)
 {
+
 	//int final_num=0;
 	if (face == NULL)
 	{
@@ -166,9 +167,10 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2;//给点余量吧
 	int y = 0;
+
 	log_i("TTF_DisplayUTF8!,num=%d\n", num);
 	//log_i("ptext->GetWidth()=%d ,ptext->GetHeight()=%d\n",ptext->GetWidth(),ptext->GetHeight());
-
+	lock();
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	 const char *start=text;
 	 const char* stop = text + num;
@@ -197,6 +199,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 		if (ft_error)
 		{
 			log_e("Error at load char!\n");
+			unlock();
 			return -1;
 		}
 
@@ -226,6 +229,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 			x += word_w; //可以从此处下手添加自动换行功能
 	}
 	log_i("final_num=%d TTF_Displayutft8 exit!\n",text-start);
+	unlock();
 	return text-start;
 }
 
@@ -243,7 +247,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 	//int max_h = face->size->metrics.ascender  >> 6;   // 基线到字符轮廓最高点的距离
 	int x = 2+padding_left;//给点余量吧
 	int y = padding_top;
-
+	lock();
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	 const char *start=text;
 	 const char* stop = text + num;
@@ -274,6 +278,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 		if (ft_error)
 		{
 			log_e("Error at load char!\n");
+			unlock();
 			return -1;
 		}
 
@@ -301,7 +306,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 			x += word_w; //可以从此处下手添加自动换行功能
 
 	}
-
+    unlock();
 	return text-start;
 }
 
@@ -323,7 +328,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 	int y = padding_top;
 	log_i("TTF_DisplayUnicode!,num=%d\n", num);
 	//log_i("ptext->GetWidth()=%d ,ptext->GetHeight()=%d\n",ptext->GetWidth(),ptext->GetHeight());
-
+	lock();
 	setPixelSize(ptext->fontWidth, ptext->fontHeight);
 	 const char *start=text;
 	 const char* stop = text + num;
@@ -352,6 +357,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 		if (ft_error)
 		{
 			log_e("Error at load char!\n");
+			unlock();
 			return -1;
 		}
 
@@ -379,6 +385,7 @@ unsigned int FontDev::TTF_DisplayUTF8(text * ptext, const char *text, int num, u
 			x += word_w; //可以从此处下手添加自动换行功能
 
 	}
+    unlock();
 	return text-start;
 }
 
@@ -398,6 +405,7 @@ void text::ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,
 		log_w("warning ft_draw_bitmap u32Height[%d] to low\r\n",u32Height);
 		return;
 	}
+	lock();
 	for (y = 0; y < bitmap->rows; y++)
 	{
 		if (dst_y + y > u32Height)
@@ -418,6 +426,7 @@ void text::ft_draw_bitmap(FT_Bitmap *bitmap, int dst_x, int dst_y,
 			}
 		}
 	}
+	unlock();
 }
 //字体渐渐隐藏显示
 void text::ft_draw_bitmap_fade(FT_Bitmap *bitmap, int dst_x, int dst_y,
@@ -438,7 +447,7 @@ void text::ft_draw_bitmap_fade(FT_Bitmap *bitmap, int dst_x, int dst_y,
 	}
 	alpha=startAlpha;
 	fadeStep= (startAlpha-endAlpha)/bitmap->rows;
-
+	lock();
 	for (y = 0; y < bitmap->rows; y++)
 	{
 		alpha-=fadeStep;
@@ -460,6 +469,7 @@ void text::ft_draw_bitmap_fade(FT_Bitmap *bitmap, int dst_x, int dst_y,
 			}
 		}
 	}
+	unlock();
 }
 
 

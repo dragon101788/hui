@@ -76,17 +76,18 @@ public:
 		}
 		void doFlushConfigCom()
 		{
-			int red = m_mp["red"]->getvalue_int();
-			int green = m_mp["green"]->getvalue_int();
-			int blue = m_mp["blue"]->getvalue_int();
-			color = (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
+//			int red = m_mp["red"]->getvalue_int();
+//			int green = m_mp["green"]->getvalue_int();
+//			int blue = m_mp["blue"]->getvalue_int();
+			color =m_mp["color"]->getvalue_hex();// (red & 0xff) << 16 | (green & 0xff) << 8 | blue & 0xff;
 			ttf.color = color;
 			ttf.SetBuffer(width, height);
 
-			int padding_left=width/2-(txt.length())*size/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
+			int padding_left=width/2-((txt.length())*size)/4; //中心对齐，文本框的x值代表文本框文字的中点位置值
 			padding_left>0?padding_left:0;
 			int padding_top=(height-size)/2;
 			padding_top>0?padding_top:0;
+			lock();
 			if(boss->edge_fading){
 				if(id==0){
 					ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top,(float)0,(float)1);
@@ -97,7 +98,7 @@ public:
 			}
 			else
 			ttf.DrawText( (char *) txt.c_str(), txt.length(),padding_left,padding_top);
-
+			unlock();
 
 		}
 

@@ -95,6 +95,7 @@ void JumpToFile(const char * jump, const char * snap)
 	}
 	else if(math==".xml")
 	{
+		int mem=getFreeMemPercent();
 			if (g_xml_proc.find(jump) != g_xml_proc.end())  //已经缓存好了
 			{
 				log_i("$$$HU$$$ JumpToFile %s find cus\r\n", jump);
@@ -110,7 +111,7 @@ void JumpToFile(const char * jump, const char * snap)
 			}
 			else  //重新打开，这里最好添加一个内存判断，如果内存不够，释放掉缓存中的某个页面
 			{
-				if(getFreeMemPercent()<MIN_MEN_PERCENT){
+				if(mem<MIN_MEN_PERCENT){
 
 					map<hustr, pXmlproc>::iterator it;
 					it = g_xml_proc.begin();
