@@ -9,25 +9,25 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 	}
 
 	ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
-	if (lcm_dpp == 16)
-	{
-		img->lock();
-		//log_i("$$$luo$$$ bpp=16\r\n");
-		for(int y=0;y<u32Height;y++)
-		{
-			for(int x=0;x<u32Width;x++)
-			{
-				Color32 * pix = &img->pixels(x,y);
-				*(((unsigned short*)pSrcBuffer)+(y*u32Width+x)) = RGB565(pix->r,pix->g,pix->b);
-			}
-		}
-		img->unlock();
-	}
-	else if (lcm_dpp == 32)
-	{
-		//log_i("$$$luo$$$ bpp=32\r\n");
+//	if (lcm_dpp == 16)
+//	{
+//		img->lock();
+//		//log_i("$$$luo$$$ bpp=16\r\n");
+//		for(int y=0;y<u32Height;y++)
+//		{
+//			for(int x=0;x<u32Width;x++)
+//			{
+//				Color32 * pix = &img->pixels(x,y);
+//				*(((unsigned short*)pSrcBuffer)+(y*u32Width+x)) = RGB565(pix->r,pix->g,pix->b);
+//			}
+//		}
+//		img->unlock();
+//	}
+//	else if (lcm_dpp == 32)
+//	{
+//		//log_i("$$$luo$$$ bpp=32\r\n");
 		img->dump_to_buf(pSrcBuffer);
-	}
+//	}
 	//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);
 
 	ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
