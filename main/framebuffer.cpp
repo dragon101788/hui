@@ -7,7 +7,7 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 	{
 		huErrExit("RenderFromBuffer Image invalid\r\n");
 	}
-
+	lock();
 	ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
 //	if (lcm_dpp == 16)
 //	{
@@ -31,6 +31,7 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 	//memcpy(pSrcBuffer, img->pSrcBuffer, SrcSize);
 
 	ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
+	unlock();
 
 }
 
@@ -41,7 +42,7 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 	{
 		huErrExit("RenderFromBuffer Image invalid\r\n");
 	}
-
+	lock();
 	ioctl(lcm_fd, IOCTL_LCD_DISABLE_INT);
 
 	 if (lcm_dpp == 32)
@@ -50,5 +51,5 @@ void framebuffer::RenderImageToFrameBuffer(image * img)
 	}
 
 	ioctl(lcm_fd, IOCTL_LCD_ENABLE_INT);
-
+	unlock();
 }

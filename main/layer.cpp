@@ -241,7 +241,7 @@
 				}
 			}
 		//	if(!cnt&&!clean_buf){ //没有队列，为了清除原状态。否则会显示上一次的状态
-			if(!cnt){ //没有队列，为了清除原状态。否则会显示上一次的状态
+			if(!cnt&&hide){ //没有队列，为了清除原状态。否则会显示上一次的状态
 				cleanArea();
 			}
 		}
@@ -460,8 +460,8 @@ void element::renderLayer(image * src_img, int src_x, int src_y, int cp_width, i
 
 void element::cleanArea()
 {
-	//log_i("--%s cleanArea render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d---\n"
-	//		,name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
+	log_i("--%s cleanArea render_offset_x=%d,render_offset_y=%d,render_width=%d,render_height=%d---\n"
+			,name.c_str(),render_offset_x,render_offset_y,render_width,render_height);
 	if (hasParent()){
 		unsigned long *src_offset=(unsigned long *)parent->top_image.pSrcBuffer+(y+render_offset_y)*parent->top_image.u32Width+(x+render_offset_x);
 		int cp_size=render_width<<2;
@@ -480,11 +480,6 @@ void element::cleanArea()
 		int cp_size=render_width<<2;
 		xml_mgr->out.lock();
 		for(int i=0;i<render_height;i++){
-
-
-//			if(src_offset+cp_size>xml_mgr->out.SrcSize){
-//							break;
-//						}
 			memset((void*)src_offset, 0, cp_size);
 			src_offset+=xml_mgr->out.u32Width;
 		}

@@ -435,6 +435,7 @@ public:
 			void *newBuffer;
 			int err = posix_memalign(&newBuffer, 4, tmpsize);
 			if (err) {
+				unlock();
 				log_e("posix_memalign failed: %s\n", strerror(err));
 				return err;
 			}

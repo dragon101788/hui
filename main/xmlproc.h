@@ -131,23 +131,6 @@ public:
 			//fb->NotifyRenderFrameBuffer(this);
 		//	unlock();
 		}
-
-//		/************************
-//		 * 带动画效果的切换
-//		 * 动画应该做成控件形式
-//		 * 分 alpha translation ,scale等
-//		 */
-//		void RenderToFramebufferAnim(framebuffer * fb,Animation *anim)
-//		{
-//			//fb->RenderImageToFrameBuffer(this);
-//			int steps=40;
-//			for(int i=steps;i>=0;i--){
-//			int src_x=u32Width/steps*i;
-//			int src_y=u32Height/steps*i;
-//			fb->RenderImageToFrameBuffer_part(this,src_x,src_y,u32Width-src_x,u32Height-src_y,0,0);
-//			FPSWaitFPS(anim->fps);
-//			}
-//		}
 	};
 	xmlout out;
 

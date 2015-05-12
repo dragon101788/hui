@@ -939,8 +939,10 @@ int image::SetBuffer(int width, int height,unsigned int color)
 
 		int err = posix_memalign(&pSrcBuffer, 4, tmpsize);
 		if (err) {
-			log_e("posix_memalign failed: %s\n", strerror(err));
-			return err;
+			log_e("************************ERROR***************************\n");
+			log_e(" posix_memalign failed!! malloc size= %d\n",tmpsize);
+			log_e("******************************************************** \n");
+			exit(-1);
 		}
 
 	}
@@ -971,8 +973,10 @@ int image::SetBuffer(int width, int height)
 
 		int err = posix_memalign(&pSrcBuffer, 4, tmpsize);
 		if (err) {
-			log_e("posix_memalign failed: %s\n", strerror(err));
-			return false;
+			log_e("************************ERROR***************************\n");
+			log_e(" posix_memalign failed!! malloc size= %d\n",tmpsize);
+			log_e("******************************************************** \n");
+			exit(-1);
 		}
 //
 //		if (pSrcBuffer == NULL)
