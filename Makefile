@@ -1,7 +1,8 @@
 sinclude .config
 #CROSS_COMPILE:=$(HOME)/usr/arm/4.3.3/bin/arm-linux-
 #CROSS_COMPILE:=arm-linux-
-CROSS_COMPILE:=$(compile)
+#CROSS_COMPILE:=$(compile)
+CROSS_COMPILE:=$(PWD)/build/dragon-4.8.2/bin/arm-linux-gnueabi-
 CC=$(CROSS_COMPILE)g++
 STRIP=$(CROSS_COMPILE)strip
 TOPDIR=$(PWD)/
@@ -13,9 +14,11 @@ CFLAG+=-I$(TOPDIR)include
 CFLAG+=-I$(FREETYPE)
 
 #CFLAG+=-g -O1
-LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt -lts
+#LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt -lts
+LDFLAG += -lpthread -lc -lgcc -ldl -rdynamic -lrt 
+
 OUTPUT =../output/
-TARGET = $(OUTPUT)vidroid
+TARGET = $(OUTPUT)hui
 OBJS_DIR = $(TOPDIR)/objs/
 DRAGON_AUTO = $(TOPDIR)/script/dragon_auto.sh
 MCONF = $(TOPDIR)/script/mconf
@@ -65,6 +68,11 @@ ifeq ($(CONFIG_USING_FONT),y)
 else
 endif 
 
+
+ifeq ($(TOUCH_TSLIB),y) 
+	LDFLAG+=-lts
+else
+endif 
 
 sinclude  $(MKAUTO)
 

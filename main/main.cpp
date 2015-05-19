@@ -26,7 +26,7 @@
 
 using namespace std;
 
-#define DEFAULT_XMLFILE "start.xml"
+#define DEFAULT_XMLFILE "main.xml"
 #define MIN_MEN_PERCENT 20  //当剩余内存小于20%时开始清楚多余的页面
 
 
